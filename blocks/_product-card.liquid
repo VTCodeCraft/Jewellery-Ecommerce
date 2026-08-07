@@ -1,0 +1,197 @@
+
+
+{%- doc -%}
+  @param {string} [product_view_context] - Context value passed through to the card snippet.
+{%- enddoc -%}
+
+{% liquid
+  assign product = closest.product
+-%}
+
+{% capture children %}
+  {% content_for 'blocks', closest.product: product %}
+{% endcapture %}
+
+{% render 'product-card', children: children, product: product, product_view_context: product_view_context %}
+{% render 'quantity-selector-styles' %}
+{% render 'buy-buttons-styles' %}
+{% render 'gift-card-recipient-form-styles' %}
+{% render 'quick-add-styles' %}
+{% render 'quick-add-modal-styles' %}
+{% render 'swatch-styles' %}
+{% render 'variant-picker-styles' %}
+{% render 'product-badges-styles' %}
+
+{% schema %}
+{
+  "name": "t:names.product_card",
+  "blocks": [
+    {
+      "type": "_product-card-group"
+    },
+    {
+      "type": "text"
+    },
+    {
+      "type": "image"
+    },
+    {
+      "type": "buy-buttons"
+    },
+    {
+      "type": "price"
+    },
+    {
+      "type": "review"
+    },
+    {
+      "type": "sku"
+    },
+    {
+      "type": "swatches"
+    },
+    {
+      "type": "_product-card-gallery"
+    },
+    {
+      "type": "product-title"
+    },
+    {
+      "type": "custom-liquid"
+    },
+    {
+      "type": "@app"
+    }
+  ],
+  "tag": null,
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "t:content.resource_reference_product_card"
+    },
+    {
+      "type": "range",
+      "id": "product_card_gap",
+      "label": "t:settings.vertical_gap",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "header",
+      "content": "t:content.appearance"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "t:settings.background_color",
+      "placeholder": "t:settings.default"
+    },
+    {
+      "type": "header",
+      "content": "t:content.borders"
+    },
+    {
+      "type": "select",
+      "id": "border",
+      "label": "t:settings.style",
+      "options": [
+        {
+          "value": "none",
+          "label": "t:options.none"
+        },
+        {
+          "value": "solid",
+          "label": "t:options.solid"
+        }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "range",
+      "id": "border_width",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "t:settings.thickness",
+      "default": 1,
+      "visible_if": "{{ block.settings.border != 'none' }}"
+    },
+    {
+      "type": "range",
+      "id": "border_opacity",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "t:settings.opacity",
+      "default": 100,
+      "visible_if": "{{ block.settings.border != 'none' }}"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "t:settings.color",
+      "placeholder": "t:settings.default",
+      "visible_if": "{{ block.settings.border != 'none' }}"
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "label": "t:settings.border_radius",
+      "min": 0,
+      "max": 32,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "t:content.padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "t:settings.top",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "t:settings.bottom",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-inline-start",
+      "label": "t:settings.left",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-inline-end",
+      "label": "t:settings.right",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    }
+  ]
+}
+{% endschema %}

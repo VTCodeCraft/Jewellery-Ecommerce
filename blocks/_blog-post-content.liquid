@@ -1,0 +1,47 @@
+
+
+<div
+  class="blog-post-content rte"
+  style="
+    {% if block.settings.text_color != blank %}
+      --color: {{ block.settings.text_color }};
+      --color-rgb: {{ block.settings.text_color.rgb }};
+    {% endif %}
+  "
+>
+  <rte-formatter>
+    {{ article.content }}
+  </rte-formatter>
+</div>
+
+{% stylesheet %}
+  .blog-post-content {
+    max-width: var(--normal-content-width);
+    margin: 0 auto;
+    color: var(--color, inherit);
+  }
+
+  .blog-post-content a {
+    color: currentcolor;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:names.content",
+  "settings": [
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "t:settings.text_color",
+      "placeholder": "t:settings.default"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:names.content",
+      "category": "t:categories.blog_post"
+    }
+  ]
+}
+{% endschema %}

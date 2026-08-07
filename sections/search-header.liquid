@@ -1,0 +1,91 @@
+
+
+{% liquid
+  if section.settings.background_color != blank
+    render 'contrast-override', background_color: section.settings.background_color, section_id: section.id
+  endif
+%}
+
+<div
+  class="section-background{% if section.settings.background_color != blank %} color-custom-{{ section.id }}{% endif %}"
+></div>
+<div class="section section--page-width{% if section.settings.background_color != blank %} color-custom-{{ section.id }}{% endif %}">
+  <div
+    class="spacing-style search-page__header"
+    style="
+      --horizontal-alignment: {{ section.settings.alignment }};
+      {% render 'spacing-style', settings: section.settings %}
+    "
+  >
+    {% assign heading_text = 'content.search' | t %}
+
+    {% if search.performed %}
+      {% assign heading_text = 'content.search_results' | t %}
+    {% endif %}
+
+    {% capture heading_text %}
+      <h3>{{ heading_text }}</h3>
+    {% endcapture %}
+
+    {% content_for 'block', id: 'heading', type: '_heading', text: heading_text %}
+    {% content_for 'block', id: 'search', type: '_search-input' %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "t:names.search",
+  "settings": [
+    {
+      "type": "select",
+      "id": "alignment",
+      "label": "t:settings.alignment",
+      "options": [
+        {
+          "value": "flex-start",
+          "label": "t:options.left"
+        },
+        {
+          "value": "center",
+          "label": "t:options.center"
+        },
+        {
+          "value": "flex-end",
+          "label": "t:options.right"
+        }
+      ],
+      "default": "flex-start"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "t:settings.background_color",
+      "placeholder": "t:settings.default"
+    },
+    {
+      "type": "header",
+      "content": "t:content.padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "t:settings.top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "t:settings.bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    }
+  ]
+}
+{% endschema %}

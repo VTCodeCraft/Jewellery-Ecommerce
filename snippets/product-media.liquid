@@ -1,0 +1,139 @@
+{%- doc -%}
+  Renders a product media component.
+
+  @param {object} media - The product media object.
+  @param {boolean} [preview_image_only] - Renders only the preview image without controls.
+  @param {string} [widths] - Image widths for responsive images.
+  @param {string} [sizes] - Image sizes for responsive images.
+  @param {string} [loading] - The loading attribute for the image.
+  @param {object} [block] - The block object.
+  @param {object} [selected_product] - The currently selected product.
+  @param {boolean} [first_3d_model] - Indicates if this is the first 3D model.
+  @param {boolean} [is_main_product_media] - Indicates if this is the main product image.
+  @param {string} [image_ref] - Optional ref attribute for the image element.
+
+  @example
+  {% render 'product-media', media: media, preview_image_only: false, loading: 'lazy' %}
+{%- enddoc -%}
+
+{% liquid
+  assign widths = widths | default: '240, 352, 832, 1200, 1600, 1920, 2560, 3840'
+  assign ref_image_to_transition = ''
+  if settings.transition_to_main_product
+    assign ref_image_to_transition = 'imagesToTransition[]'
+  endif
+%}
+
+<div
+  class="product-media"
+  style="--ratio: {{ media.aspect_ratio }}"
+  data-media-id="{{ media.id }}"
+>
+  {% liquid
+    assign high_res_url = media.preview_image | image_url: width: 3840
+    assign fetch_priority = 'auto'
+    if is_main_product_media
+      assign fetch_priority = 'high'
+    endif
+    assign focal_point_style = '--focal-point: ' | append: media.presentation.focal_point | append: ';'
+  %}
+  {{
+    media.preview_image
+    | image_url: width: 3840
+    | image_tag:
+      widths: widths,
+      alt: media.alt,
+      sizes: sizes,
+      loading: loading,
+      class: 'product-media__image',
+      ref: ref_image_to_transition,
+      data_max_resolution: high_res_url,
+      fetchpriority: fetch_priority,
+      style: focal_point_style,
+      ref: image_ref
+  }}
+
+  {% unless preview_image_only %}
+    {%- case media.media_type -%}
+      {% when 'model' %}
+        <product-model
+          data-media-id="{{ media.id }}"
+        >
+          <button
+            class="button deferred-media__poster-button button-unstyled"
+            ref="deferredMediaPlayButton"
+            on:click="/showDeferredMedia"
+          >
+            {{
+              media.preview_image
+              | image_url: width: 3840
+              | image_tag:
+                widths: widths,
+                alt: media.alt,
+                sizes: sizes,
+                loading: loading,
+                class: 'deferred-media__poster-image'
+            }}
+            <span class="deferred-media__poster-icon">
+              <span class="visually-hidden">{{ 'accessibility.play_model' | t }}</span>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                aria-hidden="true"
+                focusable="false"
+                class="icon"
+                fill="none"
+                viewBox="0 0 18 21"
+              >
+                {% render 'icon', icon: '3d-model' %}
+              </svg>
+            </span>
+          </button>
+
+          <template>
+            {% # Should I be using media_tag here instead like on Dawn? 🤔 %}
+            {{ media | model_viewer_tag }}
+          </template>
+        </product-model>
+        <button
+          class="button button-secondary button-shopify-xr"
+          type="button"
+          data-shopify-xr
+          data-shopify-model3d-id="{{ media.id }}"
+          data-shopify-title="{{ selected_product.title | escape }}"
+          data-shopify-xr-hidden
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            aria-hidden="true"
+            focusable="false"
+            class="icon icon-default"
+            fill="none"
+            viewBox="0 0 18 21"
+          >
+            {% render 'icon', icon: '3d-model' %}
+          </svg>
+          {{ 'actions.view_in_your_space' | t }}
+        </button>
+
+        {%- if first_3d_model -%}
+          <script
+            type="application/json"
+            id="ProductModelJSON-{{ selected_product.id }}"
+          >
+            {{ selected_product.media | where: 'media_type', 'model' | json }}
+          </script>
+        {%- endif -%}
+      {% when 'video', 'external_video' %}
+        {%- render 'video',
+          video: media,
+          video_loop: block.settings.video_loop,
+          widths: widths,
+          sizes: sizes,
+          loading: loading,
+          disable_controls: true
+        -%}
+    {% endcase %}
+  {% endunless %}
+</div>
+
+{% render 'deferred-media-product-model-styles' %}

@@ -1,0 +1,2212 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  color: var(--color-foreground);
+  background: var(--color-background);
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  min-height: 100svh;
+  font-variation-settings: 'slnt' 0;
+}
+
+:root {
+  --hover-lift-amount: 4px;
+  --hover-scale-amount: 1.03;
+  --hover-subtle-zoom-amount: 1.015;
+  --hover-shadow-color: var(--color-shadow);
+  --hover-transition-duration: 0.25s;
+  --hover-transition-timing: ease-out;
+  --surface-transition-duration: 0.3s;
+  --surface-transition-timing: var(--ease-out-quad);
+  --submenu-animation-speed: 360ms;
+  --submenu-animation-easing: cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
+html {
+  /* Firefox */
+  scrollbar-width: thin;
+  scrollbar-color: rgb(var(--color-foreground-rgb) / var(--opacity-40)) var(--color-background);
+  scroll-behavior: smooth;
+}
+
+@media (min-width: 990px) {
+  html:has(.page-wrapper),
+  html:has(.page-wrapper) body {
+    height: 100dvh;
+    overflow: hidden;
+  }
+}
+
+html[scroll-lock],
+html[scroll-lock] .page-wrapper {
+  overflow: hidden;
+}
+
+.page-wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+  transition: margin-right var(--animation-speed) var(--animation-timing-fade-out);
+}
+
+@media (min-width: 990px) {
+  .page-wrapper {
+    height: 100dvh;
+    overflow-y: auto;
+    scroll-behavior: smooth;
+    scrollbar-width: thin;
+    scrollbar-color: rgb(var(--color-foreground-rgb) / var(--opacity-40)) var(--color-background);
+  }
+
+  .page-wrapper--drawer-open shopify-account::part(dialog) {
+    translate: calc(-1 * var(--theme-drawer-width, var(--sidebar-width)));
+  }
+}
+
+.page-wrapper--drawer-open {
+  margin-right: var(--theme-drawer-width, var(--sidebar-width));
+  transition-timing-function: var(--animation-timing-fade-in);
+}
+
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+img {
+  width: 100%;
+  height: auto;
+}
+
+input,
+textarea,
+select {
+  font: inherit;
+  border-radius: var(--style-border-radius-inputs);
+}
+
+/** override ios and firefox defaults */
+select {
+  background-color: var(--color-background);
+  color: currentcolor;
+}
+
+.product-card,
+.collection-card,
+.predictive-search-results__card--product,
+.predictive-search-results__card {
+  position: relative;
+  transition: transform var(--hover-transition-duration) var(--hover-transition-timing),
+    box-shadow var(--hover-transition-duration) var(--hover-transition-timing);
+  z-index: var(--layer-flat);
+}
+
+.product-card__link {
+  position: absolute;
+  inset: 0;
+}
+
+.product-card__content {
+  position: relative;
+}
+
+.product-card__content {
+  cursor: pointer;
+}
+
+@media (any-pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .card-hover-effect-lift .product-card:hover,
+  .card-hover-effect-lift .collection-card:hover,
+  .card-hover-effect-lift .predictive-search-results__card:hover {
+    transform: translateY(calc(-1 * var(--hover-lift-amount)));
+  }
+
+  .card-hover-effect-scale .product-card:hover,
+  .card-hover-effect-scale .collection-card:hover,
+  .card-hover-effect-scale .predictive-search-results__card:hover {
+    transform: scale(var(--hover-scale-amount));
+  }
+
+  .card-hover-effect-subtle-zoom .card-gallery,
+  .card-hover-effect-subtle-zoom .collection-card__image,
+  .card-hover-effect-subtle-zoom .product-card__image {
+    overflow: hidden;
+    transition: transform var(--hover-transition-duration) var(--hover-transition-timing);
+  }
+
+  .card-hover-effect-subtle-zoom .product-card:hover .card-gallery,
+  .card-hover-effect-subtle-zoom .collection-card:hover .collection-card__image,
+  .card-hover-effect-subtle-zoom .product-card:hover .product-card__image,
+  .card-hover-effect-subtle-zoom .predictive-search-results__card:hover {
+    transform: scale(var(--hover-subtle-zoom-amount));
+  }
+}
+
+dialog {
+  /* the ::backdrop inherits from the originating element, custom properties must be set on the dialog element */
+  --backdrop-color-rgb: var(--color-shadow-rgb);
+
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+}
+
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  overflow-wrap: break-word;
+}
+
+.wrap-text {
+  overflow-wrap: break-word;
+  word-break: break-word;
+  hyphens: auto;
+}
+
+p:empty {
+  display: none;
+}
+
+:first-child:is(p, h1, h2, h3, h4, h5, h6),
+:first-child:empty + :where(p, h1, h2, h3, h4, h5, h6) {
+  margin-block-start: 0;
+}
+
+/* Remove bottom margin from last text item, or previous to last if the last is empty */
+:last-child:is(p, h1, h2, h3, h4, h5, h6),
+:where(p, h1, h2, h3, h4, h5, h6):nth-child(2):has(+ :last-child:empty) {
+  margin-block-end: 0;
+}
+
+/* view transitions */
+
+/*
+ * The cross-document (MPA) opt-in `@view-transition { navigation: auto }` is declared per-layout
+ * (layout/theme.liquid and layout/password.liquid), because this stylesheet is shared by both layouts
+ * and a static stylesheet can't read theme settings.
+ * It is gated on the same `settings.page_transition_enabled or settings.transition_to_main_product` condition as the
+ * render blocker, so the opt-in and its opt-out switch can never disagree. The rules below only
+ * take effect once an `@view-transition` opt-in is active, so they are inert without it.
+ */
+@media (prefers-reduced-motion: no-preference) {
+  /* Keep page interactive while view transitions are running */
+  :root {
+    view-transition-name: none;
+  }
+
+  /* Have the root transition during page navigation */
+  html:active-view-transition-type(page-navigation),
+  html:active-view-transition-type(product-image-transition) {
+    view-transition-name: root-custom;
+  }
+
+  ::view-transition {
+    pointer-events: none;
+  }
+
+  html:active-view-transition-type(page-navigation) main[data-page-transition-enabled='true'] {
+    view-transition-name: main-content;
+  }
+
+  html:active-view-transition-type(page-navigation) main[data-product-transition='true'][data-template*='product'] {
+    view-transition-name: none;
+  }
+
+  ::view-transition-old(main-content) {
+    animation: var(--view-transition-old-main-content);
+  }
+
+  ::view-transition-new(main-content) {
+    animation: var(--view-transition-new-main-content);
+  }
+
+  html:active-view-transition-type(product-image-transition) {
+    [data-view-transition-type='product-image-transition'] {
+      view-transition-name: product-image-transition;
+    }
+
+    [data-view-transition-type='product-details'] {
+      view-transition-name: product-details;
+    }
+  }
+
+  ::view-transition-group(product-image-transition) {
+    z-index: 1;
+  }
+
+  ::view-transition-group(product-image-transition),
+  ::view-transition-group(product-details) {
+    animation-duration: var(--animation-speed);
+    animation-timing-function: var(--animation-easing);
+  }
+
+  ::view-transition-old(product-image-transition),
+  ::view-transition-new(product-image-transition) {
+    block-size: 100%;
+    overflow: hidden;
+    object-fit: cover;
+    animation-duration: 0.25s;
+    animation-timing-function: var(--animation-easing);
+  }
+
+  ::view-transition-new(product-details) {
+    animation: var(--view-transition-new-main-content);
+  }
+}
+
+/* Focus */
+*:focus-visible {
+  outline: var(--focus-outline-width) solid currentcolor;
+  outline-offset: var(--focus-outline-offset);
+}
+
+@supports not selector(:focus-visible) {
+  *:focus {
+    outline: var(--focus-outline-width) solid currentcolor;
+    outline-offset: var(--focus-outline-offset);
+  }
+}
+
+.focus-inset {
+  outline-offset: calc(var(--focus-outline-width) * -1);
+}
+
+/* Layout */
+.content-for-layout {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.content-for-layout > .shopify-section:last-child {
+  flex-grow: 1;
+}
+
+/* Set up page widths & margins */
+.page-width-wide,
+.page-width-normal,
+.page-width-narrow,
+.page-width-content {
+  --page-margin: 16px;
+}
+
+@media screen and (min-width: 750px) {
+  .page-width-wide,
+  .page-width-normal,
+  .page-width-narrow,
+  .page-width-content {
+    --page-margin: 40px;
+  }
+}
+
+.page-width-wide {
+  /* NOTE: This results in a page width of 2400px because of how we set up margins with grid */
+  --page-content-width: var(--wide-page-width);
+  --page-width: calc(var(--page-content-width) + (var(--page-margin) * 2));
+}
+
+.page-width-normal {
+  --page-content-width: var(--normal-page-width);
+  --page-width: calc(var(--page-content-width) + (var(--page-margin) * 2));
+}
+
+.page-width-narrow,
+.page-width-content {
+  /* NOTE: This results in a page width of 1400px because of how we set up margins with grid */
+  --page-content-width: var(--narrow-page-width);
+  --page-width: calc(var(--page-content-width) + (var(--page-margin) * 2));
+}
+
+.page-width-content {
+  --page-content-width: var(--normal-content-width);
+  --page-width: calc(var(--page-content-width) + (var(--page-margin) * 2));
+}
+
+/* Section width full vs. page
+   The reason we use a grid to contain the section is to allow for the section to have a
+   full-width background image even if the section content is constrained by the page width. Do not try
+   to rewrite this to max-width: --page-width; margin: 0 auto;, it doesn't work. */
+.section {
+  --full-page-grid-central-column-width: min(
+    var(--page-width) - var(--page-margin) * 2,
+    calc(100% - var(--page-margin) * 2)
+  );
+  --full-page-grid-margin: minmax(var(--page-margin), 1fr);
+  --full-page-grid-with-margins: var(--full-page-grid-margin) var(--full-page-grid-central-column-width)
+    var(--full-page-grid-margin);
+
+  /* Utility variable gives the grid's first column width. Provides an offset width for components like carousels */
+  --util-page-margin-offset: max(
+    var(--page-margin),
+    calc((100% - min(var(--page-content-width), 100% - var(--page-margin) * 2)) / 2)
+  );
+
+  /* Offset for full-width sections to account for the page margin,
+  used for Marquee — note that --util-page-margin-offset doesn't work here */
+  --full-page-margin-inline-offset: calc(((100vw - var(--full-page-grid-central-column-width)) / 2) * -1);
+
+  width: 100%;
+
+  /* This is required to make background images work, which are <img> rendered absolutely */
+  position: relative;
+
+  /* Set up the grid */
+  display: grid;
+  grid-template-columns: var(--full-page-grid-with-margins);
+  min-height: var(--section-min-height, 'auto');
+}
+
+/* Place all direct children in the center column by default */
+.section > * {
+  grid-column: 2;
+}
+
+/* Make the actual section background transparent, and instead apply it to a separate sibling element to enable stacking with hero shadow  */
+.shopify-section:not(.header-section) :is(.section, .cart-summary) {
+  background: transparent;
+}
+
+.shopify-section:not(.header-section):has(.section) {
+  position: relative;
+}
+
+.shopify-section:not(.header-section) .section-background {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: var(--layer-section-background);
+  background-color: var(--color-background);
+}
+
+/* For page-width sections, all content goes in the center column */
+.section--page-width > * {
+  grid-column: 2;
+}
+
+/* For full-width sections, content spans all columns */
+.section--full-width > * {
+  grid-column: 1 / -1;
+}
+
+@media screen and (max-width: 749px) {
+  .section--mobile-full-width > * {
+    grid-column: 1 / -1;
+  }
+}
+
+/* Some page-width sections should still extend all the way to the right edge of the page, e.g. collection carousel */
+.section--page-width.section--full-width-right > * {
+  grid-column: 2 / 4;
+}
+
+/* For full-width sections with margin, content still spans full width but with space on the sides */
+.section--full-width.section--full-width-margin > * {
+  grid-column: 1 / -1;
+
+  @media screen and (min-width: 750px) {
+    padding-left: var(--page-margin);
+    padding-right: var(--page-margin);
+  }
+}
+
+/* Some section content break out to full width of the page */
+.section > .force-full-width {
+  grid-column: 1 / -1;
+}
+
+.section--height-small {
+  --section-min-height: var(--section-height-small);
+}
+
+.section--height-medium {
+  --section-min-height: var(--section-height-medium);
+}
+
+.section--height-large {
+  --section-min-height: var(--section-height-large);
+}
+
+.section--height-full-screen {
+  --section-min-height: 100svh;
+}
+
+.section-content-wrapper.section-content-wrapper {
+  min-height: calc(var(--section-min-height, 'auto') - var(--section-height-offset, 0px));
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+/* Utility */
+
+.hidden {
+  /* stylelint-disable-next-line declaration-no-important */
+  display: none !important;
+}
+
+@media screen and (max-width: 749px) {
+  .hidden--mobile,
+  .mobile\:hidden {
+    /* stylelint-disable-next-line declaration-no-important */
+    display: none !important;
+  }
+}
+
+@media screen and (min-width: 750px) {
+  .hidden--desktop,
+  .desktop\:hidden {
+    /* stylelint-disable-next-line declaration-no-important */
+    display: none !important;
+  }
+}
+
+.hide-when-empty:empty {
+  /* stylelint-disable-next-line declaration-no-important */
+  display: none !important;
+}
+
+.visually-hidden:not(:focus, :active) {
+  /* stylelint-disable-next-line declaration-no-important */
+  position: absolute !important;
+  overflow: hidden;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  clip: rect(0 0 0 0);
+  /* stylelint-disable-next-line declaration-no-important */
+  word-wrap: normal !important;
+}
+
+.contents {
+  display: contents;
+}
+
+.flex {
+  display: flex;
+  gap: var(--gap-md);
+}
+
+.grid {
+  --centered-column-number: 12;
+  --full-width-column-number: 14;
+  --centered: column-1 / span var(--centered-column-number);
+  --full-width: column-0 / span var(--full-width-column-number);
+
+  display: flex;
+  flex-direction: column;
+}
+
+@media screen and (min-width: 750px) {
+  .grid {
+    display: grid;
+    gap: 0;
+    grid-template-columns: var(--margin-4xl) repeat(var(--centered-column-number), minmax(0, 1fr)) var(--margin-4xl);
+    grid-template-areas: 'column-0 column-1 column-2 column-3 column-4 column-5 column-6 column-7 column-8 column-9 column-10 column-11 column-12 column-13';
+  }
+}
+
+@media screen and (min-width: 1400px) {
+  .grid {
+    grid-template-columns:
+      1fr repeat(
+        var(--centered-column-number),
+        minmax(0, calc((var(--page-width) - var(--page-margin) * 2) / var(--centered-column-number)))
+      )
+      1fr;
+  }
+}
+
+.flex {
+  display: flex;
+  gap: var(--gap-md);
+}
+
+.flip-x {
+  scale: -1 1;
+}
+
+.flip-y {
+  scale: 1 -1;
+}
+
+.list-unstyled {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.text-left {
+  --text-align: left;
+
+  text-align: left;
+}
+
+.text-center {
+  --text-align: center;
+
+  text-align: center;
+}
+
+.text-right {
+  --text-align: right;
+
+  text-align: right;
+}
+
+.text-inherit {
+  color: inherit;
+}
+
+.user-select-text {
+  user-select: text;
+}
+
+.justify-left {
+  justify-content: left;
+}
+
+.justify-center {
+  justify-content: center;
+}
+
+.justify-right {
+  justify-content: right;
+}
+
+.title--aligned-center {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.background-image-container {
+  overflow: hidden;
+  position: absolute;
+  inset: 0;
+  opacity: var(--image-opacity);
+}
+
+.background-image-container img,
+.background-image-container svg {
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+}
+
+.background-image-fit img,
+.background-image-fit svg {
+  object-fit: contain;
+}
+
+.svg-wrapper {
+  color: currentcolor;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: var(--icon-size-sm);
+  height: var(--icon-size-sm);
+  pointer-events: none;
+}
+
+.svg-wrapper--smaller {
+  width: var(--icon-size-2xs);
+  height: var(--icon-size-2xs);
+}
+
+.svg-wrapper--small {
+  width: var(--icon-size-xs);
+  height: var(--icon-size-xs);
+}
+
+.svg-wrapper > svg {
+  width: var(--icon-size-sm);
+  height: var(--icon-size-sm);
+}
+
+.relative {
+  position: relative;
+}
+
+/* Icons */
+.icon-success,
+.icon-error {
+  width: var(--icon-size-md);
+  height: var(--icon-size-md);
+  flex-shrink: 0;
+}
+
+.icon-success {
+  color: var(--color-success);
+}
+
+.icon-error {
+  fill: var(--color-error);
+}
+
+.icon-default {
+  fill: currentColor;
+}
+
+[data-placeholder='true'] * {
+  cursor: default;
+}
+
+/* Base text and heading styles */
+body,
+.paragraph:not(.button),
+.paragraph > *,
+.text-block.paragraph :is(h1, h2, h3, h4, h5, h6) {
+  font-family: var(--font-paragraph--family);
+  font-style: var(--font-paragraph--style);
+  font-weight: var(--font-paragraph--weight);
+  font-size: var(--font-paragraph--size);
+  line-height: var(--font-paragraph--line-height);
+  text-transform: var(--font-paragraph--case);
+  -webkit-font-smoothing: antialiased;
+  color: var(--color, var(--color-foreground));
+}
+
+/* Ensure inputs with type presets maintain minimum 16px on mobile to prevent iOS zoom */
+@media screen and (max-width: 1200px) {
+  input.paragraph.paragraph,
+  input.paragraph.paragraph:not([type]),
+  textarea.paragraph.paragraph,
+  select.paragraph.paragraph {
+    font-size: max(1rem, var(--font-paragraph--size));
+  }
+}
+
+.paragraph > small {
+  font-size: smaller;
+}
+
+/* Typography presets */
+
+h1,
+.h1.h1,
+.text-block.h1 > *,
+.text-block.h1 :is(h1, h2, h3, h4, h5, h6) {
+  font-family: var(--font-h1--family);
+  font-style: var(--font-h1--style);
+  font-weight: var(--font-h1--weight);
+  font-size: var(--font-h1--size);
+  line-height: var(--font-h1--line-height);
+  letter-spacing: var(--font-h1--letter-spacing);
+  text-transform: var(--font-h1--case);
+  color: var(--color);
+}
+
+@media screen and (max-width: 1200px) {
+  input.h1.h1,
+  textarea.h1.h1,
+  select.h1.h1 {
+    font-size: max(1rem, var(--font-h1--size));
+  }
+}
+
+h2,
+.h2.h2,
+.text-block.h2 > *,
+.text-block.h2 :is(h1, h2, h3, h4, h5, h6) {
+  font-family: var(--font-h2--family);
+  font-style: var(--font-h2--style);
+  font-weight: var(--font-h2--weight);
+  font-size: var(--font-h2--size);
+  line-height: var(--font-h2--line-height);
+  letter-spacing: var(--font-h2--letter-spacing);
+  text-transform: var(--font-h2--case);
+  color: var(--color);
+}
+
+@media screen and (max-width: 1200px) {
+  input.h2.h2,
+  textarea.h2.h2,
+  select.h2.h2 {
+    font-size: max(1rem, var(--font-h2--size));
+  }
+}
+
+h3,
+.h3,
+.h3.h3,
+.text-block.h3 > *,
+.text-block.h3 :is(h1, h2, h3, h4, h5, h6) {
+  font-family: var(--font-h3--family);
+  font-style: var(--font-h3--style);
+  font-weight: var(--font-h3--weight);
+  font-size: var(--font-h3--size);
+  line-height: var(--font-h3--line-height);
+  letter-spacing: var(--font-h3--letter-spacing);
+  text-transform: var(--font-h3--case);
+  color: var(--color);
+}
+
+@media screen and (max-width: 1200px) {
+  input.h3,
+  textarea.h3,
+  select.h3 {
+    font-size: max(1rem, var(--font-h3--size));
+  }
+}
+
+h4,
+.h4.h4,
+.text-block.h4 > *,
+.text-block.h4 :is(h1, h2, h3, h4, h5, h6) {
+  font-family: var(--font-h4--family);
+  font-style: var(--font-h4--style);
+  font-weight: var(--font-h4--weight);
+  font-size: var(--font-h4--size);
+  line-height: var(--font-h4--line-height);
+  letter-spacing: var(--font-h4--letter-spacing);
+  text-transform: var(--font-h4--case);
+  color: var(--color);
+}
+
+@media screen and (max-width: 1200px) {
+  input.h4.h4,
+  textarea.h4.h4,
+  select.h4.h4 {
+    font-size: max(1rem, var(--font-h4--size));
+  }
+}
+
+h5,
+.h5.h5,
+.text-block.h5 > *,
+.text-block.h5 :is(h1, h2, h3, h4, h5, h6) {
+  font-family: var(--font-h5--family);
+  font-style: var(--font-h5--style);
+  font-weight: var(--font-h5--weight);
+  font-size: var(--font-h5--size);
+  line-height: var(--font-h5--line-height);
+  letter-spacing: var(--font-h5--letter-spacing);
+  text-transform: var(--font-h5--case);
+  color: var(--color);
+}
+
+@media screen and (max-width: 1200px) {
+  input.h5.h5,
+  textarea.h5.h5,
+  select.h5.h5 {
+    font-size: max(1rem, var(--font-h5--size));
+  }
+}
+
+h6,
+.h6.h6,
+.text-block.h6 > *,
+.text-block.h6 :is(h1, h2, h3, h4, h5, h6) {
+  font-family: var(--font-h6--family);
+  font-style: var(--font-h6--style);
+  font-weight: var(--font-h6--weight);
+  font-size: var(--font-h6--size);
+  line-height: var(--font-h6--line-height);
+  letter-spacing: var(--font-h6--letter-spacing);
+  text-transform: var(--font-h6--case);
+  color: var(--color);
+}
+
+@media screen and (max-width: 1200px) {
+  input.h6.h6,
+  textarea.h6.h6,
+  select.h6.h6 {
+    font-size: max(1rem, var(--font-h6--size));
+  }
+}
+
+:first-child:is(.h1, .h2, .h3, .h4, .h5, .h6) {
+  margin-block-start: 0;
+}
+
+:last-child:is(.h1, .h2, .h3, .h4, .h5, .h6) {
+  margin-block-end: 0;
+}
+
+/* Links */
+a {
+  color: currentcolor;
+  text-decoration-color: transparent;
+  text-decoration-thickness: 0.075em;
+  text-underline-offset: 0.125em;
+  transition: text-decoration-color var(--animation-speed) var(--animation-easing),
+    color var(--animation-speed) var(--animation-easing);
+}
+
+:is(h1, h2, h3, h4, h5, h6, p) > a:hover {
+  color: rgb(var(--color-rgb, var(--color-foreground-rgb)) / 0.7);
+}
+
+/* Add underline to text using our paragraph styles only. */
+p:not(.h1, .h2, .h3, .h4, .h5, .h6) a:where(:not(.button, .button-secondary)),
+.rte :is(p, ul, ol, table):not(.h1, .h2, .h3, .h4, .h5, .h6) a:where(:not(.button, .button-secondary)) {
+  text-decoration-color: currentcolor;
+
+  &:hover {
+    text-decoration-color: currentcolor;
+    color: rgb(var(--color-rgb, var(--color-foreground-rgb)) / 0.7);
+  }
+}
+
+.container-background-image {
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center center;
+}
+
+details[open] .summary-closed {
+  display: none;
+}
+
+details:not([open]) .summary-open {
+  display: none;
+}
+
+details[open] > summary .icon-animated > svg {
+  transform: rotate(180deg);
+}
+
+/* iOS fix: hide the default arrow on the summary */
+summary::-webkit-details-marker {
+  display: none;
+}
+
+/* When header is transparent, pull the first main content section up to sit under the floating header */
+body:has(.header[transparent]) .content-for-layout > .shopify-section:first-child {
+  margin-top: calc(var(--header-group-height) * -1);
+}
+
+body:has(.header[transparent]) #header-group > .header-section {
+  z-index: var(--layer-menu-drawer);
+}
+
+/* All other header group content should be beneath the floating header,
+but above the rest of the page content */
+body:has(.header[transparent]) #header-group > *:not(.header-section) {
+  z-index: calc(var(--layer-menu-drawer) - 1);
+}
+
+.text-block {
+  width: 100%;
+}
+
+.text-block > *:first-child,
+.text-block > *:first-child:empty + * {
+  margin-block-start: 0;
+}
+
+.text-block > *:last-child,
+.text-block > *:has(+ *:last-child:empty) {
+  margin-block-end: 0;
+}
+
+/* This is to deal with the margin applied to the p when custom styles are enabled. The p isn't the first child anymore due to the style tag */
+.text-block > style + * {
+  margin-block-start: 0;
+}
+
+/* Dialog */
+.dialog-modal {
+  border: none;
+  box-shadow: var(--shadow-popover);
+
+  @media screen and (min-width: 750px) {
+    border-radius: var(--style-border-radius-popover);
+    max-width: var(--normal-content-width);
+  }
+
+  @media screen and (max-width: 749px) {
+    max-width: 100%;
+    max-height: 100%;
+    height: 100dvh;
+    width: 100dvw;
+    padding: var(--padding-md);
+  }
+}
+
+.dialog-modal::backdrop {
+  transition: backdrop-filter var(--animation-speed) var(--animation-easing);
+  backdrop-filter: brightness(1);
+  background: rgb(var(--backdrop-color-rgb) / var(--backdrop-opacity));
+}
+
+.dialog-modal[open] {
+  animation: elementSlideInTop var(--animation-speed) var(--animation-easing) forwards;
+
+  &::backdrop {
+    animation: backdropFilter var(--animation-speed) var(--animation-easing) forwards;
+    transition: opacity var(--animation-speed) var(--animation-easing);
+  }
+}
+
+.dialog-modal.dialog-closing {
+  animation: elementSlideOutTop var(--animation-speed) var(--animation-easing) forwards;
+
+  &::backdrop {
+    opacity: 0;
+  }
+}
+
+/* stylelint-disable value-keyword-case */
+.dialog-drawer {
+  --dialog-drawer-opening-animation: move-and-fade;
+  --dialog-drawer-closing-animation: move-and-fade;
+}
+
+.dialog-drawer--right {
+  --dialog-drawer-opening-animation: move-and-fade;
+  --dialog-drawer-closing-animation: move-and-fade;
+}
+/* stylelint-enable value-keyword-case */
+
+.dialog-drawer[open] {
+  --start-x: var(--custom-transform-from, 100%);
+  --end-x: var(--custom-transform-to, 0px);
+  --start-opacity: 1;
+
+  animation: var(--dialog-drawer-opening-animation) var(--animation-speed) var(--animation-easing) forwards;
+}
+
+.dialog-drawer[open].dialog-closing {
+  --start-x: 0px;
+  --end-x: 100%;
+  --start-opacity: 1;
+  --end-opacity: 1;
+
+  animation: var(--dialog-drawer-closing-animation) var(--animation-speed) var(--animation-easing);
+}
+
+.dialog-drawer--right[open] {
+  --start-x: -100%;
+  --start-opacity: 1;
+}
+
+.dialog-drawer--right[open].dialog-closing {
+  --start-x: 0px;
+  --end-x: -100%;
+  --start-opacity: 1;
+  --end-opacity: 1;
+
+  animation: var(--dialog-drawer-closing-animation) var(--animation-speed) var(--animation-easing);
+}
+
+/* Buttons */
+.button,
+.button-secondary,
+.button-custom,
+button.shopify-payment-button__button--unbranded {
+  --text-align: center;
+
+  display: grid;
+  align-content: center;
+  text-decoration: none;
+  text-align: var(--text-align);
+  color: var(--button-color);
+  appearance: none;
+  background-color: var(--button-background-color);
+  border: none;
+  font-family: var(--font-paragraph--family);
+  font-style: var(--font-paragraph--style);
+  font-weight: var(--font-paragraph--weight);
+  font-size: var(--font-paragraph--size);
+  line-height: var(--font-paragraph--line-height);
+  margin-block: 0;
+  transition: color var(--animation-speed) var(--animation-easing),
+    box-shadow var(--animation-speed) var(--animation-easing),
+    background-color var(--animation-speed) var(--animation-easing);
+  cursor: pointer;
+  width: fit-content;
+  box-shadow: inset 0 0 0 var(--button-border-width) var(--button-border-color);
+  padding-block: var(--button-padding-block);
+  padding-inline: var(--button-padding-inline);
+}
+
+.button {
+  font-family: var(--button-font-family-primary);
+  text-transform: var(--button-text-case-primary);
+  border-radius: var(--style-border-radius-buttons-primary);
+}
+
+.button:not(.button-secondary, .button-unstyled) {
+  outline-color: var(--button-focus-outline-color, var(--button-background-color));
+}
+
+.button-secondary {
+  font-family: var(--button-font-family-secondary);
+  text-transform: var(--button-text-case-secondary);
+  border-radius: var(--style-border-radius-buttons-secondary);
+}
+
+button.shopify-payment-button__button--unbranded {
+  font-family: var(--button-font-family-primary);
+  text-transform: var(--button-text-case-primary);
+}
+
+textarea,
+input:not([type='checkbox'], [type='radio']) {
+  background-color: var(--color-input-background);
+  border-color: var(--color-input-border);
+}
+
+textarea::placeholder,
+input::placeholder {
+  color: rgb(var(--color-input-text-rgb) / var(--opacity-muted-text));
+}
+
+textarea:not(:placeholder-shown)::placeholder,
+input:not(:placeholder-shown)::placeholder {
+  opacity: 0;
+}
+
+/* The declaration above is messing with buttons that have an attribute of hidden as it overwrites the display value */
+.button[hidden] {
+  display: none;
+}
+
+.button[aria-disabled='true'],
+.button-secondary[aria-disabled='true'],
+.button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.button,
+button.shopify-payment-button__button--unbranded {
+  --button-color: var(--color-primary-button-text);
+  --button-background-color: var(--color-primary-button-background);
+  --button-border-color: var(--color-primary-button-border);
+  --button-border-width: var(--style-border-width-primary);
+  --button-focus-outline-color: var(--color-primary-button-focus-outline);
+}
+
+.button:hover,
+button.shopify-payment-button__button--unbranded:hover:not([disabled]) {
+  --button-color: var(--color-primary-button-hover-text);
+  --button-background-color: var(--color-primary-button-hover-background);
+  --button-border-color: var(--color-primary-button-hover-border);
+}
+
+.button-secondary {
+  --button-color: var(--color-secondary-button-text);
+  --button-background-color: var(--color-secondary-button-background);
+  --button-border-color: var(--color-secondary-button-border);
+  --button-border-width: var(--style-border-width-secondary);
+}
+
+.button-secondary:hover {
+  --button-color: var(--color-secondary-button-hover-text);
+  --button-background-color: var(--color-secondary-button-hover-background);
+  --button-border-color: var(--color-secondary-button-hover-border);
+}
+
+.button-custom {
+  --button-color: var(--color-primary-button-text);
+  --button-background-color: var(--color-primary-button-background);
+  --button-border-color: var(--color-primary-button-border);
+  --button-border-width: var(--style-border-width-secondary);
+  --button-focus-outline-color: var(--color-primary-button-focus-outline);
+
+  font-family: var(--button-font-family-primary);
+  text-transform: var(--button-text-case-primary);
+  border-radius: var(--style-border-radius-buttons-primary);
+  outline-color: var(--button-focus-outline-color, var(--button-background-color));
+}
+
+.button-custom:hover {
+  --button-color: var(--color-primary-button-hover-text);
+  --button-background-color: var(--color-primary-button-hover-background);
+  --button-border-color: var(--color-primary-button-hover-border);
+}
+
+/* Needed to override the default Shopify styles */
+button.shopify-payment-button__button--unbranded:hover:not([disabled]) {
+  background-color: var(--button-background-color);
+}
+
+.button-unstyled {
+  display: block;
+  padding: 0;
+  background-color: inherit;
+  color: var(--color-foreground);
+  border: 0;
+  border-radius: 0;
+  overflow: hidden;
+  box-shadow: none;
+  font-family: var(--font-paragraph--family);
+  font-style: var(--font-paragraph--style);
+  font-size: var(--font-paragraph--size);
+}
+
+.button-unstyled:hover {
+  background-color: inherit;
+}
+
+/* Default hover dim for link-style buttons, scoped via :where() so component-specific
+   hover rules (.facets__clear-all-link, .header-actions__action, etc.) still win. */
+:where(.button-unstyled):hover {
+  --hover-color-rgb: var(--color-foreground-rgb);
+
+  color: rgb(var(--hover-color-rgb) / var(--opacity-70));
+}
+
+.button-unstyled--with-icon {
+  color: var(--color-foreground);
+  display: flex;
+  gap: var(--gap-2xs);
+  align-items: center;
+}
+
+.button-unstyled--transparent {
+  background-color: transparent;
+  box-shadow: none;
+}
+
+/* Collapsible row */
+
+.icon-caret svg {
+  transition: transform var(--animation-speed) var(--animation-easing);
+}
+
+.icon-caret--forward svg {
+  transform: rotate(-90deg);
+}
+
+.icon-caret--backward svg {
+  transform: rotate(90deg);
+}
+
+summary {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  list-style: none;
+  padding-block: var(--padding-sm);
+}
+
+summary:hover {
+  color: rgb(var(--color-foreground-rgb) / var(--opacity-80));
+}
+
+summary .svg-wrapper {
+  margin-inline-start: auto;
+  height: var(--icon-size-xs);
+  width: var(--icon-size-xs);
+  transition: transform var(--animation-speed) var(--animation-easing);
+}
+
+/* Shared plus/minus icon animations */
+summary .icon-plus :is(.horizontal, .vertical) {
+  transition: transform var(--animation-speed) var(--animation-easing);
+  transform: rotate(0deg);
+  transform-origin: 50% 50%;
+  opacity: 1;
+}
+
+details[open] > summary .icon-plus .horizontal {
+  transform: rotate(90deg);
+}
+
+details[open] > summary .icon-plus .vertical {
+  transform: rotate(90deg);
+  opacity: 0;
+}
+
+/* Animate the UI elements in only after the view transition is complete */
+.close-button {
+  position: fixed;
+  top: var(--margin-lg);
+  right: var(--margin-lg);
+  width: var(--minimum-touch-target);
+  height: var(--minimum-touch-target);
+  z-index: var(--layer-flat);
+  background-color: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  /* For the outline radius */
+  border-radius: 50%;
+}
+
+/* This triggers iOS < 16.4. The outline bug is not recognized as a lack of @supports */
+
+@supports not (background-color: rgb(from red 150 g b / alpha)) {
+  /**
+    There is a bug in safari < 16.4 that causes the outline to not follow the elements border radius. This is a workaround.
+    Using element selector to increase specificity.
+  **/
+
+  .close-button:focus-visible {
+    outline: none;
+    overflow: visible;
+  }
+
+  .close-button:focus-visible::after {
+    content: '';
+    position: absolute;
+    inset: calc(-1 * var(--focus-outline-offset));
+    border: var(--focus-outline-width) solid currentColor;
+    border-radius: 50%;
+    display: inherit;
+  }
+}
+
+.dialog--closed .close-button {
+  animation: elementSlideOutBottom calc(var(--animation-speed) * 0.5) var(--animation-easing) forwards;
+}
+
+.close-button:hover {
+  background-color: transparent;
+  opacity: 0.8;
+}
+
+.close-button svg {
+  width: var(--icon-size-xs);
+  height: var(--icon-size-xs);
+}
+
+/* Product media */
+.product-media {
+  display: flex;
+  flex: 1;
+}
+
+.sticky-content {
+  position: sticky;
+  top: var(--sticky-header-offset, 0);
+  z-index: var(--layer-flat);
+}
+
+@media screen and (min-width: 750px) {
+  .sticky-content--desktop,
+  .sticky-content--desktop.full-height--desktop > .group-block {
+    position: sticky;
+    top: var(--sticky-header-offset, 0);
+    z-index: var(--layer-flat);
+  }
+}
+
+.price,
+.compare-at-price,
+.unit-price {
+  white-space: nowrap;
+}
+
+.unit-price {
+  display: block;
+  font-size: min(0.85em, var(--font-paragraph--size));
+  color: rgb(var(--color-rgb, var(--color-foreground-rgb)) / var(--opacity-subdued-text));
+}
+
+.tax-note.tax-note.tax-note {
+  font-size: min(0.85em, var(--font-paragraph--size));
+  font-weight: var(--font-paragraph--weight);
+  color: rgb(var(--color-rgb, var(--color-foreground-rgb)) / var(--opacity-subdued-text));
+}
+
+.tax-note:empty {
+  display: none;
+}
+
+product-price.text-block:is(.h1, .h2, .h3, .h4, .h5, .h6) > *:not(.tax-note) {
+  margin-block: 0;
+}
+
+/* Volume pricing note should match unit-price styling (small, grey text) */
+product-price .volume-pricing-note,
+product-price.text-block:is(.h1, .h2, .h3, .h4, .h5, .h6) .volume-pricing-note {
+  display: block;
+  font-family: var(--font-body--family);
+  font-weight: normal;
+  font-size: var(--font-size--xs);
+  line-height: normal;
+  letter-spacing: normal;
+  text-transform: none;
+  color: rgb(var(--color-rgb, var(--color-foreground-rgb)) / var(--opacity-subdued-text));
+}
+
+.compare-at-price {
+  color: rgb(var(--color-rgb, var(--color-foreground-rgb)) / var(--opacity-subdued-text));
+  text-decoration-line: line-through;
+  text-decoration-thickness: 1.5px;
+  text-decoration-color: rgb(var(--color-rgb, var(--color-foreground-rgb)) / var(--opacity-30));
+}
+
+.price-item__group {
+  display: inline-block;
+}
+
+/* Spacing style */
+.spacing-style {
+  --spacing-scale: var(--spacing-scale-md);
+
+  @media screen and (min-width: 990px) {
+    --spacing-scale: var(--spacing-scale-default);
+  }
+
+  /* Must disable this, when you use these with calc and another unit type, things break — see logo.liquid */
+  /* stylelint-disable length-zero-no-unit */
+  --padding-block: 0px;
+  --padding-block-start: var(--padding-block, 0px);
+  --padding-block-end: var(--padding-block, 0px);
+  --padding-inline: 0px;
+  --padding-inline-start: var(--padding-inline, 0px);
+  --padding-inline-end: var(--padding-inline, 0px);
+  --margin-block: 0px;
+  --margin-block-start: var(--margin-block, 0px);
+  --margin-block-end: var(--margin-block, 0px);
+  --margin-inline: 0px;
+  --margin-inline-start: var(--margin-inline, 0px);
+  --margin-inline-end: var(--margin-inline, 0px);
+}
+
+.spacing-style,
+.inherit-spacing {
+  padding-block: calc(var(--padding-block-start) + var(--section-top-offset, 0px)) var(--padding-block-end);
+  padding-inline: var(--padding-inline-start) var(--padding-inline-end);
+  margin-block: var(--margin-block-start) var(--margin-block-end);
+  margin-inline: var(--margin-inline-start) var(--margin-inline-end);
+}
+
+/* Size style */
+.size-style {
+  width: var(--size-style-width-mobile, var(--size-style-width));
+  height: var(--size-style-height-mobile, var(--size-style-height));
+
+  @media screen and (min-width: 750px) {
+    width: var(--size-style-width);
+    height: var(--size-style-height);
+  }
+}
+
+/* Custom Typography style */
+.custom-typography,
+.custom-typography > * {
+  font-family: var(--font-family);
+  font-weight: var(--font-weight);
+  text-transform: var(--text-transform);
+  text-wrap: var(--text-wrap);
+  line-height: var(--line-height);
+  letter-spacing: var(--letter-spacing);
+}
+
+.custom-typography {
+  h1 {
+    line-height: var(--line-height--display, var(--line-height));
+  }
+
+  h2,
+  h3,
+  h4 {
+    line-height: var(--line-height--heading, var(--line-height));
+  }
+
+  p {
+    line-height: var(--line-height--body, var(--line-height));
+  }
+}
+
+.custom-font-size,
+.custom-font-size > * {
+  font-size: var(--font-size);
+}
+
+.custom-font-weight,
+.custom-font-weight > * {
+  font-weight: var(--font-weight);
+}
+
+/* Border override style */
+.border-style {
+  border-width: var(--border-width);
+  border-style: var(--border-style);
+  border-color: var(--border-color);
+  border-radius: var(--border-radius);
+}
+
+/* Gap scaling style */
+.gap-style,
+.layout-panel-flex {
+  --gap-scale: var(--spacing-scale-md);
+
+  @media screen and (min-width: 990px) {
+    --gap-scale: var(--spacing-scale-default);
+  }
+}
+
+.layout-panel-flex {
+  display: flex;
+  gap: var(--gap);
+  height: 100%;
+}
+
+.shopify-block:has(> [shopify-block-empty]) {
+  display: none;
+}
+
+.layout-panel-flex--row {
+  flex-flow: row var(--flex-wrap);
+  justify-content: var(--horizontal-alignment);
+  align-items: var(--vertical-alignment);
+}
+
+.layout-panel-flex--column {
+  flex-flow: column var(--flex-wrap);
+  align-items: var(--horizontal-alignment);
+  justify-content: var(--vertical-alignment);
+}
+
+@media screen and (max-width: 749px) {
+  .mobile-column {
+    flex-flow: column nowrap;
+    align-items: var(--horizontal-alignment);
+    justify-content: var(--vertical-alignment-mobile);
+  }
+
+  .layout-panel-flex--row:not(.mobile-column) {
+    flex-wrap: var(--flex-wrap-mobile);
+    height: auto;
+
+    > .menu {
+      flex: 1 1 min-content;
+    }
+
+    > .text-block {
+      flex: 1 1 var(--max-width--display-tight);
+    }
+
+    > .image-block {
+      flex: 1 1 var(--size-style-width-mobile-min);
+    }
+
+    > .button {
+      flex: 0 0 fit-content;
+    }
+
+    > .group-block--height-fill {
+      height: calc(var(--section-min-height, auto) - var(--section-height-offset, 0px));
+    }
+  }
+}
+
+@media screen and (min-width: 750px) {
+  .layout-panel-flex {
+    flex-direction: var(--flex-direction);
+  }
+}
+
+/* Form fields */
+.field {
+  position: relative;
+  width: 100%;
+  display: flex;
+  transition: box-shadow var(--animation-speed) ease;
+}
+
+.field__input {
+  flex-grow: 1;
+  text-align: left;
+  border-radius: var(--style-border-radius-inputs);
+  transition: box-shadow var(--animation-speed) ease, background-color var(--animation-speed) ease;
+  padding: var(--input-padding);
+  box-shadow: var(--input-box-shadow);
+  background-color: var(--color-input-background);
+  color: var(--color-input-text);
+  border: none;
+  outline: none;
+  font-size: var(--font-paragraph--size);
+
+  &:autofill {
+    background-color: var(--color-input-background);
+    color: var(--color-input-text);
+  }
+}
+
+.field__input:focus {
+  box-shadow: var(--input-box-shadow-focus);
+}
+
+.field__input--button-radius {
+  border-radius: var(--style-border-radius-buttons-primary);
+}
+
+.field__input--button-padding {
+  padding-inline: var(--padding-3xl);
+}
+
+.field__label {
+  color: rgb(var(--color-input-text-rgb) / var(--opacity-80));
+  font-size: var(--font-paragraph--size);
+  left: var(--input-padding-x);
+  top: 50%;
+  transform: translateY(-50%);
+  margin-bottom: 0;
+  pointer-events: none;
+  position: absolute;
+  transition: top var(--animation-speed) ease, font-size var(--animation-speed) ease;
+}
+
+/* RTE styles */
+.rte,
+.shopify-policy__title {
+  :is(h1, h2, h3, h4, h5, h6) {
+    margin-block: clamp(1.5rem, 1em * 3.3, 2.5rem) var(--font-heading--spacing);
+  }
+
+  :first-child:is(p, h1, h2, h3, h4, h5, h6),
+  :first-child:empty + :is(p, h1, h2, h3, h4, h5, h6) {
+    margin-block-start: 0;
+  }
+
+  ul,
+  ol {
+    margin-block-start: 0;
+    padding-inline-start: 1.5em;
+  }
+
+  /* Only apply margin-block-end to the higher level list, not nested lists */
+  :is(ul, ol):not(:is(ul, ol) :is(ul, ol)) {
+    margin-block-end: 1em;
+  }
+
+  blockquote {
+    margin-inline: 1.5em 2.3em;
+    margin-block: 3.8em;
+    padding-inline-start: 0.8em;
+    border-inline-start: 1.5px solid rgb(var(--color-foreground-rgb) / var(--opacity-25));
+    font-style: italic;
+    font-weight: 500;
+  }
+
+  .rte-table-wrapper {
+    overflow-x: auto;
+  }
+
+  table {
+    /* stylelint-disable-next-line declaration-no-important */
+    width: 100% !important;
+    border-collapse: collapse;
+  }
+
+  tr:not(:has(td)),
+  thead {
+    background-color: rgb(var(--color-foreground-rgb) / var(--opacity-5));
+    font-weight: bold;
+    text-transform: uppercase;
+  }
+
+  tr:has(td) {
+    border-bottom: 1px solid rgb(var(--color-foreground-rgb) / var(--opacity-10));
+  }
+
+  th,
+  td {
+    text-align: start;
+    padding-inline: var(--padding-md);
+    padding-block: var(--padding-sm);
+  }
+}
+
+.shopify-policy__container {
+  padding-block: var(--padding-xl);
+}
+
+/* Radio buttons and checkboxes - shared base styles */
+:where(input[type='radio']),
+:where(input[type='checkbox']) {
+  width: var(--checkbox-size);
+  height: var(--checkbox-size);
+  aspect-ratio: 1;
+  margin: 0;
+  margin-inline-end: var(--padding-3xs);
+  padding: 0;
+  border: var(--checkbox-border);
+  appearance: none;
+  position: relative;
+  display: inline-block;
+  vertical-align: middle;
+  cursor: pointer;
+}
+
+/* Radio buttons */
+input[type='radio'] {
+  border-radius: var(--style-border-radius-50);
+  background: transparent;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+:where(input[type='radio']):checked {
+  border-color: var(--color-foreground);
+  background: var(--color-background);
+}
+
+:where(input[type='radio']):checked::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: calc(var(--checkbox-size) / 2);
+  height: calc(var(--checkbox-size) / 2);
+  background: var(--color-foreground);
+  border-radius: var(--style-border-radius-50);
+  transition: background 0.2s ease;
+}
+
+:where(input[type='radio']):disabled {
+  border-color: var(--input-disabled-border-color);
+  background-color: var(--input-disabled-background-color);
+  cursor: not-allowed;
+}
+
+:where(input[type='radio']):disabled:checked::after {
+  background: var(--input-disabled-background-color);
+}
+
+:where(input[type='radio']):not(:disabled):hover {
+  border-color: rgb(var(--color-foreground-rgb) / var(--opacity-40-60));
+  background-color: rgb(var(--color-foreground-rgb) / var(--opacity-5));
+}
+
+:where(input[type='radio']):not(:disabled):hover:checked {
+  border-color: var(--color-foreground);
+  background-color: var(--color-background);
+}
+
+:where(input[type='radio']):not(:disabled):hover:checked::after {
+  background: rgb(var(--color-foreground-rgb) / var(--opacity-85));
+}
+
+/* Checkboxes */
+:where(input[type='checkbox']) {
+  border-radius: var(--checkbox-border-radius);
+  background-color: var(--color-background);
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+:where(input[type='checkbox']):checked {
+  background-color: var(--color-foreground);
+  border-color: var(--color-foreground);
+}
+
+:where(input[type='checkbox']):checked::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: var(--checkbox-size);
+  height: var(--checkbox-size);
+  background-color: var(--color-background);
+  mask-image: url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M4.75439 10.7485L7.68601 14.5888C7.79288 14.7288 7.84632 14.7988 7.91174 14.8242C7.96907 14.8466 8.03262 14.8469 8.09022 14.8253C8.15596 14.8007 8.21026 14.7314 8.31886 14.5927L15.2475 5.74658' stroke='black' stroke-width='1' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  mask-size: contain;
+  mask-repeat: no-repeat;
+  mask-position: center;
+}
+
+:where(input[type='checkbox']):not(:disabled):hover {
+  border-color: rgb(var(--color-foreground-rgb) / var(--opacity-40-60));
+  background-color: rgb(var(--color-foreground-rgb) / var(--opacity-5));
+}
+
+:where(input[type='checkbox']):not(:disabled):hover:checked {
+  border-color: var(--color-foreground);
+  background-color: rgb(var(--color-foreground-rgb) / var(--opacity-85));
+}
+
+:where(input[type='checkbox']):disabled {
+  background-color: var(--input-disabled-background-color);
+  border-color: var(--input-disabled-border-color);
+  cursor: not-allowed;
+}
+
+:where(input[type='checkbox']):disabled:checked::after {
+  background-color: var(--input-disabled-text-color);
+}
+
+/* Shared styles for radio buttons and checkboxes */
+:where(input[type='radio']) + label,
+:where(input[type='checkbox']) + label {
+  display: inline;
+  vertical-align: middle;
+  cursor: pointer;
+}
+
+:where(input[type='radio']):disabled + label,
+:where(input[type='checkbox']):disabled + label {
+  color: var(--input-disabled-text-color);
+  cursor: not-allowed;
+}
+
+/* Flexbox for labels wrapping radio buttons or checkboxes */
+label:has(input[type='radio']),
+label:has(input[type='checkbox']) {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--padding-2xs);
+  cursor: pointer;
+}
+
+label:has(input[type='radio']:disabled),
+label:has(input[type='checkbox']:disabled) {
+  cursor: not-allowed;
+}
+
+/* ------------------------------------------------------------------------------ */
+
+/* ------------------------------------------------------------------------------ */
+
+/* Animation declarations - to be kept at the bottom of the file for ease of find */
+@keyframes grow {
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.2);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes move-and-fade {
+  from {
+    transform: translate(var(--start-x, 0), var(--start-y, 0));
+    opacity: var(--start-opacity, 0);
+  }
+
+  to {
+    transform: translate(var(--end-x, 0), var(--end-y, 0));
+    opacity: var(--end-opacity, 1);
+  }
+}
+
+@keyframes slideInTopViewTransition {
+  from {
+    transform: translateY(100px);
+  }
+}
+
+@keyframes elementSlideInTop {
+  from {
+    margin-top: var(--padding-sm);
+    opacity: 0;
+  }
+
+  to {
+    margin-top: 0;
+    opacity: 1;
+  }
+}
+
+@keyframes elementSlideOutTop {
+  from {
+    transform: translateY(0);
+    opacity: 1;
+  }
+
+  to {
+    transform: translateY(var(--padding-sm));
+    opacity: 0;
+  }
+}
+
+@keyframes elementSlideInBottom {
+  from {
+    transform: translateY(calc(-1 * var(--padding-sm)));
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes elementSlideOutBottom {
+  from {
+    transform: translateY(0);
+    opacity: 1;
+  }
+
+  to {
+    transform: translateY(calc(-1 * var(--padding-sm)));
+    opacity: 0;
+  }
+}
+
+@keyframes thumbnailsSlideInTop {
+  from {
+    transform: translateY(calc(-50% + var(--margin-lg)));
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(-50%);
+    opacity: 1;
+  }
+}
+
+@keyframes thumbnailsSlideOutTop {
+  from {
+    transform: translateY(-50%);
+    opacity: 1;
+  }
+
+  to {
+    transform: translateY(calc(-50% + var(--margin-lg)));
+    opacity: 0;
+  }
+}
+
+@keyframes thumbnailsSlideInBottom {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes thumbnailsSlideOutBottom {
+  from {
+    transform: translateY(0);
+    opacity: 1;
+  }
+
+  to {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+}
+
+@keyframes search-element-slide-in-bottom {
+  0% {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes search-element-slide-out-bottom {
+  0% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+
+  100% {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+}
+
+@keyframes dialogZoom {
+  from {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+
+  to {
+    opacity: 0;
+    transform: scale(0.95) translateY(1em);
+  }
+}
+
+@keyframes thumbnail-selected {
+  0%,
+  100% {
+    box-shadow: 0 0 0 2px transparent;
+    scale: 0.9;
+  }
+
+  50% {
+    box-shadow: 0 0 0 2px #000;
+    scale: 1;
+  }
+}
+
+@keyframes backdropFilter {
+  from {
+    backdrop-filter: brightness(1);
+  }
+
+  to {
+    backdrop-filter: brightness(0.75);
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes modalSlideInTop {
+  from {
+    transform: translateY(var(--padding-sm));
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes modalSlideOutTop {
+  from {
+    transform: translateY(0);
+    opacity: 1;
+  }
+
+  to {
+    transform: translateY(var(--padding-sm));
+    opacity: 0;
+  }
+}
+
+/* Slideshow Arrow Hover Animation - must stay in base.css for proper CSS cascade */
+
+:not(.media-gallery--carousel)
+  > :is(slideshow-component:hover, slideshow-component:focus-within):not(:has(slideshow-controls:hover))
+  > slideshow-container
+  > slideshow-arrows
+  .slideshow-control {
+  animation: arrowsSlideIn var(--animation-speed) var(--animation-easing) forwards;
+}
+
+@keyframes arrowsSlideIn {
+  from {
+    transform: translate(var(--padding-sm), 0);
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+.section-resource-list,
+.section-carousel {
+  row-gap: var(--gap);
+}
+
+.section-resource-list__content {
+  display: flex;
+  flex-direction: column;
+  align-items: var(--horizontal-alignment);
+  gap: var(--gap);
+  width: 100%;
+}
+
+.section-resource-list__content:empty {
+  display: none;
+}
+
+.section-resource-list__header:is(:empty, :has(.group-block-content:empty)),
+.section-resource-list__content:empty {
+  display: none;
+}
+
+:where(.section-resource-list.section--full-width) product-card[data-product-transition] > .group-block,
+:where(.section-carousel.section--full-width) product-card[data-product-transition] > .group-block {
+  @media screen and (max-width: 749px) {
+    padding-inline: max(var(--padding-xs), var(--padding-inline-start))
+      max(var(--padding-xs), var(--padding-inline-end));
+  }
+}
+
+/* Base styles */
+.group-block,
+.group-block-content {
+  position: relative;
+}
+
+.group-block:has(> video-background-component),
+.group-block:has(> .background-image-container) {
+  overflow: hidden;
+}
+
+.group-block-content {
+  height: 100%;
+  width: 100%;
+}
+
+/* Container styles */
+.section-content-wrapper.section-content-wrapper:where(.layout-panel-flex) .group-block--fill {
+  flex: 1;
+}
+
+/* Flex behavior for width variants */
+.layout-panel-flex--row > .group-block--width-fit {
+  flex: 0;
+}
+
+.layout-panel-flex--row > .group-block--width-fill {
+  flex: 1;
+}
+
+.layout-panel-flex--row > .group-block--width-custom {
+  flex-basis: var(--size-style-width);
+}
+
+/* Dimension utilities - Height */
+.group-block--height-fit {
+  height: auto;
+}
+
+.group-block--height-custom,
+.group-block--height-fill {
+  height: var(--size-style-height);
+}
+
+/* Flex behavior for height variants */
+.layout-panel-flex--column > .group-block--height-fit {
+  flex: 0 1 auto;
+}
+
+.layout-panel-flex--column > .group-block--height-fill {
+  flex: 1;
+}
+
+.layout-panel-flex--column > .group-block--height-custom {
+  flex-basis: var(--size-style-height);
+}
+
+/* Animation transitions */
+.transition-background-color {
+  transition: background-color var(--animation-speed-medium) ease-in-out;
+}
+
+.transition-transform {
+  transition: transform var(--animation-speed-medium) var(--animation-timing-bounce);
+}
+
+.transition-border-color {
+  transition: border-color var(--animation-speed-medium) var(--animation-timing-hover);
+}
+
+/* Global scrollbar styles */
+
+/* Webkit browsers */
+::-webkit-scrollbar {
+  width: 20px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgb(var(--color-foreground-rgb) / var(--opacity-40));
+  border-radius: 20px;
+  border: 6px solid transparent;
+  background-clip: content-box;
+  transition: background-color 0.2s;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: rgb(var(--color-foreground-rgb) / var(--opacity-60));
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+.product-card:hover,
+.collection-card:hover,
+.predictive-search-results__card--product:hover,
+.predictive-search-results__card:hover {
+  position: relative;
+  z-index: var(--layer-raised);
+  transition: transform var(--hover-transition-duration) var(--hover-transition-timing),
+    box-shadow var(--hover-transition-duration) var(--hover-transition-timing);
+}
+
+/* Prevent iOS zoom on input focus by ensuring minimum 16px font size on mobile */
+@media screen and (max-width: 1200px) {
+  input,
+  textarea,
+  select,
+  /* Higher specificity to override type preset classes like .paragraph, .h1, etc. */
+  .paragraph.paragraph input,
+  .paragraph.paragraph textarea,
+  .paragraph.paragraph select,
+  .h1.h1 input,
+  .h1.h1 textarea,
+  .h1.h1 select,
+  .h2.h2 input,
+  .h2.h2 textarea,
+  .h2.h2 select,
+  .h3.h3 input,
+  .h3.h3 textarea,
+  .h3.h3 select,
+  .h4.h4 input,
+  .h4.h4 textarea,
+  .h4.h4 select,
+  .h5.h5 input,
+  .h5.h5 textarea,
+  .h5.h5 select,
+  .h6.h6 input,
+  .h6.h6 textarea,
+  .h6.h6 select {
+    font-size: max(1rem, 100%);
+  }
+}
+
+/* When the header is transparent, and when there is no header-section below it, offset the first main-section with
+ * the height of the header
+ */
+main > .shopify-section:first-child .section:not(.disable-section-top-offset) {
+  &.spacing-style,
+  .spacing-style {
+    --section-top-offset: calc(var(--header-height) * var(--transparent-header-offset-boolean));
+
+    /* Any nested sections should not be offset */
+    :is(.spacing-style, .inherit-spacing) {
+      --section-top-offset: 0px;
+    }
+  }
+
+  /* Make sticky content immediately stick to the top of the page */
+  .sticky-content {
+    margin-top: calc(var(--header-height) * var(--transparent-header-offset-boolean) * -1);
+  }
+}

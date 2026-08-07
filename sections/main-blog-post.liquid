@@ -1,0 +1,193 @@
+
+
+{% liquid
+  if section.settings.background_color != blank
+    render 'contrast-override', background_color: section.settings.background_color, section_id: section.id
+  endif
+%}
+
+<div
+  class="section-background{% if section.settings.background_color != blank %} color-custom-{{ section.id }}{% endif %}"
+></div>
+<div class="section{% if section.settings.background_color != blank %} color-custom-{{ section.id }}{% endif %}">
+  <div
+    class="
+      spacing-style
+      layout-panel-flex
+      layout-panel-flex--column
+      section-content-wrapper
+      mobile-column
+    "
+    style="
+      {% render 'layout-panel-style', settings: section.settings %}
+      {% render 'spacing-style', settings: section.settings %}
+    "
+  >
+    {% content_for 'blocks' %}
+
+    {% if blog.comments_enabled? %}
+      <div class="blog-post-comments-container">
+        <h2 class="h3">{{- 'blogs.article.comments_heading' | t: count: article.comments_count -}}</h2>
+
+        <div class="blog-post-comments">
+          {% paginate article.comments by 10 %}
+            {% for comment in article.comments %}
+              <div class="blog-post-comment">
+                {{ comment.content }}
+                <div class="blog-post-comment__author">
+                  <span class="blog-post-comment__author-name">{{- comment.author -}}</span>
+                  <span>{{- 'blogs.article.comment_author_separator' | t -}}</span>
+                  <span class="blog-post-comment__date">
+                    {{- comment.created_at | time_tag: format: 'date' -}}
+                  </span>
+                </div>
+              </div>
+            {% endfor %}
+
+            <div class="blog-post-comments-pagination">
+              {{- paginate | default_pagination -}}
+            </div>
+          {% endpaginate %}
+        </div>
+
+        {% render 'blog-comment-form', article: article, section_id: section.id %}
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+<script type="application/ld+json">
+  {{ article | structured_data }}
+</script>
+
+{% stylesheet %}
+  .blog-post-comments-container {
+    width: 100%;
+    max-width: var(--normal-content-width);
+    margin: 0 auto;
+  }
+
+  .blog-post-comments {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap-3xl);
+  }
+
+  .blog-post-comment__author {
+    display: flex;
+    align-items: center;
+    gap: var(--gap-2xs);
+    margin-top: var(--margin-md);
+    font-size: var(--font-size--body-sm);
+    color: rgb(var(--color-foreground-rgb) / var(--opacity-subdued-text));
+  }
+
+  .blog-post-comments-pagination {
+    display: flex;
+    justify-content: center;
+    gap: var(--gap-2xs);
+  }
+
+  .blog-post-comments-pagination,
+  .blog-post-comments-pagination a {
+    color: var(--color-foreground);
+  }
+
+  .blog-post-comments-pagination .current {
+    color: var(--color-foreground);
+  }
+
+  .blog-post-comments-pagination .current,
+  .blog-post-comments-pagination a {
+    display: block;
+    padding: var(--padding-2xs) var(--padding-xs);
+  }
+
+  .blog-post-comments-pagination .current,
+  .blog-post-comments-pagination a:hover {
+    border-bottom: 1px solid var(--color-foreground);
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:names.blog_post",
+  "blocks": [
+    {
+      "type": "@theme"
+    },
+    {
+      "type": "@app"
+    },
+    {
+      "type": "_blog-post-title"
+    },
+    {
+      "type": "_blog-post-info-text"
+    },
+    {
+      "type": "_blog-post-featured-image"
+    },
+    {
+      "type": "_blog-post-content"
+    }
+  ],
+  "class": "section-wrapper",
+  "settings": [
+    {
+      "type": "select",
+      "id": "content_direction",
+      "label": "t:settings.direction",
+      "options": [
+        {
+          "value": "column",
+          "label": "t:options.vertical"
+        }
+      ],
+      "default": "column",
+      "visible_if": "{{ section.settings.gap < 0 }}"
+    },
+    {
+      "type": "range",
+      "id": "gap",
+      "label": "t:settings.gap",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "t:settings.background_color",
+      "placeholder": "t:settings.default"
+    },
+    {
+      "type": "header",
+      "content": "t:content.padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "t:settings.top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "t:settings.bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    }
+  ],
+  "presets": []
+}
+{% endschema %}

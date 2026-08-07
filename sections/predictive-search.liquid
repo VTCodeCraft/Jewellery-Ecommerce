@@ -1,0 +1,165 @@
+
+
+{% render 'pills-styles' %}
+{% render 'predictive-search-styles' %}
+
+{%- if predictive_search.performed or search.performed -%}
+  <div
+    id="predictive-search-results"
+    class="predictive-search-dropdown"
+    role="listbox"
+    aria-label="{{ 'content.search_results_label' | t }}"
+    data-transition-container
+    style="--color-shadow: rgb(var(--color-foreground-rgb) / var(--opacity-10-25));"
+  >
+    <div
+      class="predictive-search-results__inner"
+      data-search-results
+    >
+      {% if predictive_search.performed %}
+        {% assign search_results_count = predictive_search.resources.products.size
+          | plus: predictive_search.resources.pages.size
+          | plus: predictive_search.resources.articles.size
+          | plus: predictive_search.resources.collections.size
+        %}
+      {% else %}
+        {% assign search_results_count = search.results_count %}
+      {% endif %}
+
+      <div
+        class="visually-hidden"
+        role="status"
+      >
+        {%- if predictive_search.performed and search_results_count > 0 -%}
+          {{ 'accessibility.search_results_count' | t: count: search_results_count, query: predictive_search.terms }}
+        {%- elsif predictive_search.performed and predictive_search.resources.queries.size > 0 -%}
+          {{- 'accessibility.search_suggestions_available' | t: query: predictive_search.terms -}}
+        {%- elsif predictive_search.performed -%}
+          {{ 'accessibility.search_results_no_results' | t: query: predictive_search.terms }}
+        {%- endif -%}
+      </div>
+
+      {% if predictive_search.performed %}
+        {% if predictive_search.resources.queries.size > 0 %}
+          <ul
+            class="predictive-search-results__list predictive-search-results__wrapper predictive-search-results__wrapper-queries list-unstyled"
+          >
+            {%- for resource in predictive_search.resources.queries -%}
+              <li
+                class="predictive-search-results__card--query"
+                ref="resultsItems[]"
+                on:keydown="/onSearchKeyDown"
+              >
+                <a
+                  class="pills__pill predictive-search-results__pill"
+                  href="{{ resource.url }}"
+                  aria-label="{{ resource.text }}"
+                >
+                  <span>
+                    {{ resource.styled_text }}
+                  </span>
+                </a>
+              </li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+
+        {%- if search_results_count > 0 -%}
+          {% if predictive_search.resources.products.size > 0 %}
+            {%- liquid
+              assign title = 'content.search_results_resource_products' | t
+              assign products = predictive_search.resources.products
+              render 'predictive-search-products-list', title: title, products: products
+            -%}
+          {% endif %}
+
+          {% if predictive_search.resources.collections.size > 0 %}
+            {% assign resource_title = 'content.search_results_resource_collections' | t %}
+
+            {% render 'predictive-search-resource-carousel',
+              title: resource_title,
+              resource_type: 'collection',
+              resources: predictive_search.resources.collections
+            %}
+          {% endif %}
+
+          {% if predictive_search.resources.pages.size > 0 %}
+            {% assign resource_title = 'content.search_results_resource_pages' | t %}
+
+            {% render 'predictive-search-resource-carousel',
+              title: resource_title,
+              resource_type: 'page',
+              resources: predictive_search.resources.pages
+            %}
+          {% endif %}
+
+          {% if predictive_search.resources.articles.size > 0 %}
+            {% assign resource_title = 'content.search_results_resource_articles' | t %}
+
+            {% render 'predictive-search-resource-carousel',
+              title: resource_title,
+              resource_type: 'article',
+              resources: predictive_search.resources.articles
+            %}
+          {% endif %}
+        {%- elsif predictive_search.resources.queries.size == 0 -%}
+          <p class="predictive-search-results__no-results">
+            {{ 'content.search_results_no_results' | t: terms: predictive_search.terms }}
+          </p>
+        {% endif %}
+      {% else %}
+        {%- liquid
+          assign title = 'content.recently_viewed_products' | t
+          assign products = search.results
+
+          comment
+            Searching for recently viewed products by id doesn't preserve the order of the products.
+            To work around this, we get the product ids into an array then use that to reorder them.
+          endcomment
+          if search.terms contains 'id:'
+            assign new_products_ids = search.terms | replace: 'id:', '' | split: ' OR '
+          endif
+          render 'predictive-search-products-list', title: title, products: products, order_ids: new_products_ids, limit: 4
+        -%}
+      {% endif %}
+
+      {% if predictive_search.performed %}
+        {%- if search_results_count > 0 -%}
+          {% assign total_results = predictive_search.resources.products.size
+            | plus: predictive_search.resources.collections.size
+            | plus: predictive_search.resources.pages.size
+            | plus: predictive_search.resources.articles.size
+          %}
+          {% assign single_result_url = null %}
+          {% if total_results == 1 %}
+            {% if predictive_search.resources.products.size == 1 %}
+              {% assign single_result_url = predictive_search.resources.products.first.url %}
+            {% elsif predictive_search.resources.collections.size == 1 %}
+              {% assign single_result_url = predictive_search.resources.collections.first.url %}
+            {% elsif predictive_search.resources.pages.size == 1 %}
+              {% assign single_result_url = predictive_search.resources.pages.first.url %}
+            {% elsif predictive_search.resources.articles.size == 1 %}
+              {% assign single_result_url = predictive_search.resources.articles.first.url %}
+            {% endif %}
+          {% endif %}
+
+          {% if single_result_url %}
+            <div data-single-result-url="{{ single_result_url }}"></div>
+          {% endif %}
+        {% endif %}
+      {% endif %}
+    </div>
+  </div>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "t:names.predictive_search",
+  "settings": [],
+  "blocks": [
+    {
+      "type": "@theme"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,81 @@
+{%- doc -%}
+  Renders arrow controls for a slideshow component.
+  Assumes arrows are placed on top of media.
+  When icon shape is 'none', component uses mixed-blend-mode to ensure visibility.
+
+  @param {string} [class] - The class name to apply to the slideshow-arrows component
+  @param {string} [icon_style] - The style of the icon, defaults to 'arrow'
+  @param {string} [icon_shape] - The shape of the icon background (none, circle, square), defaults to 'none'
+  @param {string} [arrows_position] - { 'left' | 'center' | 'right' } The position of the arrows, defaults to 'center'
+
+  @example
+  {%- render 'slideshow-arrows' -%}
+{%- enddoc -%}
+
+{%- liquid
+  if arrows_position == null
+    assign arrows_position = 'center'
+  endif
+-%}
+
+<slideshow-arrows
+  position="{{ arrows_position }}"
+  {% if class %}
+    class="{{ class }}"
+  {% endif %}
+>
+  {%- render 'slideshow-arrow', action: 'previous', icon_style: icon_style, icon_shape: icon_shape -%}
+  {%- render 'slideshow-arrow', action: 'next', icon_style: icon_style, icon_shape: icon_shape -%}
+</slideshow-arrows>
+
+{% stylesheet %}
+  slideshow-arrows {
+    --cursor-previous: w-resize;
+    --cursor-next: e-resize;
+
+    position: absolute;
+    inset: 0;
+    display: flex;
+    z-index: var(--layer-heightened);
+    pointer-events: none;
+    mix-blend-mode: difference;
+    align-items: flex-end;
+
+    &[position='left'] {
+      justify-content: flex-start;
+      padding-inline: var(--padding-xs);
+    }
+
+    &[position='right'] {
+      justify-content: flex-end;
+      padding-inline: var(--padding-xs);
+    }
+
+    &[position='center'] {
+      justify-content: space-between;
+      align-items: center;
+    }
+  }
+
+  slideshow-arrows:has(.slideshow-control--shape-square),
+  slideshow-arrows:has(.slideshow-control--shape-circle) {
+    mix-blend-mode: normal;
+  }
+
+  slideshow-component[disabled='true'] slideshow-arrows {
+    display: none;
+  }
+
+  slideshow-arrows .slideshow-control {
+    pointer-events: auto;
+    opacity: 0;
+    min-height: var(--minimum-touch-target);
+    min-width: var(--minimum-touch-target);
+    padding: 0 var(--padding-xs);
+    color: var(--color-white);
+  }
+
+  slideshow-arrows .slideshow-control.slideshow-control--style-none {
+    display: none;
+  }
+{% endstylesheet %}

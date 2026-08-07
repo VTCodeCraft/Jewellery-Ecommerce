@@ -1,0 +1,78 @@
+{%- doc -%}
+  Renders the search action button.
+
+  @param {string} [style] - The style of the search action.
+  @param {string} [class] - Additional classes for the search action.
+  @param {string} [display_style] - The display style ('icon' or 'text').
+
+  @example
+  {% render 'search', style: 'default', class: 'custom-class', display_style: 'icon' %}
+{%- enddoc -%}
+
+{% unless style == 'none' %}
+  <search-button
+    class="search-action{% if display_style == 'text' %} search-action--text{% endif %}{% if class != blank %} {{ class | strip }}{% endif %}"
+  >
+    <button
+      on:click="#search-modal/showDialog"
+      class="button-unstyled header-actions__action{% if display_style == 'text' %} header-actions__text-style{% endif %}"
+      aria-label="{{ 'content.search_input_label' | t }}"
+      aria-haspopup="dialog"
+    >
+      <span class="{% if display_style == 'icon' %}hidden{% else %}mobile:hidden{% endif %}">
+        {{ 'content.search' | t }}
+      </span>
+
+      <span class="svg-wrapper {% if display_style != 'icon' %}desktop:hidden{% endif %}">
+        {{ 'icon-search.svg' | inline_asset_content }}
+      </span>
+    </button>
+  </search-button>
+{% endunless %}
+
+{% stylesheet %}
+  .search-action {
+    --search-border-radius: var(--style-border-radius-inputs);
+    --search-border-width: var(--style-border-width-inputs);
+
+    display: flex;
+  }
+
+  @media screen and (max-width: 749px) {
+    .search-action--hidden-on-drawer {
+      display: none;
+    }
+  }
+
+  @media screen and (min-width: 750px) {
+    [data-menu-style='drawer'] .search-action--hidden-on-drawer {
+      display: none;
+    }
+
+    [data-menu-style='menu'] .search-action--hidden-on-menu {
+      display: none;
+    }
+  }
+
+  [data-menu-style='menu'] .header__column--left .search-action {
+    @media screen and (min-width: 750px) {
+      margin-inline: calc(var(--padding-lg) * -1);
+    }
+  }
+
+  .header__column--right .search-action {
+    @media screen and (min-width: 750px) {
+      margin-inline: calc(var(--gap-md) * -1) calc(var(--gap-xs) * -1);
+    }
+  }
+
+  @media screen and (min-width: 750px) {
+    .header__column--right .search-action--text {
+      margin-inline: 0;
+    }
+
+    [data-menu-style='menu'] .header__column--left .search-action--text {
+      margin-inline: 0;
+    }
+  }
+{% endstylesheet %}

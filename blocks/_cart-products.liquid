@@ -1,0 +1,173 @@
+
+
+{% render 'cart-products' %}
+
+{% stylesheet %}
+  .cart-page__title + .cart-page__items {
+    margin-block-start: var(--margin-lg);
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:names.cart_products",
+  "tag": null,
+  "settings": [
+    {
+      "type": "range",
+      "id": "gap",
+      "label": "t:settings.gap",
+      "min": 8,
+      "max": 36,
+      "step": 4,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "select",
+      "id": "image_ratio",
+      "label": "t:settings.aspect_ratio",
+      "options": [
+        {
+          "value": "adapt",
+          "label": "t:options.auto"
+        },
+        {
+          "value": "portrait",
+          "label": "t:options.portrait"
+        },
+        {
+          "value": "square",
+          "label": "t:options.square"
+        }
+      ],
+      "default": "adapt"
+    },
+    {
+      "type": "checkbox",
+      "id": "dividers",
+      "label": "t:settings.dividers",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "vendor",
+      "label": "t:settings.vendor",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "t:content.input"
+    },
+    {
+      "type": "select",
+      "id": "input_style",
+      "label": "t:settings.style",
+      "options": [
+        {
+          "value": "default",
+          "label": "t:options.default"
+        },
+        {
+          "value": "custom",
+          "label": "t:options.custom"
+        }
+      ],
+      "default": "default",
+      "info": "t:info.edit_input_field_in_theme_settings"
+    },
+    {
+      "type": "color",
+      "id": "input_background_color",
+      "label": "t:settings.background",
+      "default": "{{ settings.color_palette.background }}",
+      "visible_if": "{{ block.settings.input_style == \"custom\" }}"
+    },
+    {
+      "type": "color",
+      "id": "input_text_color",
+      "label": "t:settings.text",
+      "default": "{{ settings.color_palette.foreground }}",
+      "visible_if": "{{ block.settings.input_style == \"custom\" }}"
+    },
+    {
+      "type": "color",
+      "id": "input_border_color",
+      "label": "t:settings.borders",
+      "default": "{{ settings.color_palette.foreground }}",
+      "visible_if": "{{ block.settings.input_style == \"custom\" }}"
+    },
+    {
+      "type": "range",
+      "id": "border_width",
+      "label": "t:settings.border_width",
+      "min": 0,
+      "max": 4,
+      "step": 0.5,
+      "unit": "px",
+      "default": 1,
+      "visible_if": "{{ block.settings.input_style == \"custom\" }}"
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "label": "t:settings.border_radius",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "unit": "px",
+      "default": 0,
+      "visible_if": "{{ block.settings.input_style == \"custom\" }}"
+    },
+    {
+      "type": "header",
+      "content": "t:content.padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "t:settings.top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "t:settings.bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-inline-start",
+      "label": "t:settings.left",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-inline-end",
+      "label": "t:settings.right",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:names.cart_items"
+    }
+  ]
+}
+{% endschema %}

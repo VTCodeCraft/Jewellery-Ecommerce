@@ -1,0 +1,92 @@
+{%- doc -%}
+  Renders a slideshow arrow control
+
+  @param {string} action - { 'previous' | 'next' } The action to perform when the arrow is clicked.
+  @param {string} [icon_style] - { 'arrow' | 'chevron' } The style of the icon, defaults to 'arrow'.
+  @param {string} [icon_shape] - { 'none' | 'circle' | 'square' } The shape of the icon background, defaults to 'none'.
+  @param {string} [icon_size] - { 'small' | 'medium' | 'large' } The size of the icon, defaults to 'medium'.
+
+  @example
+  {%- render 'slideshow-arrow', action: 'previous' -%}
+{%- enddoc -%}
+
+{%- liquid
+  assign icon_name = 'arrow'
+  assign style = icon_style | default: 'arrow'
+  assign shape = icon_shape | default: 'none'
+
+  if icon_style contains 'chevron'
+    assign icon_name = 'caret'
+  endif
+
+  if icon_style contains 'large'
+    assign icon_size = 'large'
+  endif
+-%}
+
+<button
+  class="
+    slideshow-control slideshow-control--{{ action }}
+    {% if icon_size %} slideshow-control--{{ icon_size }}{% endif %}
+    {% if shape != 'none' %} slideshow-control--shape-{{ shape }}{% endif %}
+    slideshow-control--style-{{ style }}
+    button button-unstyled button-unstyled--transparent
+    {% if action == 'previous' %} flip-x{% endif %}
+  "
+  {% if action == 'previous' %}
+    aria-label="{{ 'accessibility.slideshow_previous' | t }}"
+  {% else %}
+    aria-label="{{ 'accessibility.slideshow_next' | t }}"
+  {% endif %}
+  on:click="/{{ action }}"
+  ref="{{ action }}"
+>
+  <span class="svg-wrapper icon-{{ icon_name }}">
+    {%- if icon_name == 'caret' -%}
+      {{- 'icon-caret.svg' | inline_asset_content -}}
+    {%- else -%}
+      {{- 'icon-arrow.svg' | inline_asset_content -}}
+    {%- endif -%}
+  </span>
+</button>
+
+{% stylesheet %}
+  .slideshow-control--large {
+    .icon-caret {
+      --icon-stroke-width: 1px;
+    }
+
+    .icon-caret {
+      --icon-stroke-width: 1px;
+    }
+
+    .svg-wrapper,
+    svg {
+      width: var(--slideshow-controls-icon);
+      height: var(--slideshow-controls-icon);
+    }
+  }
+
+  /* Slideshow control shape styles */
+  .slideshow-control.slideshow-control--shape-square,
+  .slideshow-control.slideshow-control--shape-circle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    aspect-ratio: 1 / 1;
+    background-color: var(--color-primary-button-background);
+    color: var(--color-primary-button-text);
+  }
+
+  .slideshow-control.slideshow-control--shape-circle {
+    border-radius: 50%;
+  }
+
+  .slideshow-control.slideshow-control--shape-square {
+    border-radius: 0;
+  }
+
+  .slideshow-control .icon-caret {
+    rotate: -90deg;
+  }
+{% endstylesheet %}

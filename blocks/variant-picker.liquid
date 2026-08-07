@@ -1,0 +1,196 @@
+
+
+{% liquid
+  assign product_resource = closest.product
+  if request.visual_preview_mode and product_resource == blank
+    assign product_resource = collections.all.products.first
+  endif
+-%}
+
+{% unless product_resource == blank %}
+  {% render 'variant-main-picker', product_resource: product_resource, section: section, product: product %}
+{% endunless %}
+
+{% schema %}
+{
+  "name": "t:names.product_variant_picker",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:content.type"
+    },
+    {
+      "type": "select",
+      "id": "variant_style",
+      "label": "t:settings.style",
+      "options": [
+        {
+          "value": "dropdowns",
+          "label": "t:options.dropdowns"
+        },
+        {
+          "value": "buttons",
+          "label": "t:options.buttons"
+        }
+      ],
+      "default": "buttons"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_swatches",
+      "label": "t:settings.swatches",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "t:content.appearance"
+    },
+    {
+      "type": "color",
+      "id": "option_label_text_color",
+      "label": "t:settings.text_color",
+      "placeholder": "t:settings.default",
+      "alpha": true
+    },
+    {
+      "type": "select",
+      "id": "variant_style_class",
+      "label": "t:settings.variant_button_style",
+      "options": [
+        {
+          "value": "default",
+          "label": "t:options.default"
+        },
+        {
+          "value": "custom",
+          "label": "t:options.custom"
+        }
+      ],
+      "default": "default",
+      "info": "t:info.edit_variants_in_theme_settings"
+    },
+    {
+      "type": "color",
+      "id": "custom_variant_background",
+      "label": "t:settings.background",
+      "default": "{{ settings.color_palette.background }}",
+      "alpha": true,
+      "visible_if": "{{ block.settings.variant_style_class == 'custom' }}"
+    },
+    {
+      "type": "color",
+      "id": "custom_variant_text",
+      "label": "t:settings.text",
+      "default": "{{ settings.color_palette.foreground }}",
+      "alpha": true,
+      "visible_if": "{{ block.settings.variant_style_class == 'custom' }}"
+    },
+    {
+      "type": "color",
+      "id": "custom_variant_border",
+      "label": "t:settings.borders",
+      "default": "{{ settings.color_palette.foreground }}",
+      "alpha": true,
+      "visible_if": "{{ block.settings.variant_style_class == 'custom' }}"
+    },
+    {
+      "type": "select",
+      "id": "selected_variant_style_class",
+      "label": "t:settings.selected_variant_button_style",
+      "options": [
+        {
+          "value": "default",
+          "label": "t:options.default"
+        },
+        {
+          "value": "custom",
+          "label": "t:options.custom"
+        }
+      ],
+      "default": "default",
+      "visible_if": "{{ block.settings.variant_style == 'buttons' }}"
+    },
+    {
+      "type": "color",
+      "id": "custom_selected_variant_background",
+      "label": "t:settings.background",
+      "default": "{{ settings.color_palette.foreground }}",
+      "alpha": true,
+      "visible_if": "{{ block.settings.variant_style == 'buttons' and block.settings.selected_variant_style_class == 'custom' }}"
+    },
+    {
+      "type": "color",
+      "id": "custom_selected_variant_text",
+      "label": "t:settings.text",
+      "default": "{{ settings.color_palette.background }}",
+      "alpha": true,
+      "visible_if": "{{ block.settings.variant_style == 'buttons' and block.settings.selected_variant_style_class == 'custom' }}"
+    },
+    {
+      "type": "color",
+      "id": "custom_selected_variant_border",
+      "label": "t:settings.borders",
+      "default": "{{ settings.color_palette.foreground }}",
+      "alpha": true,
+      "visible_if": "{{ block.settings.variant_style == 'buttons' and block.settings.selected_variant_style_class == 'custom' }}"
+    },
+    {
+      "type": "text_alignment",
+      "id": "alignment",
+      "label": "t:settings.alignment",
+      "default": "left"
+    },
+    {
+      "type": "header",
+      "content": "t:content.padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "t:settings.top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "t:settings.bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "padding-inline-start",
+      "label": "t:settings.left",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-inline-end",
+      "label": "t:settings.right",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:names.product_variant_picker",
+      "category": "t:categories.product"
+    }
+  ]
+}
+{% endschema %}
