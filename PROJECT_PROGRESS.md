@@ -1,5 +1,6 @@
 # Project Progress
 
+
 ## Current Phase
 Phase 1 — Baseline & brand color configurability. Final Phase 1 changes (brand colors wired into the theme's `color_palette`) are complete and verified locally but not yet committed or pushed.
 
