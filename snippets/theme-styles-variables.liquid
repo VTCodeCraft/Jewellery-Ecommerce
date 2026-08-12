@@ -266,7 +266,18 @@
       for font_size in font_sizes
         assign size_setting = 'type_size_[font_size]' | replace: '[font_size]', font_size
         assign font_size_value = settings[size_setting] | times: 1
-        assign font_size_string = '[font_size_value]' | replace: '[font_size_value]', font_size_value
+
+        comment
+          Pad the lookup value exactly like the entries above, otherwise
+          find_index never matches and every fluid size falls back to the
+          largest preset (which makes clamp() collapse to a fixed size).
+        endcomment
+        if font_size_value < 100
+          assign font_size_string = '0[font_size_value]' | replace: '[font_size_value]', font_size_value
+        else
+          assign font_size_string = '[font_size_value]' | replace: '[font_size_value]', font_size_value
+        endif
+
         assign index = font_size_values | find_index: font_size_string
 
         if font_size_value >= fluid_size_cutoff

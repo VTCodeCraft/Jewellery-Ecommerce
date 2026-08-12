@@ -5,3 +5,44 @@
    Keep brand-specific overrides scoped and documented here
    rather than editing stock base.css. Group by concern.
    ============================================================ */
+
+/* ------------------------------------------------------------
+   Typography
+
+   Two families mapped onto Horizon's four font roles:
+     heading / accent   -> Instrument Serif (display, editorial)
+     body / subheading  -> Lora (reading, UI, prices)
+
+   Sizes, leading, tracking and case stay merchant-editable in
+   Theme settings > Typography. Only what the theme editor cannot
+   express lives here.
+   ------------------------------------------------------------ */
+
+/* `theme-styles-variables.liquid` renders its `:root` block after
+   this stylesheet, so variable overrides need the extra
+   specificity of `:root:root` to win the cascade. */
+:root:root {
+  /* Uppercase eyebrows and labels need more tracking than the
+     theme's "loose" preset (0.03em) allows. */
+  --font-h6--letter-spacing: 0.12em;
+}
+
+/* Instrument Serif ships regular and italic only. Without this the
+   browser fakes a bold weight, which smears the thin strokes of a
+   high-contrast display serif. Real bold faces (Lora) still apply -
+   only synthesis is disabled. */
+:is(h1, h2, h3, h4, .h1, .h2, .h3, .h4) {
+  font-synthesis-weight: none;
+}
+
+/* Prices.
+   Several templates render prices with the h6 preset, which is now the
+   uppercase, wide-tracked label style. Money should never inherit that, so
+   the preset variables are reset locally rather than fighting selector
+   specificity. Tabular figures keep columns aligned in product grids. */
+product-price {
+  --font-h6--case: none;
+  --font-h6--letter-spacing: normal;
+
+  font-variant-numeric: tabular-nums;
+}
