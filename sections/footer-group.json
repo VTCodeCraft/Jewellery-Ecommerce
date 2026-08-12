@@ -183,9 +183,9 @@
                     "input_border_color": "#000000",
                     "input_type_preset": "paragraph",
                     "style_class": "button-custom",
-                    "custom_button_background": "#351f08",
-                    "custom_button_text": "#f5e9dc",
-                    "custom_button_border": "#351f08",
+                    "custom_button_background": "{{ settings.color_palette.color3 }}",
+                    "custom_button_text": "{{ settings.color_palette.color4 }}",
+                    "custom_button_border": "{{ settings.color_palette.color3 }}",
                     "link_text_color": "",
                     "display_type": "arrow",
                     "label": "Sign up",
@@ -249,7 +249,7 @@
         "block_23de1b3bac9d": {
           "type": "footer-policy-list",
           "settings": {
-            "text_color": "#351f08",
+            "text_color": "{{ settings.color_palette.color3 }}",
             "font_size": "0.75rem",
             "case": "none"
           },
@@ -259,7 +259,7 @@
           "type": "footer-copyright",
           "settings": {
             "show_powered_by": true,
-            "text_color": "#351f08",
+            "text_color": "{{ settings.color_palette.color3 }}",
             "font_size": "0.75rem",
             "case": "none"
           },
