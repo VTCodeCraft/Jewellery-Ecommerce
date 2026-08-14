@@ -35,6 +35,29 @@
   font-synthesis-weight: none;
 }
 
+/* Display headings: word spacing.
+
+   Instrument Serif draws an unusually narrow space glyph (~0.17em against a
+   normal serif's 0.25-0.33em), which is what makes long headings read as
+   congested. Widening the word gap fixes that without stretching the letters
+   themselves - tracking stays neutral, set in Theme settings > Typography.
+
+   Scoped to h1-h3, the presets bound to the display font and the sizes where
+   the narrow space is actually visible. The :not() guard matters: heading tags
+   are reused at smaller preset sizes elsewhere in Horizon (the dense grid-view
+   product title is an <h3 class="h4"> in Lora at 13px), and Lora's space is
+   already generous, so it would read as loose there.
+
+   One case slips through by design: rich text authored as <h2> inside an h6
+   eyebrow block. Letterspaced uppercase needs a proportionally wider word gap
+   anyway, so that is left alone.
+
+   If a heading preset is ever switched to a Lora role in Theme settings,
+   drop it from this selector. */
+:is(h1, h2, h3, .h1, .h2, .h3):not(.h4, .h5, .h6, .paragraph, .rte) {
+  word-spacing: 0.12em;
+}
+
 /* Prices.
    Several templates render prices with the h6 preset, which is now the
    uppercase, wide-tracked label style. Money should never inherit that, so
