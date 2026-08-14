@@ -179,6 +179,12 @@
         <nav
           class="menu-list"
           aria-label="{{ 'accessibility.header_navigation_label' | t }}"
+          {% comment %}
+            Exposes the menu style to CSS so the text style can lay its
+            submenu content out compactly, instead of the six-column grid
+            the image-led styles need. See custom.css.
+          {% endcomment %}
+          data-menu-content-type="{{ menu_content_type }}"
           style="{% render 'menu-font-styles', settings: block_settings, menu_type: 'mega_menu' %}"
         >
           {% assign class = 'overflow-menu' | append: background_color_classes %}

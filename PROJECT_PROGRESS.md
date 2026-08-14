@@ -2,7 +2,7 @@
 
 
 ## Current Phase
-Phase 2.1 — Font-pair decision & hero typography refinement. Implemented and verified on the development theme; not yet committed. Working on branch `Vishesh` (branched from `develop` at `5751ccd`).
+Phase 3 — Navbar layout & submenu interaction. Implemented and verified on the development theme; not yet committed. Working on branch `Vishesh`.
 
 ## Completed
 - Established safe Git workflow: `main` = live/production (untouched), `develop` = all work, tag `phase1-baseline` as rollback point at develop HEAD.
@@ -43,6 +43,11 @@ Phase 2.1 — Font-pair decision & hero typography refinement. Implemented and v
 ### Phase 2.1
 - `config/settings_data.json`: `type_letter_spacing_h1` and `type_letter_spacing_h2` `heading-tight` → `heading-normal`; `type_line_height_h1` `display-normal` → `display-loose`. Applied to `current` and `presets.Horizon`.
 - `assets/custom.css`: added `word-spacing: 0.12em` on the display heading presets (h1–h3), guarded with `:not(.h4, .h5, .h6, .paragraph, .rte)`.
+
+### Phase 3
+- `sections/header-group.json`: `logo_position` `left` → `center`, `menu_position` `center` → `left`, `actions_display_style` `icon` → `text`, `menu_style` `featured_products` → `text`. All four are stock Horizon settings — no layout code was written for the navbar structure.
+- `blocks/_header-menu.liquid`: added `data-menu-content-type="{{ menu_content_type }}"` on the `.menu-list` nav (one attribute, no logic change), so CSS can distinguish the text menu style from the image-led ones.
+- `assets/custom.css`: header wordmark sizing/tracking, and compact flex layout for text-style submenu content.
 
 ## Design Decisions
 - Brand colors: primary `#351f08` (deep brown), contrast `#f5e9dc` (cream). Currently only used in the footer (email signup button, policy list, copyright text); storefront output is visually unchanged from the original hardcoded values.
@@ -87,6 +92,19 @@ Measured on the development theme, hero heading "Wear art, tell your story":
 - The breathing room came from **word-spacing and leading, not letter-spacing**. Tracking is now exactly neutral — no stretching of the letterforms.
 - The previous mobile rendering sat 2px inside its container, so any copy edit or a 360px-wide device would have wrapped unpredictably. It now wraps deliberately at a phrase boundary via `text-wrap: balance`.
 
+### Navbar (Phase 3)
+- Structure is **left navigation / centre logo / right utilities**, achieved entirely through Horizon's existing `logo_position`, `menu_position` and `actions_display_style` settings. No custom header layout code.
+- **Logo centring** uses Horizon's existing `grid-template-columns: 1fr auto 1fr` on `.header__columns`. The side columns are mathematically equal, so the logo is centred on the page rather than on the midpoint between the two side contents. Stress-tested at 3, 7 and 10 left-hand links: column widths stayed identical (591.562px each) and the logo did not move. Horizon collapses surplus items into a "More" overflow slot rather than letting the left column grow.
+- **Text vs icons resolved without compromise.** `actions_display_style: text` renders text labels on desktop (`mobile:hidden`) and icons on mobile (`desktop:hidden`) — this is stock Horizon behaviour, so desktop reads "Search / Account / Cart" while mobile keeps compact 44px icon targets.
+- Navigation is entirely Shopify menu data (`main-menu` via the `link_list` setting). No category names, handles or product IDs appear anywhere in the theme.
+- Mobile header was left untouched: Horizon already uses a 5-column grid (`44px 44px 1fr 44px 44px`) with the logo in the centre area, drawer and search left, actions right.
+
+### Submenu interaction (Phase 3)
+- **Option B — compact dropdown**, selected on the actual navigation data: `main-menu` has 3 top-level items (Home, Catalog, Contact), zero nested children and zero rendered mega-menu nodes. An image-led mega menu has nothing to display, and the store has no collection imagery configured yet (the homepage Featured Collections section still renders placeholders).
+- Implemented via Horizon's native `menu_style: text`. Horizon already gates submenus on `link.links != blank`, so childless items stay plain links and a dropdown appears automatically the moment the merchant nests items in Shopify Admin.
+- Hover **and** keyboard are already built in: the `<li>` carries `on:pointerenter/​pointerleave` and `on:focus/​blur` handlers, with `aria-haspopup`, `aria-controls` and `aria-expanded` on the link. No new JavaScript was written.
+- The one genuine gap was visual: Horizon lays all submenu content on a six-column grid across a full-width panel, so in text mode a few links spread across the viewport with most columns empty. Measured: a 77px nav item produced a 1430px-wide panel. Fixed by packing the groups with flex inside the panel. Flex rather than grid deliberately — at 12 groups it wraps to a second row, where a single grid row would eventually overflow.
+
 ### Homepage (Phase 2)
 - Every section reuses a stock Horizon section — no new section or block files were created. Featured Products and Best Sellers are both the `product-list` section; Featured Collections is the `collection-list` section.
 - Nothing is hardcoded: collections are chosen through the theme editor. `_product-list-button` derives its link from the selected collection and only appears when that collection holds more products than the section shows.
@@ -106,7 +124,10 @@ Measured on the development theme, hero heading "Wear art, tell your story":
 - Phase 2 is committed at `5751ccd` on `develop` (pushed). Phase 2.1 is uncommitted on branch `Vishesh`.
 - Galliard and Mundo Sans cannot be reconsidered later without self-hosting — they are deprecated in Shopify's font library, not merely absent.
 - Instrument Serif ships one weight (400) plus italic. All display hierarchy has to come from size, leading and tracking; there is no bold available for emphasis inside a heading.
-- Visual screenshot capture was unavailable during Phase 2.1 verification (the browser preview pane would not composite frames). Verification was done through computed styles and text geometry measured in the live page — more precise for spacing than a scaled screenshot, but it does not substitute for a human look at the hero.
+- Visual screenshot capture was unavailable during Phase 2.1 and Phase 3 verification (the browser preview pane would not composite frames). Verification was done through computed styles and layout geometry measured in the live page — precise for spacing and positioning, but it does not substitute for a human look.
+- **The dropdown cannot be fully verified until nested menu items exist.** `main-menu` currently has no children, so no submenu renders anywhere in the store. The compact layout was validated by injecting Horizon's exact submenu markup into the live DOM; the Liquid render path was verified by reading it. Re-check once the merchant nests real categories.
+- Anchoring the dropdown directly under its parent nav item was attempted and deliberately reverted. It requires making the `<li>` the containing block, which changes the coordinate space that Horizon's `top` and `clip-path` are computed against — those values are set at runtime by `header-menu.js` from element measurements, and the panel landed at y=-12 (behind the header) in testing. Reworking that is feasible but not safely verifiable without nested menu data. The dropdown currently uses Horizon's full-width panel with compactly packed content.
+- The header wordmark is text, not artwork: no logo image is uploaded, so Horizon falls back to the shop name. `_header-logo.liquid` hardcodes the family to the body font inline and exposes no font setting, so the size/tracking bump lives in `custom.css` and is overridden automatically once artwork is uploaded.
 
 ## Client Information Needed
 - Real social media URLs (currently `@shopify` placeholders) for the footer social links.
@@ -157,3 +178,20 @@ Measured on the development theme, hero heading "Wear art, tell your story":
   - Role separation audited across the rendered homepage: 10 distinct Instrument Serif headings, 14 Lora elements, no cross-contamination. Navigation, body, buttons, prices, product titles and footer all resolve to Lora; h1/h2/h3 all resolve to Instrument Serif.
   - Desktop 1280px and mobile 375px: no horizontal overflow; hero wraps to 2 balanced lines on mobile at a phrase boundary.
   - Caught and fixed during verification: the dense grid-view product title (`<h3 class="h4">`, Lora 13px) was inheriting the display word-spacing. Guarded with `:not(.h4, .h5, .h6, .paragraph, .rte)` and re-verified.
+
+### Phase 3 — Navbar layout & submenu interaction
+- Status: Completed (verified on the development theme, awaiting commit approval)
+- Summary: Restructured the desktop navbar to left navigation / centre logo / right text utilities, and set the submenu to the compact text style. Almost entirely configuration — Horizon already supported every part of the requested structure. One attribute was added to the menu block and the submenu content layout was made compact.
+- Files changed: `sections/header-group.json`, `blocks/_header-menu.liquid`, `assets/custom.css`, `PROJECT_PROGRESS.md`.
+- Theme editor settings used (all stock): Header → logo position, menu position, actions display style; Header menu block → menu style.
+- Verification:
+  - `shopify theme check` — 345 files, 0 offenses.
+  - Desktop 1440px: columns resolve left "Home Catalog Contact" / centre "Paridhi Creation" / right "Search Account Cart"; logo centre offset 0px.
+  - Logo centring stress-tested at 3, 7 and 10 left-hand nav links — zero movement.
+  - Tablet 768px: logo centred (offset 0), nav links and utilities visible, no overflow.
+  - Mobile 375px: grid `44px 44px 197px 44px 44px`, logo centred (offset 1px), drawer 52×52, search 44×44, actions 88×44 — all at or above the 44px touch target; utilities correctly fall back to icons.
+  - Mobile drawer opens and lists the live Shopify menu; cart drawer opens; both close on Escape.
+  - Keyboard tab order follows visual order: Home → Catalog → Contact → logo → Search → Cart.
+  - Typography audited: every navbar element resolves to Lora (body/subheading roles). No display serif in header chrome, consistent with the Phase 2.1 system.
+  - No horizontal overflow at 375, 768 or 1440px.
+  - Search: markup and wiring verified structurally (correct `aria-haspopup`, target ID resolves to a `DIALOG-COMPONENT` exposing `showDialog`). Live click-through could not be exercised because the preview pane would not composite; the change only swaps which label span is visible and does not touch the control's behaviour.

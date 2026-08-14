@@ -58,6 +58,73 @@
   word-spacing: 0.12em;
 }
 
+/* ------------------------------------------------------------
+   Header
+   ------------------------------------------------------------ */
+
+/* Header wordmark.
+
+   No logo image is uploaded, so Horizon falls back to rendering the shop
+   name as text at the body size. With the logo moved to the centre of the
+   navbar that left it the same size as the nav links either side of it, so
+   it no longer read as the brand anchor.
+
+   Size and tracking only - the family stays Lora, per the finalized type
+   system. `_header-logo.liquid` pins the family with an inline custom
+   property and exposes no font setting, so this cannot be done from the
+   theme editor. Superseded automatically once brand artwork is uploaded
+   under Theme settings > Logo, which is the better long-term fix.
+
+   The doubled class is deliberate: the block's own `{% stylesheet %}` sets
+   `font-size: var(--font-size--md)` at equal specificity, and Shopify
+   concatenates block styles after this file, so it would otherwise win on
+   source order. */
+.header-logo.header-logo {
+  font-size: 1.25rem;
+  letter-spacing: 0.02em;
+}
+
+@media screen and (max-width: 749px) {
+  .header-logo.header-logo {
+    font-size: 1.0625rem;
+  }
+}
+
+/* Submenu content, text menu style.
+
+   Horizon lays every submenu out on the same six-column mega-menu grid and
+   stretches the panel to the full header width. That suits the image-led
+   menu styles, but in `text` mode a short list of links gets spread across
+   the viewport with most columns empty.
+
+   This packs the groups to their natural width at the start of the panel so
+   the dropdown reads as a compact list. Flex rather than grid on purpose:
+   the groups wrap to a second row as the merchant adds categories, where a
+   single grid row would eventually overflow.
+
+   Only layout properties inside the panel are touched. The panel's
+   position, reveal animation and clip-path are Horizon's and stay
+   untouched - they are driven by element measurements taken at runtime in
+   header-menu.js, so overriding them here would desynchronise the two.
+
+   `data-menu-content-type` is emitted from the menu style setting in
+   `_header-menu.liquid`, so switching to an image-led style in the theme
+   editor restores the stock grid with no CSS change.
+
+   Desktop only; below 750px the drawer handles navigation. */
+@media screen and (min-width: 750px) {
+  [data-menu-content-type='text'] .mega-menu__grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--gap-lg) var(--gap-3xl);
+  }
+
+  [data-menu-content-type='text'] .mega-menu__column {
+    flex: 0 0 auto;
+    grid-column: auto;
+  }
+}
+
 /* Prices.
    Several templates render prices with the h6 preset, which is now the
    uppercase, wide-tracked label style. Money should never inherit that, so
