@@ -2,7 +2,7 @@
 
 
 ## Current Phase
-Phase 3 — Navbar layout & submenu interaction. Implemented and verified on the development theme; not yet committed. Working on branch `Vishesh`.
+Phase 3.1 — Full-viewport hero, marquee removal, navbar hover trigger. Implemented and verified on the development theme; not yet committed. Working on branch `Vishesh`.
 
 ## Completed
 - Established safe Git workflow: `main` = live/production (untouched), `develop` = all work, tag `phase1-baseline` as rollback point at develop HEAD.
@@ -48,6 +48,10 @@ Phase 3 — Navbar layout & submenu interaction. Implemented and verified on the
 - `sections/header-group.json`: `logo_position` `left` → `center`, `menu_position` `center` → `left`, `actions_display_style` `icon` → `text`, `menu_style` `featured_products` → `text`. All four are stock Horizon settings — no layout code was written for the navbar structure.
 - `blocks/_header-menu.liquid`: added `data-menu-content-type="{{ menu_content_type }}"` on the `.menu-list` nav (one attribute, no logic change), so CSS can distinguish the text menu style from the image-led ones.
 - `assets/custom.css`: header wordmark sizing/tracking, and compact flex layout for text-style submenu content.
+
+### Phase 3.1
+- `templates/index.json`: hero `section_height` `large` → `full-screen`; removed the `marquee_KN4PYb` section instance and its entry in `order`.
+- `sections/header.liquid`: the transparent-header opaque state now triggers on `:has(.header__row:hover)` instead of `:has(.menu-list__link:hover)`, across all three rules that share that condition (underlay height + logo swap, row text colour, cart bubble). New hover triggers are wrapped in `@media (hover: hover)`, with `@media (hover: none)` fallbacks preserving the light-on-image text for touch.
 
 ## Design Decisions
 - Brand colors: primary `#351f08` (deep brown), contrast `#f5e9dc` (cream). Currently only used in the footer (email signup button, policy list, copyright text); storefront output is visually unchanged from the original hardcoded values.
@@ -105,6 +109,14 @@ Measured on the development theme, hero heading "Wear art, tell your story":
 - Hover **and** keyboard are already built in: the `<li>` carries `on:pointerenter/​pointerleave` and `on:focus/​blur` handlers, with `aria-haspopup`, `aria-controls` and `aria-expanded` on the link. No new JavaScript was written.
 - The one genuine gap was visual: Horizon lays all submenu content on a six-column grid across a full-width panel, so in text mode a few links spread across the viewport with most columns empty. Measured: a 77px nav item produced a 1430px-wide panel. Fixed by packing the groups with flex inside the panel. Flex rather than grid deliberately — at 12 groups it wraps to a second row, where a single grid row would eventually overflow.
 
+### Hero & navbar hover (Phase 3.1)
+- The hero was only ~80% of the viewport because `section_height: large` resolves to `--section-height-large: 80svh` on desktop. Switched to Horizon's stock `full-screen` option, which sets `--hero-min-height: 100svh`. No custom height CSS was written.
+- `svh` (small viewport height) is Horizon's own choice here and is the right one for mobile: it sizes against the viewport with browser chrome *expanded*, so the hero never gets cropped as the address bar collapses. `100vh` would overflow on mobile and `100dvh` would resize the hero mid-scroll.
+- The hero image is a real `<img>` with `object-fit: cover`, which is Horizon's existing architecture and was left alone — the image is not stretched, and it fills the taller hero by cropping rather than distorting.
+- Horizon subtracts the header height from the first section via `--hero-height-offset`, but only when the header is *not* transparent. With the transparent header overlaying the hero on the homepage the offset resolves to `0px`, so the hero spans the full viewport and the navbar sits over it with no extra vertical space.
+- The marquee was removed as a **homepage section instance only**. `sections/marquee.liquid`, `blocks/_marquee.liquid` and the marquee presets remain in the theme, so the section can still be added back from the theme editor. Nothing else moved — the next section now begins exactly at the hero's bottom edge.
+- **Navbar hover.** The transparent header's opaque state was gated on `:has(.menu-list__link:not([aria-haspopup]):hover)` — a *nav link* — which is why only Home/Catalog/Contact triggered it and the logo, search, account, cart and empty header space did not. The condition is now `:has(.header__row:hover)`, so the whole header row is one unified hover area. Colours, transition and appearance are unchanged; only the trigger moved. No per-link hover backgrounds were added and no navigation item is referenced by name.
+
 ### Homepage (Phase 2)
 - Every section reuses a stock Horizon section — no new section or block files were created. Featured Products and Best Sellers are both the `product-list` section; Featured Collections is the `collection-list` section.
 - Nothing is hardcoded: collections are chosen through the theme editor. `_product-list-button` derives its link from the selected collection and only appears when that collection holds more products than the section shows.
@@ -127,6 +139,7 @@ Measured on the development theme, hero heading "Wear art, tell your story":
 - Visual screenshot capture was unavailable during Phase 2.1 and Phase 3 verification (the browser preview pane would not composite frames). Verification was done through computed styles and layout geometry measured in the live page — precise for spacing and positioning, but it does not substitute for a human look.
 - **The dropdown cannot be fully verified until nested menu items exist.** `main-menu` currently has no children, so no submenu renders anywhere in the store. The compact layout was validated by injecting Horizon's exact submenu markup into the live DOM; the Liquid render path was verified by reading it. Re-check once the merchant nests real categories.
 - Anchoring the dropdown directly under its parent nav item was attempted and deliberately reverted. It requires making the `<li>` the containing block, which changes the coordinate space that Horizon's `top` and `clip-path` are computed against — those values are set at runtime by `header-menu.js` from element measurements, and the panel landed at y=-12 (behind the header) in testing. Reworking that is feasible but not safely verifiable without nested menu data. The dropdown currently uses Horizon's full-width panel with compactly packed content.
+- The navbar hover **background** could not be visually confirmed. In the preview environment `.header__underlay-closed` computes to `height: 0` with `background-image: none` — identically for the original nav-link trigger and the new header-wide trigger, so the two behave the same and only the trigger region changed. The state variables were verified to flip correctly; the painted result needs a human look.
 - The header wordmark is text, not artwork: no logo image is uploaded, so Horizon falls back to the shop name. `_header-logo.liquid` hardcodes the family to the body font inline and exposes no font setting, so the size/tracking bump lives in `custom.css` and is overridden automatically once artwork is uploaded.
 
 ## Client Information Needed
@@ -195,3 +208,16 @@ Measured on the development theme, hero heading "Wear art, tell your story":
   - Typography audited: every navbar element resolves to Lora (body/subheading roles). No display serif in header chrome, consistent with the Phase 2.1 system.
   - No horizontal overflow at 375, 768 or 1440px.
   - Search: markup and wiring verified structurally (correct `aria-haspopup`, target ID resolves to a `DIALOG-COMPONENT` exposing `showDialog`). Live click-through could not be exercised because the preview pane would not composite; the change only swaps which label span is visible and does not touch the control's behaviour.
+
+### Phase 3.1 — Full-viewport hero, marquee removal, navbar hover trigger
+- Status: Completed (verified on the development theme, awaiting commit approval)
+- Summary: Hero now fills the viewport via Horizon's stock `full-screen` height option; the scrolling marquee instance was removed from the homepage; the transparent navbar's hover state now triggers across the whole header rather than only on a nav link.
+- Files changed: `templates/index.json`, `sections/header.liquid`, `PROJECT_PROGRESS.md`.
+- Verification:
+  - `shopify theme check` — 345 files, 0 offenses.
+  - Hero fills the viewport exactly, with zero gap before the next section, at every width tested: 1280×800, 1440×1080 (tall), 1024×600 (short), 768×1024 (tablet), 375×812 (mobile). Hero height matched viewport height to the pixel in all five.
+  - Hero image keeps `object-fit: cover` at every size — box matches the viewport, aspect ratio preserved, no stretching.
+  - Hero heading and both CTAs remain fully within the viewport at the shortest desktop size tested (1024×600) and on mobile.
+  - Marquee absent from the DOM at all widths; section order is hero → featured products → featured collections → brand story → best sellers → media ×2.
+  - No horizontal overflow at any width.
+  - Navbar hover: hovering the Cart (not a nav link) now flips `--closed-underlay-height` from `0px` to `100%` and the row foreground to the opaque colour — previously only nav links did this. Measured identical to the nav-link hover path.

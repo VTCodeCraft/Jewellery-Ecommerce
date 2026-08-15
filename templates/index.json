@@ -257,7 +257,7 @@
         "vertical_alignment_flex_direction_column": "flex-end",
         "gap": 0,
         "section_width": "page-width",
-        "section_height": "large",
+        "section_height": "full-screen",
         "section_height_custom": 5,
         "background_color": "rgba(0,0,0,0)",
         "toggle_overlay": true,
@@ -268,73 +268,6 @@
         "reflection_opacity": 75,
         "padding-block-start": 24,
         "padding-block-end": 72
-      }
-    },
-    "marquee_KN4PYb": {
-      "type": "marquee",
-      "blocks": {
-        "text_kFiJUi": {
-          "type": "text",
-          "settings": {
-            "text": "<p>Discover handcrafted jewellery that transforms bold inspiration into modern heirlooms for your everyday expression.</p>",
-            "width": "fit-content",
-            "max_width": "normal",
-            "alignment": "left",
-            "type_preset": "h6",
-            "font": "var(--font-body--family)",
-            "font_size": "1rem",
-            "line_height": "tight",
-            "letter_spacing": "tight",
-            "case": "none",
-            "wrap": "nowrap",
-            "text_color": "",
-            "background": false,
-            "background_color": "#00000026",
-            "corner_radius": 0,
-            "padding-block-start": 0,
-            "padding-block-end": 0,
-            "padding-inline-start": 0,
-            "padding-inline-end": 0
-          },
-          "blocks": {}
-        },
-        "text_separator": {
-          "type": "text",
-          "settings": {
-            "text": "<p>/</p>",
-            "width": "fit-content",
-            "max_width": "normal",
-            "alignment": "left",
-            "type_preset": "h6",
-            "font": "var(--font-body--family)",
-            "font_size": "1rem",
-            "line_height": "tight",
-            "letter_spacing": "tight",
-            "case": "none",
-            "wrap": "nowrap",
-            "text_color": "",
-            "background": false,
-            "background_color": "#00000026",
-            "corner_radius": 0,
-            "padding-block-start": 0,
-            "padding-block-end": 0,
-            "padding-inline-start": 0,
-            "padding-inline-end": 0
-          },
-          "blocks": {}
-        }
-      },
-      "block_order": [
-        "text_kFiJUi",
-        "text_separator"
-      ],
-      "name": "t:names.marquee_section",
-      "settings": {
-        "movement_direction": "reverse",
-        "background_color": "{{ settings.color_palette.color2 }}",
-        "padding-block-start": 24,
-        "padding-block-end": 24,
-        "gap_between_elements": 24
       }
     },
     "product_list_themegen": {
@@ -1450,7 +1383,6 @@
   },
   "order": [
     "hero_p9CmMG",
-    "marquee_KN4PYb",
     "product_list_themegen",
     "collection_list_featured",
     "section_x8mrnx",

@@ -547,8 +547,29 @@
       --closed-underlay-height: 100%;
     }
 
-    /** For transparent header, apply transparent text color to rows when menu is not hovered */
-    &:not([data-sticky-state='active']):not(:has(.menu-list__link:is(:hover, [aria-expanded='true']))) .header__row {
+    /* The opaque state is driven by the whole header, not just a nav link,
+       so hovering the logo, search, account, cart or empty header space
+       reveals the same background. Hover capability is required so that a
+       tap on a touch device does not latch the state on. */
+    @media (hover: hover) {
+      &:has(.header__row:hover) {
+        --header-logo-display: unset;
+        --header-logo-inverse-display: unset;
+        --color-foreground: inherit;
+        --color-foreground-rgb: inherit;
+        --color-background: inherit;
+        --color-background-rgb: inherit;
+        --color-border: inherit;
+        --color-border-rgb: inherit;
+        --closed-underlay-height: 100%;
+      }
+    }
+
+    /** For transparent header, apply transparent text color to rows when the header is not hovered */
+    &:not([data-sticky-state='active']):not(:has(.menu-list__link:is(:hover, [aria-expanded='true']))):not(
+        :has(.header__row:hover)
+      )
+      .header__row {
       --color-foreground: var(--color-transparent-text);
       --color-foreground-rgb: var(--color-transparent-text-rgb);
       --color-border: var(--color-transparent-text);
@@ -557,14 +578,38 @@
       --color-primary-button-text: var(--color-transparent-text-contrast);
     }
 
+    /* Without hover capability the background above never turns opaque, so the
+       text has to stay light or it would sit unreadable over the image after a tap. */
+    @media (hover: none) {
+      &:not([data-sticky-state='active']):not(:has(.menu-list__link:is(:hover, [aria-expanded='true'])))
+        .header__row {
+        --color-foreground: var(--color-transparent-text);
+        --color-foreground-rgb: var(--color-transparent-text-rgb);
+        --color-border: var(--color-transparent-text);
+        --color-border-rgb: var(--color-transparent-text-rgb);
+        --color-primary-button-background: var(--color-transparent-text);
+        --color-primary-button-text: var(--color-transparent-text-contrast);
+      }
+    }
+
     /* Swap the cart bubble in transparent state only when using the default
        style. Custom bubble colors apply unchanged across header states. */
     &[data-bubble-style='default']:not([data-sticky-state='active']):not(
         :has(.menu-list__link:is(:hover, [aria-expanded='true']))
-      )
+      ):not(:has(.header__row:hover))
       .header__row {
       --cart-bubble-background: var(--color-transparent-text, var(--cart-bubble-background-fallback));
       --cart-bubble-text: var(--color-transparent-text-contrast, var(--cart-bubble-text-fallback));
+    }
+
+    @media (hover: none) {
+      &[data-bubble-style='default']:not([data-sticky-state='active']):not(
+          :has(.menu-list__link:is(:hover, [aria-expanded='true']))
+        )
+        .header__row {
+        --cart-bubble-background: var(--color-transparent-text, var(--cart-bubble-background-fallback));
+        --cart-bubble-text: var(--color-transparent-text-contrast, var(--cart-bubble-text-fallback));
+      }
     }
 
     /* Multiple selectors for performance: each simple :has() check is faster than one complex selector with multiple conditions */
