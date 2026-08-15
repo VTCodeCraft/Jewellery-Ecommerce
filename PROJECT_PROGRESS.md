@@ -2,7 +2,7 @@
 
 
 ## Current Phase
-Phase 3.1 — Full-viewport hero, marquee removal, navbar hover trigger. Implemented and verified on the development theme; not yet committed. Working on branch `Vishesh`.
+Phase 3.2 — Homepage section trim. Implemented and verified on the development theme; not yet committed. Working on branch `Vishesh`.
 
 ## Completed
 - Established safe Git workflow: `main` = live/production (untouched), `develop` = all work, tag `phase1-baseline` as rollback point at develop HEAD.
@@ -52,6 +52,9 @@ Phase 3.1 — Full-viewport hero, marquee removal, navbar hover trigger. Impleme
 ### Phase 3.1
 - `templates/index.json`: hero `section_height` `large` → `full-screen`; removed the `marquee_KN4PYb` section instance and its entry in `order`.
 - `sections/header.liquid`: the transparent-header opaque state now triggers on `:has(.header__row:hover)` instead of `:has(.menu-list__link:hover)`, across all three rules that share that condition (underlay height + logo swap, row text colour, cart bubble). New hover triggers are wrapped in `@media (hover: hover)`, with `@media (hover: none)` fallbacks preserving the light-on-image text for touch.
+
+### Phase 3.2
+- `templates/index.json`: removed the two `media-with-content` section instances — `media_with_content_xMM9EF` ("Artisan craftsmanship") and `media_with_content_nrnzPh` ("Distinctive materials") — and their `order` entries.
 
 ## Design Decisions
 - Brand colors: primary `#351f08` (deep brown), contrast `#f5e9dc` (cream). Currently only used in the footer (email signup button, policy list, copyright text); storefront output is visually unchanged from the original hardcoded values.
@@ -108,6 +111,11 @@ Measured on the development theme, hero heading "Wear art, tell your story":
 - Implemented via Horizon's native `menu_style: text`. Horizon already gates submenus on `link.links != blank`, so childless items stay plain links and a dropdown appears automatically the moment the merchant nests items in Shopify Admin.
 - Hover **and** keyboard are already built in: the `<li>` carries `on:pointerenter/​pointerleave` and `on:focus/​blur` handlers, with `aria-haspopup`, `aria-controls` and `aria-expanded` on the link. No new JavaScript was written.
 - The one genuine gap was visual: Horizon lays all submenu content on a six-column grid across a full-width panel, so in text mode a few links spread across the viewport with most columns empty. Measured: a 77px nav item produced a 1430px-wide panel. Fixed by packing the groups with flex inside the panel. Flex rather than grid deliberately — at 12 groups it wraps to a second row, where a single grid row would eventually overflow.
+
+### Homepage section trim (Phase 3.2)
+- The two image/text split sections were removed as **homepage instances only**, the same approach used for the marquee. `sections/media-with-content.liquid` and its blocks (`_media-without-appearance`, `_content-without-appearance`) remain in the theme, so the section is still available in the theme editor and other templates are unaffected.
+- Homepage section order is now: hero → featured products → featured collections → brand story → best sellers.
+- No spacing compensation was needed. Sections carry their own padding, so the ones below simply moved up: every inter-section gap measures 0px on mobile and 0–1px on desktop (sub-pixel rounding).
 
 ### Hero & navbar hover (Phase 3.1)
 - The hero was only ~80% of the viewport because `section_height: large` resolves to `--section-height-large: 80svh` on desktop. Switched to Horizon's stock `full-screen` option, which sets `--hero-min-height: 100svh`. No custom height CSS was written.
@@ -208,6 +216,17 @@ Measured on the development theme, hero heading "Wear art, tell your story":
   - Typography audited: every navbar element resolves to Lora (body/subheading roles). No display serif in header chrome, consistent with the Phase 2.1 system.
   - No horizontal overflow at 375, 768 or 1440px.
   - Search: markup and wiring verified structurally (correct `aria-haspopup`, target ID resolves to a `DIALOG-COMPONENT` exposing `showDialog`). Live click-through could not be exercised because the preview pane would not composite; the change only swaps which label span is visible and does not touch the control's behaviour.
+
+### Phase 3.2 — Homepage section trim
+- Status: Completed (verified on the development theme, awaiting commit approval)
+- Summary: Removed the "Artisan craftsmanship" and "Distinctive materials" image/text split sections from the homepage, keeping the underlying section reusable.
+- Files changed: `templates/index.json`, `PROJECT_PROGRESS.md`.
+- Verification:
+  - `shopify theme check` — 345 files, 0 offenses.
+  - Both sections absent from the DOM at 1280px and 375px; neither heading string appears anywhere on the page.
+  - No gaps left behind: inter-section gaps are 0px throughout on mobile, 0–1px on desktop. Sections stack contiguously (desktop: 0 → 800 → 1510 → 2391 → 2791 → 3463 → 3641).
+  - Remaining sections keep their existing layout; hero still fills the viewport; no horizontal overflow at either width.
+  - `sections/media-with-content.liquid` and its blocks confirmed still present in the theme.
 
 ### Phase 3.1 — Full-viewport hero, marquee removal, navbar hover trigger
 - Status: Completed (verified on the development theme, awaiting commit approval)
