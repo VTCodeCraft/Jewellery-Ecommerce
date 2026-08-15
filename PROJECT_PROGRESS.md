@@ -2,7 +2,7 @@
 
 
 ## Current Phase
-Phase 3.2 — Homepage section trim. Implemented and verified on the development theme; not yet committed. Working on branch `Vishesh`.
+Phase 3.3 — Collections / Best Sellers / Featured Products refinement. Implemented and verified on the development theme; not yet committed. Working on branch `Vishesh`.
 
 ## Completed
 - Established safe Git workflow: `main` = live/production (untouched), `develop` = all work, tag `phase1-baseline` as rollback point at develop HEAD.
@@ -55,6 +55,9 @@ Phase 3.2 — Homepage section trim. Implemented and verified on the development
 
 ### Phase 3.2
 - `templates/index.json`: removed the two `media-with-content` section instances — `media_with_content_xMM9EF` ("Artisan craftsmanship") and `media_with_content_nrnzPh` ("Distinctive materials") — and their `order` entries.
+
+### Phase 3.3
+- `templates/index.json` only. Reordered the existing sections to Hero → Collections → Best Sellers → Featured Products → brand story, and retuned the three sections' existing settings. No section was created, duplicated or replaced, and no Liquid or CSS was written.
 
 ## Design Decisions
 - Brand colors: primary `#351f08` (deep brown), contrast `#f5e9dc` (cream). Currently only used in the footer (email signup button, policy list, copyright text); storefront output is visually unchanged from the original hardcoded values.
@@ -112,6 +115,15 @@ Measured on the development theme, hero heading "Wear art, tell your story":
 - Hover **and** keyboard are already built in: the `<li>` carries `on:pointerenter/​pointerleave` and `on:focus/​blur` handlers, with `aria-haspopup`, `aria-controls` and `aria-expanded` on the link. No new JavaScript was written.
 - The one genuine gap was visual: Horizon lays all submenu content on a six-column grid across a full-width panel, so in text mode a few links spread across the viewport with most columns empty. Measured: a 77px nav item produced a 1430px-wide panel. Fixed by packing the groups with flex inside the panel. Flex rather than grid deliberately — at 12 groups it wraps to a second row, where a single grid row would eventually overflow.
 
+### Collections / Best Sellers / Featured Products (Phase 3.3)
+- Homepage sequence is now **Hero → Collections → Best Sellers → Featured Products → brand story**. The three sections are the same instances as before (`collection_list_featured`, `product_list_best_sellers`, `product_list_themegen`), reordered rather than recreated.
+- **Collections**: 3 → 4 columns, card imagery portrait → **square**, background switched from `color_palette.color2` (grey) to the page background so the section reads off-white and the imagery carries it. Gaps 16/32 → 24/48, section padding 72 → 96.
+- **Best Sellers** — positioned as the shoppable, easy-to-scan grid: header and card text **left aligned**, standard spacing retained (gaps 16/48, padding 72).
+- **Featured Products** — positioned as the curated/editorial grid: header and card text stay **centred**, with noticeably more air (gaps 24/56, padding 96).
+- The two product grids are differentiated by **alignment and whitespace only** — same product-card architecture, same typography, no gratuitous styling differences. Best Sellers reads as a browse grid; Featured Products reads as a curated presentation.
+- All data stays dynamic. Collections come from the `collection_list` picker, products from each section's `collection` picker; titles, images, prices and links are all rendered by Horizon's stock collection-card and product-card components. No handle, ID, title, price or image is hardcoded anywhere.
+- Typography unchanged and consistent with the finalized system: section headings render Instrument Serif 48px; collection titles, product titles and prices render Lora 16px.
+
 ### Homepage section trim (Phase 3.2)
 - The two image/text split sections were removed as **homepage instances only**, the same approach used for the marquee. `sections/media-with-content.liquid` and its blocks (`_media-without-appearance`, `_content-without-appearance`) remain in the theme, so the section is still available in the theme editor and other templates are unaffected.
 - Homepage section order is now: hero → featured products → featured collections → brand story → best sellers.
@@ -139,7 +151,7 @@ Measured on the development theme, hero heading "Wear art, tell your story":
 - Featured Products still points at the theme asset-pack demo collection (`asset-pack-…-example-products`).
 - The colour palette is still stock white/black/grey. The brand hexes added in Phase 1 (`color3` deep brown, `color4` cream) are only consumed by the footer, so the storefront does not yet read as warm/handmade.
 - The fluid font-size fix in `theme-styles-variables.liquid` is a change to a stock Horizon file. A theme upgrade will overwrite it; the fix must be re-applied, or every heading ≥ 48px will collapse back to a fixed size.
-- Horizon has only two grid breakpoints (mobile / ≥ 750px), so a 768px tablet shows the full desktop column count. Four product cards at 768px is tight but legible; not changed, since it would override the merchant's column setting site-wide.
+- At 768px all three grids show 4 columns, giving ~152px imagery. This is Horizon's deliberate behaviour, not a defect: its `resource-list` container query uses 3 columns between 450–749px but bumps to 4 when there are exactly 4, 7 or 10 items, specifically to avoid an orphan card in the last row. Overriding it would reinstate the 3 + 1 orphan the theme avoids, so it was left alone. Revisit if the merchant configures a different number of collections/products.
 - Prices on the collection, search, 404, cart and product-recommendation templates use the h6 preset and therefore render at 12px. Worth raising to the paragraph preset in a later phase.
 - Phase 2 is committed at `5751ccd` on `develop` (pushed). Phase 2.1 is uncommitted on branch `Vishesh`.
 - Galliard and Mundo Sans cannot be reconsidered later without self-hosting — they are deprecated in Shopify's font library, not merely absent.
@@ -216,6 +228,20 @@ Measured on the development theme, hero heading "Wear art, tell your story":
   - Typography audited: every navbar element resolves to Lora (body/subheading roles). No display serif in header chrome, consistent with the Phase 2.1 system.
   - No horizontal overflow at 375, 768 or 1440px.
   - Search: markup and wiring verified structurally (correct `aria-haspopup`, target ID resolves to a `DIALOG-COMPONENT` exposing `showDialog`). Live click-through could not be exercised because the preview pane would not composite; the change only swaps which label span is visible and does not touch the control's behaviour.
+
+### Phase 3.3 — Collections / Best Sellers / Featured Products refinement
+- Status: Completed (verified on the development theme, awaiting commit approval)
+- Summary: Reordered the three existing sections into Collections → Best Sellers → Featured Products and retuned their layout, imagery and spacing toward the editorial reference. Settings-only; no new sections, no Liquid, no CSS.
+- Files changed: `templates/index.json`, `PROJECT_PROGRESS.md`.
+- Verification:
+  - `shopify theme check` — 345 files, 0 offenses.
+  - Section order confirmed in the rendered DOM: hero → Collections ("Find your piece") → Best Sellers → Featured Products → brand story ("Our shop") → newsletter → footer. Exactly one instance of each; navbar and hero untouched.
+  - Desktop 1440px: all three grids 4 columns; collection images 320×320 (ratio 1.00, equal dimensions); gaps 48/24, 48/16 and 56/24 respectively; all backgrounds white.
+  - Tablet 768px: 4 columns, collection images square at 152px, product images 4/5 at 152×190.
+  - Mobile 375px: 2 columns across all three, collection images 166×166 square, product images 166×208 portrait, zero inter-section gaps.
+  - No horizontal overflow at 1440, 768 or 375px.
+  - Dynamic data confirmed live: Featured Products renders real product links (`/products/…`) and real prices from the configured collection.
+  - Typography confirmed: headings Instrument Serif 48px, card titles and prices Lora 16px.
 
 ### Phase 3.2 — Homepage section trim
 - Status: Completed (verified on the development theme, awaiting commit approval)
