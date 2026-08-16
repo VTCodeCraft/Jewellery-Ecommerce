@@ -529,7 +529,7 @@
       },
       "name": "t:names.products_grid",
       "settings": {
-        "collection": "asset-pack-97238417410-example-products",
+        "collection": "featured-products",
         "layout_type": "grid",
         "carousel_on_mobile": false,
         "max_products": 4,
@@ -861,7 +861,12 @@
       ],
       "name": "t:names.collections_grid",
       "settings": {
-        "collection_list": [],
+        "collection_list": [
+          "earrings",
+          "necklaces",
+          "bracelets-bangles",
+          "rings"
+        ],
         "layout_type": "grid",
         "carousel_on_mobile": false,
         "columns": 4,
@@ -1138,7 +1143,7 @@
       },
       "name": "t:names.products_grid",
       "settings": {
-        "collection": "",
+        "collection": "best-sellers",
         "layout_type": "grid",
         "carousel_on_mobile": false,
         "max_products": 4,

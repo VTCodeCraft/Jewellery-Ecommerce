@@ -2,7 +2,10 @@
 
 
 ## Current Phase
-Phase 3.3 — Collections / Best Sellers / Featured Products refinement. Implemented and verified on the development theme; not yet committed. Working on branch `Vishesh`.
+Phase 3.4 — Temporary development catalogue created in Shopify. Verified end to end on the development theme; theme change not yet committed. Working on branch `Vishesh`.
+
+> **Temporary development catalogue created from the provided product structure for testing Shopify functionality. Replace with the client's final catalogue before launch.**
+> Every development product carries the tag **`DEV-SAMPLE`**. To remove the whole set later, filter by that tag in Shopify Admin → Products and bulk delete. Nothing is hardcoded in the theme.
 
 ## Completed
 - Established safe Git workflow: `main` = live/production (untouched), `develop` = all work, tag `phase1-baseline` as rollback point at develop HEAD.
@@ -58,6 +61,10 @@ Phase 3.3 — Collections / Best Sellers / Featured Products refinement. Impleme
 
 ### Phase 3.3
 - `templates/index.json` only. Reordered the existing sections to Hero → Collections → Best Sellers → Featured Products → brand story, and retuned the three sections' existing settings. No section was created, duplicated or replaced, and no Liquid or CSS was written.
+
+### Phase 3.4
+- **Shopify Admin data** (not theme code): 13 development products, 11 automated collections, inventory and Online Store publication — all created through the Admin GraphQL API via `shopify store execute`.
+- `templates/index.json`: pointed the three existing sections at the new collections — Collections → `earrings, necklaces, bracelets-bangles, rings`; Best Sellers → `best-sellers`; Featured Products → `featured-products` (replacing the asset-pack demo collection). Resource pickers only; no layout, styling or Liquid change.
 
 ## Design Decisions
 - Brand colors: primary `#351f08` (deep brown), contrast `#f5e9dc` (cream). Currently only used in the footer (email signup button, policy list, copyright text); storefront output is visually unchanged from the original hardcoded values.
@@ -115,6 +122,30 @@ Measured on the development theme, hero heading "Wear art, tell your story":
 - Hover **and** keyboard are already built in: the `<li>` carries `on:pointerenter/​pointerleave` and `on:focus/​blur` handlers, with `aria-haspopup`, `aria-controls` and `aria-expanded` on the link. No new JavaScript was written.
 - The one genuine gap was visual: Horizon lays all submenu content on a six-column grid across a full-width panel, so in text mode a few links spread across the viewport with most columns empty. Measured: a 77px nav item produced a 1430px-wide panel. Fixed by packing the groups with flex inside the panel. Flex rather than grid deliberately — at 12 groups it wraps to a second row, where a single grid row would eventually overflow.
 
+### Development catalogue (Phase 3.4)
+- **13 development products**, 1–2 per category, using the exact categories and terminology from the client product spreadsheet (`Paridhi-Creation-Product-List.xlsx`). All are artificial/fashion jewellery — no claims about gold purity, diamonds, certification or hypoallergenic properties.
+- **Excel field → Shopify mapping:**
+
+| Excel column | Shopify field |
+|---|---|
+| Product Name | Product title |
+| Category | `productType` + automated collection |
+| Description | `descriptionHtml` (material/colour/size repeated as a spec block) |
+| Price (Rs.) | Variant price, INR |
+| Stock Qty | Inventory at location "M Block, Shastri Nagar" |
+| Material | Tag `Material: <value>` |
+| Colour | Tag `Colour: <value>` |
+| Size / Length | Variant option where it varies, otherwise tag `Size: <value>` |
+| Best Seller? | Tag `best-seller` → Best Sellers collection |
+| Photo 1–4 | Partially — see limitations |
+| Notes | Not mapped (internal only) |
+
+- **11 automated collections.** Category collections use the rule *product type equals `<category>`*; Best Sellers and Featured Products use *tag equals `best-seller` / `featured`*. Automated rather than manual so the merchant only has to set a product type or add a tag — nothing needs a developer, and nothing is hardcoded in the theme.
+- **Best Sellers (4):** Meenakari Peacock Jhumka, Kundan Choker Necklace, AD Stone Statement Ring, Ghungroo Payal Anklet.
+- **Featured Products (4):** Layered Pearl Chain Necklace, Beaded Charm Bracelet, Temple Jewellery Necklace Set, Floral Enamel Hair Pin Set. Deliberately a different set from Best Sellers so the two sections can be tested independently.
+- **Variants:** two products carry real size options — Antique Gold Kada Bangle (2.4 / 2.6 / 2.8) and AD Stone Statement Ring (12 / 14 / 16) — so the variant picker and per-variant inventory can be tested.
+- **Metafields were deliberately not created.** The task brief assumed Material/Colour/Size metafields already existed; the Phase 0 audit confirmed none do (only Shopify's standard `shopify.disclosure` and `reviews.*`). Creating definitions would also need theme work to display them, which this task excluded. Material, Colour and Size are therefore stored as structured tags — which additionally makes them usable as native filters via Search & Discovery — plus a spec block in the description. Proper metafields remain a Phase 4 task.
+
 ### Collections / Best Sellers / Featured Products (Phase 3.3)
 - Homepage sequence is now **Hero → Collections → Best Sellers → Featured Products → brand story**. The three sections are the same instances as before (`collection_list_featured`, `product_list_best_sellers`, `product_list_themegen`), reordered rather than recreated.
 - **Collections**: 3 → 4 columns, card imagery portrait → **square**, background switched from `color_palette.color2` (grey) to the page background so the section reads off-white and the imagery carries it. Gaps 16/32 → 24/48, section padding 72 → 96.
@@ -148,7 +179,8 @@ Measured on the development theme, hero heading "Wear art, tell your story":
 - `color_palette.color1`–`color4` are also consumed elsewhere (input text/borders, drawer/popover borders, section backgrounds). Changing a palette color in the theme editor affects all consumers of that key, not just the footer. Do not rename/reorder palette keys once live.
 - The `sections/footer-group.json` file is marked auto-generated by the theme editor; manual edits may be overwritten. The same applies to `sections/header-group.json` and `templates/index.json`.
 - Best Sellers and Featured Collections ship with empty resource settings, so they render placeholder cards until a collection / collection list is chosen in the theme editor. This is deliberate — hardcoded handles would break on a store that does not have them.
-- Featured Products still points at the theme asset-pack demo collection (`asset-pack-…-example-products`).
+- The 4 original Shopify asset-pack demo products (tagged "Sample Product", zero inventory, unavailable) are still in the store and were deliberately left untouched. Delete them alongside the `DEV-SAMPLE` set when the real catalogue lands.
+- **5 of 13 development products have no image.** The store only holds four pieces of jewellery photography, which were reused for the categories they genuinely match (Earrings, Necklaces, Bracelets & Bangles, Rings). Anklets, Sets, Hair Accessories, Nose Pins and Other were left imageless rather than showing unrelated photos, so those cards render Horizon's placeholder.
 - The colour palette is still stock white/black/grey. The brand hexes added in Phase 1 (`color3` deep brown, `color4` cream) are only consumed by the footer, so the storefront does not yet read as warm/handmade.
 - The fluid font-size fix in `theme-styles-variables.liquid` is a change to a stock Horizon file. A theme upgrade will overwrite it; the fix must be re-applied, or every heading ≥ 48px will collapse back to a fixed size.
 - At 768px all three grids show 4 columns, giving ~152px imagery. This is Horizon's deliberate behaviour, not a defect: its `resource-list` container query uses 3 columns between 450–749px but bumps to 4 when there are exactly 4, 7 or 10 items, specifically to avoid an orphan card in the last row. Overriding it would reinstate the 3 + 1 orphan the theme avoids, so it was left alone. Revisit if the merchant configures a different number of collections/products.
@@ -228,6 +260,23 @@ Measured on the development theme, hero heading "Wear art, tell your story":
   - Typography audited: every navbar element resolves to Lora (body/subheading roles). No display serif in header chrome, consistent with the Phase 2.1 system.
   - No horizontal overflow at 375, 768 or 1440px.
   - Search: markup and wiring verified structurally (correct `aria-haspopup`, target ID resolves to a `DIALOG-COMPONENT` exposing `showDialog`). Live click-through could not be exercised because the preview pane would not composite; the change only swaps which label span is visible and does not touch the control's behaviour.
+
+### Phase 3.4 — Temporary development catalogue
+- Status: Completed (verified end to end on the development theme; theme change awaiting commit approval)
+- Summary: Created a temporary Shopify catalogue so the storefront can be developed and tested against real data. 13 products across all 9 Excel categories, 11 automated collections, real inventory, published to the Online Store.
+- Files changed: `templates/index.json`, `PROJECT_PROGRESS.md`. Everything else is Shopify Admin data, not code.
+- Admin API access: authenticated via `shopify store auth` against the permanent domain `ghmkq0-ir.myshopify.com` (the `paridhi-creation-3` domain is an alias and is rejected by the OAuth callback).
+- Verification:
+  - `shopify theme check` — 345 files, 0 offenses.
+  - 13 products live, 182 units of stock, every variant `availableForSale: true`.
+  - Collection membership: Earrings 2, Necklaces 2, Bracelets & Bangles 2, Rings 2, Anklets 1, Sets 1, Hair Accessories 1, Nose Pins 1, Other 1, Best Sellers 4, Featured Products 4.
+  - All 11 collection pages return HTTP 200 and appear in `/collections.json`.
+  - Homepage now renders real data: Collections shows 4 category tiles linking to real collection pages; Best Sellers and Featured Products each show 4 products with correct INR prices and working product links.
+  - Product pages: variant product renders the "Ring Size" picker and Product JSON-LD; simple product shows Rs. 450.00 with material/colour/size in the description; recommendations render.
+  - Cart tested via AJAX API: add simple product, add a specific variant, cart total Rs. 1,220 in INR, quantity change to 5 recalculated the line to Rs. 1,600, line removal worked, clear worked.
+  - **Inventory enforcement confirmed** — requesting quantity 999 returned HTTP 422 "Only 5 items were added to your cart due to availability".
+  - Search finds the development products; filtered collection URLs return 200.
+  - No horizontal overflow on the homepage.
 
 ### Phase 3.3 — Collections / Best Sellers / Featured Products refinement
 - Status: Completed (verified on the development theme, awaiting commit approval)
