@@ -90,24 +90,9 @@
           test_id: 'resource-list-grid'
         %}
       </div>
-
-      <button
-        class="product-list-slider__arrow product-list-slider__arrow--prev"
-        data-slider-prev
-        aria-label="Previous"
-        type="button"
-      >
-        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M12.5 15L7.5 10L12.5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </button>
-
-      <button
-        class="product-list-slider__arrow product-list-slider__arrow--next"
-        data-slider-next
-        aria-label="Next"
-        type="button"
-      >
-        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M7.5 15L12.5 10L7.5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </button>
+      <div class="product-list-slider__scrollbar" data-slider-scrollbar>
+        <div class="product-list-slider__scrollbar-thumb" data-slider-scrollbar-thumb></div>
+      </div>
     </product-list-slider>
   {% else %}
     {% render 'resource-list',
@@ -188,64 +173,53 @@
     container-type: inline-size;
   }
 
-  .product-list-slider__arrow {
-    position: absolute;
-    top: calc(50% - 24px);
-    transform: translateY(-50%);
-    z-index: 5;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 48px;
-    height: 48px;
-    padding: 0;
-    border: 1px solid var(--color-foreground, #000);
-    border-radius: 50%;
-    background: var(--color-background, #fff);
-    color: var(--color-foreground, #000);
-    cursor: pointer;
-    transition: opacity 0.2s ease, visibility 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+  .product-list-slider__track.is-dragging {
+    scroll-behavior: auto;
+    cursor: grabbing;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-user-drag: none;
+  }
+
+  .product-list-slider__scrollbar {
+    position: relative;
+    width: 100%;
+    height: 3px;
+    margin-top: 16px;
+    background: rgb(var(--color-foreground-rgb, 0, 0, 0) / 0.08);
+    border-radius: 3px;
     opacity: 0;
     visibility: hidden;
-    pointer-events: none;
+    overflow: hidden;
   }
 
-  .product-list-slider__arrow:hover {
-    background: var(--color-foreground, #000);
-    color: var(--color-background, #fff);
-  }
-
-  .product-list-slider__arrow--prev {
-    left: -24px;
-  }
-
-  .product-list-slider__arrow--next {
-    right: -24px;
-  }
-
-  product-list-slider[data-has-overflow="true"] .product-list-slider__arrow[data-enabled="true"] {
+  product-list-slider[data-has-overflow="true"] .product-list-slider__scrollbar {
     opacity: 1;
     visibility: visible;
-    pointer-events: auto;
   }
 
-  product-list-slider[data-scroll-position="start"] .product-list-slider__arrow--prev[data-enabled="true"] {
-    opacity: 0;
-    visibility: hidden;
-    pointer-events: none;
+  .product-list-slider__scrollbar-thumb {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    min-width: 32px;
+    border-radius: 3px;
+    background: rgb(var(--color-foreground-rgb, 0, 0, 0) / 0.35);
+    cursor: grab;
+    will-change: transform;
   }
 
-  product-list-slider[data-scroll-position="end"] .product-list-slider__arrow--next[data-enabled="true"] {
-    opacity: 0;
-    visibility: hidden;
-    pointer-events: none;
+  .product-list-slider__scrollbar-thumb:hover {
+    background: rgb(var(--color-foreground-rgb, 0, 0, 0) / 0.55);
+  }
+
+  .product-list-slider__scrollbar-thumb.is-scrollbar-dragging {
+    cursor: grabbing;
+    background: rgb(var(--color-foreground-rgb, 0, 0, 0) / 0.55);
   }
 
   @media screen and (max-width: 749px) {
-    .product-list-slider__arrow {
-      display: none;
-    }
-
     .product-list-slider__header {
       flex-direction: column;
       align-items: flex-start;
@@ -266,60 +240,227 @@
 
 <script>
   (function () {
-    if (customElements.get('product-list-slider')) return;
+    const SLIDER_SELECTOR = 'product-list-slider';
+    const TRACK_SELECTOR = '[data-slider-track]';
+    const SCROLLBAR_SELECTOR = '[data-slider-scrollbar]';
+    const THUMB_SELECTOR = '[data-slider-scrollbar-thumb]';
+    const DRAG_THRESHOLD = 8;
+    const INITIALIZED_ATTR = 'data-slider-init';
 
-    class ProductListSlider extends HTMLElement {
-      connectedCallback() {
-        this.track = this.querySelector('[data-slider-track]');
-        this.prevBtn = this.querySelector('[data-slider-prev]');
-        this.nextBtn = this.querySelector('[data-slider-next]');
+    function initSlider(el) {
+      if (el.hasAttribute(INITIALIZED_ATTR)) return;
 
-        if (!this.track || !this.prevBtn || !this.nextBtn) return;
+      const track = el.querySelector(TRACK_SELECTOR);
+      if (!track) return;
 
-        this.prevBtn.addEventListener('click', () => this.scroll(-1));
-        this.nextBtn.addEventListener('click', () => this.scroll(1));
+      const scrollbar = el.querySelector(SCROLLBAR_SELECTOR);
+      const thumb = el.querySelector(THUMB_SELECTOR);
 
-        this.track.addEventListener('scroll', () => this.update(), { passive: true });
-        this.resizeObserver = new ResizeObserver(() => this.update());
-        this.resizeObserver.observe(this.track);
+      el.setAttribute(INITIALIZED_ATTR, '1');
 
-        this.update();
-      }
+      /* ---- overflow + scrollbar sync ---- */
 
-      disconnectedCallback() {
-        if (this.resizeObserver) this.resizeObserver.disconnect();
-      }
-
-      scroll(direction) {
-        const item = this.track.querySelector('.resource-list__item');
-        if (!item) return;
-        const gap = parseInt(getComputedStyle(this.track.querySelector('.resource-list--grid')).gap) || 16;
-        this.track.scrollBy({ left: direction * (item.offsetWidth + gap), behavior: 'smooth' });
-      }
-
-      update() {
-        const scrollWidth = this.track.scrollWidth;
-        const clientWidth = this.track.clientWidth;
-        const scrollLeft = this.track.scrollLeft;
+      function updateOverflow() {
+        const scrollWidth = track.scrollWidth;
+        const clientWidth = track.clientWidth;
+        const scrollLeft = track.scrollLeft;
         const tolerance = 2;
-
         const hasOverflow = scrollWidth - clientWidth > tolerance;
-        this.setAttribute('data-has-overflow', String(hasOverflow));
 
-        this.prevBtn.setAttribute('data-enabled', String(hasOverflow));
-        this.nextBtn.setAttribute('data-enabled', String(hasOverflow));
+        el.setAttribute('data-has-overflow', String(hasOverflow));
 
         if (scrollLeft <= tolerance) {
-          this.setAttribute('data-scroll-position', 'start');
+          el.setAttribute('data-scroll-position', 'start');
         } else if (scrollLeft >= scrollWidth - clientWidth - tolerance) {
-          this.setAttribute('data-scroll-position', 'end');
+          el.setAttribute('data-scroll-position', 'end');
         } else {
-          this.setAttribute('data-scroll-position', 'middle');
+          el.setAttribute('data-scroll-position', 'middle');
         }
+
+        if (!scrollbar || !thumb) return;
+
+        if (!hasOverflow) {
+          thumb.style.width = '0px';
+          thumb.style.transform = 'translateX(0)';
+          return;
+        }
+
+        var maxScroll = scrollWidth - clientWidth;
+        var ratio = maxScroll > 0 ? scrollLeft / maxScroll : 0;
+
+        /* Thumb width: proportion of visible area, clamped to min 32px */
+        var trackWidth = scrollbar.clientWidth || clientWidth;
+        var thumbWidthPct = clientWidth / scrollWidth;
+        var thumbWidth = Math.max(32, thumbWidthPct * trackWidth);
+        var thumbMaxTravel = trackWidth - thumbWidth;
+
+        if (thumbMaxTravel < 0) thumbMaxTravel = 0;
+
+        var thumbLeft = ratio * thumbMaxTravel;
+
+        thumb.style.width = thumbWidth + 'px';
+        thumb.style.transform = 'translateX(' + thumbLeft + 'px)';
+      }
+
+      track.addEventListener('scroll', updateOverflow, { passive: true });
+      new ResizeObserver(updateOverflow).observe(track);
+      updateOverflow();
+
+      /* ---- product row drag ---- */
+
+      var dragState = null;
+
+      function onMouseMove(e) {
+        var ds = dragState;
+        if (!ds) return;
+
+        var dx = e.clientX - ds.startX;
+        var dy = e.clientY - ds.startY;
+
+        if (!ds.dragging) {
+          if (Math.abs(dx) <= DRAG_THRESHOLD && Math.abs(dy) <= DRAG_THRESHOLD) return;
+          if (Math.abs(dy) > Math.abs(dx)) {
+            cleanupDrag();
+            return;
+          }
+          ds.dragging = true;
+          track.classList.add('is-dragging');
+          document.body.style.userSelect = 'none';
+          document.body.style.webkitUserSelect = 'none';
+        }
+
+        e.preventDefault();
+        track.scrollLeft = ds.startScrollLeft - dx;
+      }
+
+      function onMouseUp() {
+        cleanupDrag();
+      }
+
+      function cleanupDrag() {
+        if (dragState && dragState.dragging) {
+          track.classList.remove('is-dragging');
+          document.body.style.userSelect = '';
+          document.body.style.webkitUserSelect = '';
+        }
+        dragState = null;
+        document.removeEventListener('mousemove', onMouseMove);
+        document.removeEventListener('mouseup', onMouseUp);
+      }
+
+      el.addEventListener('mousedown', function (e) {
+        if (e.button !== 0) return;
+        if (e.target.closest('a, button, input, textarea, select')) return;
+
+        e.preventDefault();
+
+        dragState = {
+          startX: e.clientX,
+          startY: e.clientY,
+          startScrollLeft: track.scrollLeft,
+          dragging: false,
+        };
+
+        document.addEventListener('mousemove', onMouseMove, { passive: false });
+        document.addEventListener('mouseup', onMouseUp);
+      });
+
+      /* ---- scrollbar thumb drag ---- */
+
+      if (scrollbar && thumb) {
+        var thumbDrag = null;
+
+        function onThumbMove(e) {
+          if (!thumbDrag) return;
+          e.preventDefault();
+
+          var trackWidth = scrollbar.clientWidth || track.clientWidth;
+          var scrollWidth = track.scrollWidth;
+          var clientWidth = track.clientWidth;
+          var thumbWidth = thumb.clientWidth;
+          var maxScroll = scrollWidth - clientWidth;
+          var maxThumbLeft = trackWidth - thumbWidth;
+
+          if (maxThumbLeft <= 0 || maxScroll <= 0) return;
+
+          var dx = e.clientX - thumbDrag.startX;
+          var newThumbLeft = Math.max(0, Math.min(maxThumbLeft, thumbDrag.startThumbLeft + dx));
+          var ratio = newThumbLeft / maxThumbLeft;
+
+          track.scrollLeft = thumbDrag.startScrollLeft + ratio * maxScroll;
+        }
+
+        function onThumbUp() {
+          if (thumbDrag) {
+            thumb.classList.remove('is-scrollbar-dragging');
+            thumbDrag = null;
+          }
+          document.removeEventListener('mousemove', onThumbMove);
+          document.removeEventListener('mouseup', onThumbUp);
+        }
+
+        thumb.addEventListener('mousedown', function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+
+          var thumbRect = thumb.getBoundingClientRect();
+          var scrollbarRect = scrollbar.getBoundingClientRect();
+
+          thumbDrag = {
+            startX: e.clientX,
+            startScrollLeft: track.scrollLeft,
+            startThumbLeft: thumbRect.left - scrollbarRect.left,
+          };
+
+          thumb.classList.add('is-scrollbar-dragging');
+          document.addEventListener('mousemove', onThumbMove, { passive: false });
+          document.addEventListener('mouseup', onThumbUp);
+        });
+
+        scrollbar.addEventListener('click', function (e) {
+          if (e.target === thumb || thumbDrag) return;
+
+          var scrollbarRect = scrollbar.getBoundingClientRect();
+          var clickX = e.clientX - scrollbarRect.left;
+          var trackWidth = scrollbar.clientWidth || track.clientWidth;
+          var thumbWidth = thumb.clientWidth;
+          var maxScroll = track.scrollWidth - track.clientWidth;
+          var maxThumbLeft = trackWidth - thumbWidth;
+
+          if (maxThumbLeft <= 0 || maxScroll <= 0) return;
+
+          var targetThumbLeft = clickX - thumbWidth / 2;
+          var ratio = Math.max(0, Math.min(1, targetThumbLeft / maxThumbLeft));
+
+          track.scrollTo({ left: ratio * maxScroll, behavior: 'smooth' });
+        });
       }
     }
 
-    customElements.define('product-list-slider', ProductListSlider);
+    /* ---- initialize all existing sliders ---- */
+    function initAll() {
+      document.querySelectorAll(SLIDER_SELECTOR).forEach(initSlider);
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initAll);
+    } else {
+      initAll();
+    }
+
+    /* ---- catch sliders added later (e.g. section rendering) ---- */
+    new MutationObserver(function (mutations) {
+      for (var i = 0; i < mutations.length; i++) {
+        for (var j = 0; j < mutations[i].addedNodes.length; j++) {
+          var node = mutations[i].addedNodes[j];
+          if (node.nodeType !== 1) continue;
+          if (node.matches && node.matches(SLIDER_SELECTOR)) initSlider(node);
+          if (node.querySelectorAll) {
+            node.querySelectorAll(SLIDER_SELECTOR).forEach(initSlider);
+          }
+        }
+      }
+    }).observe(document.body, { childList: true, subtree: true });
   })();
 </script>
 
