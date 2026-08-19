@@ -16,7 +16,7 @@ Phase 3.6 — Best Sellers & Featured Products data-driven responsive sliders wi
 - Restructured the homepage: hero with CTAs, featured products, featured collections, brand story, best sellers (see Phase 2).
 
 ## In Progress
-- Awaiting user verification of Phase 3.6 on the development theme.
+- Hero vertical alignment fix: changed `vertical_alignment_flex_direction_column` from `flex-end` to `center` in `templates/index.json`. Pushed to dev theme #199609548881. Awaiting user verification.
 
 ## Pending
 - Commit and push Phase 1 + Phase 2 work to `develop` (requires user approval).
