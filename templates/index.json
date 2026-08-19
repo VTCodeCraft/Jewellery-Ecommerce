@@ -280,10 +280,10 @@
           "settings": {
             "content_direction": "column",
             "vertical_on_mobile": false,
-            "horizontal_alignment": "center",
+            "horizontal_alignment": "flex-start",
             "vertical_alignment": "center",
             "align_baseline": true,
-            "horizontal_alignment_flex_direction_column": "center",
+            "horizontal_alignment_flex_direction_column": "flex-start",
             "vertical_alignment_flex_direction_column": "center",
             "gap": 16,
             "width": "fill",
@@ -313,7 +313,7 @@
                 "text": "<h2>Featured products</h2>",
                 "width": "100%",
                 "max_width": "normal",
-                "alignment": "center",
+                "alignment": "left",
                 "type_preset": "h2",
                 "font": "var(--font-body--family)",
                 "font_size": "",
@@ -339,7 +339,7 @@
                 "text": "<p>A rotating edit of the pieces we are loving right now.</p>",
                 "width": "100%",
                 "max_width": "normal",
-                "alignment": "center",
+                "alignment": "left",
                 "type_preset": "paragraph",
                 "font": "var(--font-body--family)",
                 "font_size": "1rem",
@@ -357,26 +357,11 @@
                 "padding-inline-end": 0
               },
               "blocks": {}
-            },
-            "product_list_button_featured": {
-              "type": "_product-list-button",
-              "name": "t:names.product_list_button",
-              "settings": {
-                "label": "View all",
-                "open_in_new_tab": false,
-                "style_class": "button-secondary",
-                "width": "fit-content",
-                "custom_width": 100,
-                "width_mobile": "fit-content",
-                "custom_width_mobile": 100
-              },
-              "blocks": {}
             }
           },
           "block_order": [
             "product_list_text_Bd9pVh",
-            "text_featured_description",
-            "product_list_button_featured"
+            "text_featured_description"
           ]
         },
         "static-product-card": {
@@ -532,7 +517,7 @@
         "collection": "featured-products",
         "layout_type": "grid",
         "carousel_on_mobile": false,
-        "max_products": 4,
+        "max_products": 16,
         "columns": 4,
         "mobile_columns": "2",
         "mobile_card_size": "60cqw",
@@ -894,7 +879,7 @@
           "settings": {
             "content_direction": "column",
             "vertical_on_mobile": false,
-            "horizontal_alignment": "center",
+            "horizontal_alignment": "flex-start",
             "vertical_alignment": "center",
             "align_baseline": true,
             "horizontal_alignment_flex_direction_column": "flex-start",
@@ -971,26 +956,11 @@
                 "padding-inline-end": 0
               },
               "blocks": {}
-            },
-            "product_list_button_best_sellers": {
-              "type": "_product-list-button",
-              "name": "t:names.product_list_button",
-              "settings": {
-                "label": "Shop best sellers",
-                "open_in_new_tab": false,
-                "style_class": "button-secondary",
-                "width": "fit-content",
-                "custom_width": 100,
-                "width_mobile": "fit-content",
-                "custom_width_mobile": 100
-              },
-              "blocks": {}
             }
           },
           "block_order": [
             "product_list_text_best_sellers",
-            "text_best_sellers_description",
-            "product_list_button_best_sellers"
+            "text_best_sellers_description"
           ]
         },
         "static-product-card": {
@@ -1146,7 +1116,7 @@
         "collection": "best-sellers",
         "layout_type": "grid",
         "carousel_on_mobile": false,
-        "max_products": 4,
+        "max_products": 16,
         "columns": 4,
         "mobile_columns": "2",
         "mobile_card_size": "60cqw",
@@ -1166,8 +1136,8 @@
   "order": [
     "hero_p9CmMG",
     "collection_list_featured",
+    "section_x8mrnx",
     "product_list_best_sellers",
-    "product_list_themegen",
-    "section_x8mrnx"
+    "product_list_themegen"
   ]
 }

@@ -2,10 +2,7 @@
 
 
 ## Current Phase
-Phase 3.4 — Temporary development catalogue created in Shopify. Verified end to end on the development theme; theme change not yet committed. Working on branch `Vishesh`.
-
-> **Temporary development catalogue created from the provided product structure for testing Shopify functionality. Replace with the client's final catalogue before launch.**
-> Every development product carries the tag **`DEV-SAMPLE`**. To remove the whole set later, filter by that tag in Shopify Admin → Products and bulk delete. Nothing is hardcoded in the theme.
+Phase 3.6 — Best Sellers & Featured Products data-driven responsive sliders with "View all" links. Pushed to development theme.
 
 ## Completed
 - Established safe Git workflow: `main` = live/production (untouched), `develop` = all work, tag `phase1-baseline` as rollback point at develop HEAD.
@@ -19,7 +16,7 @@ Phase 3.4 — Temporary development catalogue created in Shopify. Verified end t
 - Restructured the homepage: hero with CTAs, featured products, featured collections, brand story, best sellers (see Phase 2).
 
 ## In Progress
-- Awaiting merchant configuration of the Best Sellers collection and the Featured Collections list in the theme editor.
+- Awaiting user verification of Phase 3.6 on the development theme.
 
 ## Pending
 - Commit and push Phase 1 + Phase 2 work to `develop` (requires user approval).
@@ -314,4 +311,31 @@ Measured on the development theme, hero heading "Wear art, tell your story":
   - Hero heading and both CTAs remain fully within the viewport at the shortest desktop size tested (1024×600) and on mobile.
   - Marquee absent from the DOM at all widths; section order is hero → featured products → featured collections → brand story → best sellers → media ×2.
   - No horizontal overflow at any width.
-  - Navbar hover: hovering the Cart (not a nav link) now flips `--closed-underlay-height` from `0px` to `100%` and the row foreground to the opaque colour — previously only nav links did this. Measured identical to the nav-link hover path.
+   - Navbar hover: hovering the Cart (not a nav link) now flips `--closed-underlay-height` from `0px` to `100%` and the row foreground to the opaque colour — previously only nav links did this. Measured identical to the nav-link hover path.
+
+### Phase 3.5 — Homepage section reorder
+- Status: Completed (verified locally, not committed)
+- Summary: Reordered homepage sections so the "Our Shop" brand-statement section appears immediately after Categories/Collections, before Best Sellers and Featured Products. No section content, styling, or blocks were changed — only the render order in the `order` array.
+- Files changed: `templates/index.json` (order array only: `section_x8mrnx` moved from position 5 to position 3).
+- Verification:
+  - `shopify theme check` — 345 files, 0 offenses.
+  - Order confirmed: `hero_p9CmMG` → `collection_list_featured` → `section_x8mrnx` → `product_list_best_sellers` → `product_list_themegen`.
+  - Diff is a single 4-line swap in the `order` array; no section definitions modified.
+
+### Phase 3.6 — Best Sellers & Featured Products horizontal slider
+- Status: Completed (verified on development theme, pushed)
+- Summary: Converted Best Sellers and Featured Products from static grids to data-driven responsive horizontal sliders. Products scroll horizontally when they overflow the available width. Removed the `_product-list-button` blocks that caused "Translation missing" errors. Fixed Featured Products heading alignment from center to left.
+- Files changed:
+  - `sections/product-list.liquid`: replaced the static grid with a `<product-list-slider>` custom element wrapping the `resource-list` in a horizontal scrollable track. Added prev/next arrow buttons, "View all" link in the header, and JavaScript (custom element) for overflow detection and arrow visibility.
+  - `templates/index.json`: increased `max_products` from 4 to 16 for both sections; changed Featured Products header alignment from center to left; removed `_product-list-button` blocks from both sections.
+- Implementation details:
+  - **Data-driven**: shows all products from the collection (up to 16, the section schema max). No hardcoded product count.
+  - **Responsive card sizing**: CSS `container-type: inline-size` on items with viewport-relative widths. Desktop: 4 columns, tablet: 3, mobile: 2.
+  - **Conditional slider**: `<product-list-slider>` custom element uses `ResizeObserver` + scroll events to detect overflow. Arrows only appear when `scrollWidth > clientWidth`.
+  - **Arrow visibility**: tracks `data-scroll-position` (start/middle/end) to hide prev at start and next at end.
+  - **Mobile**: arrows hidden, native swipe/scroll works. Header stacks vertically.
+  - **"View all" link**: hardcoded "View all" text (fixes the `text_defaults.view_all_button_label` translation missing error), links to the collection URL.
+  - **No grid override on non-slider layouts**: the flex override only applies inside `product-list-slider__track`, so other `product-list` sections using grid/carousel/editorial are unaffected.
+- Verification:
+  - `shopify theme check` — 345 files, 0 offenses.
+  - Pushed to development theme `#199609548881`.

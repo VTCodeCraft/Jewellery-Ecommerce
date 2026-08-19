@@ -5,6 +5,11 @@
   if section.settings.background_color != blank
     render 'contrast-override', background_color: section.settings.background_color, section_id: section.id
   endif
+
+  assign view_more_url = ''
+  if section.settings.collection != blank
+    assign view_more_url = section.settings.collection.url
+  endif
 %}
 
 <div
@@ -25,30 +30,35 @@
     {% render 'gap-style', value: section.settings.gap %}
   "
 >
-  <div class="section-resource-list__header">
-    {%- content_for 'block', type: '_product-list-content', id: 'static-header' -%}
+  <div class="product-list-slider__header">
+    <div class="product-list-slider__header-left">
+      {%- content_for 'block', type: '_product-list-content', id: 'static-header' -%}
+    </div>
+    {% if view_more_url != blank %}
+      <a href="{{ view_more_url }}" class="product-list-slider__view-more button-unstyled">
+        View all
+      </a>
+    {% endif %}
   </div>
 
   {% capture list_items %}
     {% if section.settings.collection != blank and shop.products_count != 0 %}
-      {% paginate section.settings.collection.products by max_items %}
-        {% for product in section.settings.collection.products limit: max_items %}
-        <div
-          class="resource-list__item"
-        >
-            {% content_for 'block',
-              type: '_product-card',
-              id: 'static-product-card',
-              closest.product: product,
-              product_view_context: 'collection'
-            %}
-          </div>
+      {% for product in section.settings.collection.products limit: max_items %}
+      <div
+        class="resource-list__item"
+      >
+          {% content_for 'block',
+            type: '_product-card',
+            id: 'static-product-card',
+            closest.product: product,
+            product_view_context: 'collection'
+          %}
+        </div>
 
-          {% unless forloop.last %}
-            <!--@list/split-->
-          {% endunless %}
-        {% endfor %}
-      {% endpaginate %}
+        {% unless forloop.last %}
+          <!--@list/split-->
+        {% endunless %}
+      {% endfor %}
     {% else %}
       {% for i in (1..max_items) %}
         <div
@@ -65,18 +75,50 @@
   {% endcapture %}
 
   {% liquid
-    # Create an array from the list items to be used for different layout types
     assign list_items_array = list_items | strip | split: '<!--@list/split-->'
   %}
 
-  {% render 'resource-list',
-    list_items: list_items,
-    list_items_array: list_items_array,
-    settings: section.settings,
-    slide_count: max_items,
-    content_type: 'products',
-    test_id: 'resource-list-grid'
-  %}
+  {% if section.settings.layout_type == 'grid' %}
+    <product-list-slider data-section-id="{{ section.id }}">
+      <div class="product-list-slider__track" data-slider-track>
+        {% render 'resource-list',
+          list_items: list_items,
+          list_items_array: list_items_array,
+          settings: section.settings,
+          slide_count: max_items,
+          content_type: 'products',
+          test_id: 'resource-list-grid'
+        %}
+      </div>
+
+      <button
+        class="product-list-slider__arrow product-list-slider__arrow--prev"
+        data-slider-prev
+        aria-label="Previous"
+        type="button"
+      >
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M12.5 15L7.5 10L12.5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+
+      <button
+        class="product-list-slider__arrow product-list-slider__arrow--next"
+        data-slider-next
+        aria-label="Next"
+        type="button"
+      >
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M7.5 15L12.5 10L7.5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </product-list-slider>
+  {% else %}
+    {% render 'resource-list',
+      list_items: list_items,
+      list_items_array: list_items_array,
+      settings: section.settings,
+      slide_count: max_items,
+      content_type: 'products',
+      test_id: 'resource-list-grid'
+    %}
+  {% endif %}
 
   <div
     class="section-resource-list__content"
@@ -85,6 +127,201 @@
     {%- content_for 'blocks' -%}
   </div>
 </div>
+
+{% stylesheet %}
+  .product-list-slider__header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .product-list-slider__header-left {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .product-list-slider__view-more {
+    flex-shrink: 0;
+    font-family: var(--font-body--family);
+    font-size: var(--font-size--body-sm, 0.875rem);
+    color: var(--color-foreground);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    transition: opacity 0.2s ease;
+    white-space: nowrap;
+  }
+
+  .product-list-slider__view-more:hover {
+    opacity: 0.7;
+  }
+
+  product-list-slider {
+    display: block;
+    position: relative;
+  }
+
+  .product-list-slider__track {
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    scroll-behavior: smooth;
+  }
+
+  .product-list-slider__track::-webkit-scrollbar {
+    display: none;
+  }
+
+  .product-list-slider__track .resource-list--grid {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: var(--resource-list-column-gap);
+    width: max-content;
+  }
+
+  .product-list-slider__track .resource-list__item {
+    flex: 0 0 auto;
+    width: calc((100cqw - var(--resource-list-column-gap) * 3) / 4);
+    container-type: inline-size;
+  }
+
+  .product-list-slider__arrow {
+    position: absolute;
+    top: calc(50% - 24px);
+    transform: translateY(-50%);
+    z-index: 5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    padding: 0;
+    border: 1px solid var(--color-foreground, #000);
+    border-radius: 50%;
+    background: var(--color-background, #fff);
+    color: var(--color-foreground, #000);
+    cursor: pointer;
+    transition: opacity 0.2s ease, visibility 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  .product-list-slider__arrow:hover {
+    background: var(--color-foreground, #000);
+    color: var(--color-background, #fff);
+  }
+
+  .product-list-slider__arrow--prev {
+    left: -24px;
+  }
+
+  .product-list-slider__arrow--next {
+    right: -24px;
+  }
+
+  product-list-slider[data-has-overflow="true"] .product-list-slider__arrow[data-enabled="true"] {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+  }
+
+  product-list-slider[data-scroll-position="start"] .product-list-slider__arrow--prev[data-enabled="true"] {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  product-list-slider[data-scroll-position="end"] .product-list-slider__arrow--next[data-enabled="true"] {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  @media screen and (max-width: 749px) {
+    .product-list-slider__arrow {
+      display: none;
+    }
+
+    .product-list-slider__header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.5rem;
+    }
+
+    .product-list-slider__track .resource-list__item {
+      width: calc((100cqw - var(--resource-list-column-gap)) / 2);
+    }
+  }
+
+  @media screen and (min-width: 750px) and (max-width: 1024px) {
+    .product-list-slider__track .resource-list__item {
+      width: calc((100cqw - var(--resource-list-column-gap) * 2) / 3);
+    }
+  }
+{% endstylesheet %}
+
+<script>
+  (function () {
+    if (customElements.get('product-list-slider')) return;
+
+    class ProductListSlider extends HTMLElement {
+      connectedCallback() {
+        this.track = this.querySelector('[data-slider-track]');
+        this.prevBtn = this.querySelector('[data-slider-prev]');
+        this.nextBtn = this.querySelector('[data-slider-next]');
+
+        if (!this.track || !this.prevBtn || !this.nextBtn) return;
+
+        this.prevBtn.addEventListener('click', () => this.scroll(-1));
+        this.nextBtn.addEventListener('click', () => this.scroll(1));
+
+        this.track.addEventListener('scroll', () => this.update(), { passive: true });
+        this.resizeObserver = new ResizeObserver(() => this.update());
+        this.resizeObserver.observe(this.track);
+
+        this.update();
+      }
+
+      disconnectedCallback() {
+        if (this.resizeObserver) this.resizeObserver.disconnect();
+      }
+
+      scroll(direction) {
+        const item = this.track.querySelector('.resource-list__item');
+        if (!item) return;
+        const gap = parseInt(getComputedStyle(this.track.querySelector('.resource-list--grid')).gap) || 16;
+        this.track.scrollBy({ left: direction * (item.offsetWidth + gap), behavior: 'smooth' });
+      }
+
+      update() {
+        const scrollWidth = this.track.scrollWidth;
+        const clientWidth = this.track.clientWidth;
+        const scrollLeft = this.track.scrollLeft;
+        const tolerance = 2;
+
+        const hasOverflow = scrollWidth - clientWidth > tolerance;
+        this.setAttribute('data-has-overflow', String(hasOverflow));
+
+        this.prevBtn.setAttribute('data-enabled', String(hasOverflow));
+        this.nextBtn.setAttribute('data-enabled', String(hasOverflow));
+
+        if (scrollLeft <= tolerance) {
+          this.setAttribute('data-scroll-position', 'start');
+        } else if (scrollLeft >= scrollWidth - clientWidth - tolerance) {
+          this.setAttribute('data-scroll-position', 'end');
+        } else {
+          this.setAttribute('data-scroll-position', 'middle');
+        }
+      }
+    }
+
+    customElements.define('product-list-slider', ProductListSlider);
+  })();
+</script>
 
 {% schema %}
 {
