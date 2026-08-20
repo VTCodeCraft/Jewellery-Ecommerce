@@ -306,6 +306,8 @@
       new ResizeObserver(updateOverflow).observe(track);
       updateOverflow();
 
+      el._sliderRecalc = updateOverflow;
+
       /* ---- product row drag ---- */
 
       var dragState = null;
@@ -447,6 +449,15 @@
     } else {
       initAll();
     }
+
+    /* ---- recalculate after full page load (images, fonts, etc.) ---- */
+    window.addEventListener('load', function () {
+      requestAnimationFrame(function () {
+        document.querySelectorAll(SLIDER_SELECTOR).forEach(function (el) {
+          if (typeof el._sliderRecalc === 'function') el._sliderRecalc();
+        });
+      });
+    });
 
     /* ---- catch sliders added later (e.g. section rendering) ---- */
     new MutationObserver(function (mutations) {

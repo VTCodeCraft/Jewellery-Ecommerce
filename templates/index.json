@@ -729,53 +729,11 @@
                 "padding-inline-end": 0
               },
               "blocks": {}
-            },
-            "text_collections_description": {
-              "type": "text",
-              "name": "t:names.text",
-              "settings": {
-                "text": "<p>Earrings, necklaces, bracelets and rings — each made by hand in small batches.</p>",
-                "width": "100%",
-                "max_width": "normal",
-                "alignment": "center",
-                "type_preset": "paragraph",
-                "font": "var(--font-body--family)",
-                "font_size": "1rem",
-                "line_height": "normal",
-                "letter_spacing": "normal",
-                "case": "none",
-                "wrap": "pretty",
-                "text_color": "",
-                "background": false,
-                "background_color": "#00000026",
-                "corner_radius": 0,
-                "padding-block-start": 0,
-                "padding-block-end": 0,
-                "padding-inline-start": 0,
-                "padding-inline-end": 0
-              },
-              "blocks": {}
-            },
-            "button_collections_all": {
-              "type": "button",
-              "settings": {
-                "label": "View all collections",
-                "link": "shopify://collections",
-                "open_in_new_tab": false,
-                "style_class": "button-unstyled",
-                "width": "fit-content",
-                "custom_width": 100,
-                "width_mobile": "fit-content",
-                "custom_width_mobile": 100
-              },
-              "blocks": {}
             }
           },
           "block_order": [
             "text_collections_eyebrow",
-            "text_collections_heading",
-            "text_collections_description",
-            "button_collections_all"
+            "text_collections_heading"
           ]
         },
         "static-collection-card": {
