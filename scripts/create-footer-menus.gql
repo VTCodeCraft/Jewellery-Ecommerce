@@ -1,0 +1,47 @@
+mutation CreateFooterMenus {
+  # Create "Shop" menu
+  shopMenu: menuCreate(input: {
+    handle: "footer-shop"
+    title: "Shop"
+    items: [
+      { title: "All Jewellery", url: "/collections/all" }
+      { title: "Earrings", url: "/collections/earrings" }
+      { title: "Necklaces", url: "/collections/necklaces" }
+      { title: "Rings", url: "/collections/rings" }
+      { title: "Bracelets", url: "/collections/bracelets-bangles" }
+    ]
+  }) {
+    menu { id handle title }
+    userErrors { field message }
+  }
+
+  # Create "About" menu
+  aboutMenu: menuCreate(input: {
+    handle: "footer-about"
+    title: "About"
+    items: [
+      { title: "Our Story", url: "/pages/about" }
+      { title: "Contact Us", url: "/pages/contact" }
+      { title: "Craftsmanship", url: "/pages/craftsmanship" }
+    ]
+  }) {
+    menu { id handle title }
+    userErrors { field message }
+  }
+
+  # Create "Help" menu
+  helpMenu: menuCreate(input: {
+    handle: "footer-help"
+    title: "Help"
+    items: [
+      { title: "FAQ", url: "/pages/faq" }
+      { title: "Shipping & Delivery", url: "/pages/shipping-policy" }
+      { title: "Returns", url: "/pages/refund-policy" }
+      { title: "Jewellery Care", url: "/pages/jewellery-care" }
+      { title: "Size Guide", url: "/pages/size-guide" }
+    ]
+  }) {
+    menu { id handle title }
+    userErrors { field message }
+  }
+}

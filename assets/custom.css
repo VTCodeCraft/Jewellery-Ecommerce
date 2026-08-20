@@ -136,3 +136,24 @@ product-price {
 
   font-variant-numeric: tabular-nums;
 }
+
+/* ------------------------------------------------------------
+   Footer
+
+   The main columns are the generic `section` in footer-group.json,
+   laid out as a flex row (content_direction: row) with columns
+   spread across the width (horizontal_alignment: space-between).
+   Below 750px the theme's `mobile-column` stacks them vertically;
+   on tablet we let the columns wrap so they read as 2-3 per row
+   instead of being squeezed into a single row of five.
+   ------------------------------------------------------------ */
+
+@media screen and (min-width: 750px) and (max-width: 989px) {
+  footer .layout-panel-flex--row {
+    flex-wrap: wrap;
+  }
+
+  footer .layout-panel-flex--row > .shopify-block {
+    flex: 1 1 30%;
+  }
+}

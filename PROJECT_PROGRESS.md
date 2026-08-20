@@ -2,7 +2,7 @@
 
 
 ## Current Phase
-Phase 3.6 — Best Sellers & Featured Products data-driven responsive sliders with "View all" links. Pushed to development theme.
+Phase 4 — Footer restructure to match reference layout. Pushed to development theme.
 
 ## Completed
 - Established safe Git workflow: `main` = live/production (untouched), `develop` = all work, tag `phase1-baseline` as rollback point at develop HEAD.
@@ -16,9 +16,15 @@ Phase 3.6 — Best Sellers & Featured Products data-driven responsive sliders wi
 - Restructured the homepage: hero with CTAs, featured products, featured collections, brand story, best sellers (see Phase 2).
 
 ## In Progress
-- Hero vertical alignment fix: changed `vertical_alignment_flex_direction_column` from `flex-end` to `center` in `templates/index.json`. Pushed to dev theme #199609548881. Awaiting user verification.
+- Footer restructure: brand area + 3 navigation columns + newsletter layout matching reference. Navigation menus need to be created in Shopify Admin (see below). Pushed to dev theme #199609548881.
 
 ## Pending
+- **Create footer navigation menus in Shopify Admin** (required for footer to display links):
+  1. Go to Shopify Admin → Content → Navigation → Menus
+  2. Create menu with handle `footer-shop`: All Jewellery (`/collections/all`), Earrings (`/collections/earrings`), Necklaces (`/collections/necklaces`), Rings (`/collections/rings`), Bracelets (`/collections/bracelets-bangles`)
+  3. Create menu with handle `footer-about`: Our Story (`/pages/about`), Contact Us (`/pages/contact`), Craftsmanship (`/pages/craftsmanship`)
+  4. Create menu with handle `footer-help`: FAQ (`/pages/faq`), Shipping & Delivery (`/pages/shipping-policy`), Returns (`/pages/refund-policy`), Jewellery Care (`/pages/jewellery-care`), Size Guide (`/pages/size-guide`)
+  5. Create the referenced pages if they don't exist yet
 - Commit and push Phase 1 + Phase 2 work to `develop` (requires user approval).
 - Replace the Featured Products collection (still the theme asset-pack demo collection) with a real one.
 - Review the brand colour palette: `color_palette` is still the stock white/black/grey set, so the store does not yet read as "warm handmade".
@@ -27,6 +33,12 @@ Phase 3.6 — Best Sellers & Featured Products data-driven responsive sliders wi
 
 ## Technical Changes
 - `sections/footer-group.json`: replaced 5 hardcoded brand hexes (`#351f08`, `#f5e9dc`) with `{{ settings.color_palette.color3 }}` / `{{ settings.color_palette.color4 }}` in the email signup button, policy list, and copyright blocks.
+
+### Phase 4 — Footer restructure
+- `sections/footer-group.json`: restructured main footer from "Stay inspired" heading + newsletter to 5-column layout: brand area (Paridhi Creation heading) + 3 navigation columns (Shop, About, Help) + newsletter (heading + email signup). Navigation columns use `menu` block type referencing `footer-shop`, `footer-about`, `footer-help` link lists. Utilities bar updated: removed "Powered by Shopify", social links reduced to Instagram only (placeholder).
+- `sections/footer.liquid`: changed grid columns cap from 4 to 5; added CSS for 5-column layout (`1.4fr 1fr 1fr 1fr 1.6fr`) at desktop breakpoint; added 5-column tablet layout (3-column wrap).
+- `assets/custom.css`: added footer-specific styles — menu heading margin, menu link line-height, newsletter heading spacing, utilities layout.
+- `scripts/create-footer-menus.gql`: GraphQL mutation to create the three footer navigation menus in Shopify Admin (not yet executed — requires API auth).
 - `config/settings_schema.json`: extended `color_palette` default with `color1`–`color4` (brand colors = `color3`, `color4`). Removed the earlier rejected custom "Brand" settings group.
 - `config/settings_data.json`: added `color3: "#351f08"` and `color4: "#f5e9dc"` to `color_palette` in both `current` and `presets.Horizon`. File kept in compact single-line format.
 - `snippets/stylesheets.liquid`: added `{{ 'custom.css' | asset_url | stylesheet_tag }}`.
