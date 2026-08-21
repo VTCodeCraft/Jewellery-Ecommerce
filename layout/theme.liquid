@@ -62,6 +62,23 @@
       <script>
         // Inline header height and menu style calculations to prevent layout shift
         // Note: Updates in calculateHeaderGroupHeight(), updateTransparentHeaderOffset() and setHeaderMenuStyle() utilities.js should be kept in sync with this function
+
+        // Must run BEFORE the height measurement below. Without data-menu-style the
+        // header renders in its unhydrated state (drawer and menu both visible) and
+        // measures taller than its final height (82px vs 66px on desktop). That stale
+        // value feeds --header-height, which the transparent-header offset adds to the
+        // hero's top padding, so when header.js re-measured the hydrated header the
+        // hero content visibly shifted upward after load.
+        (function setHeaderMenuStyle() {
+          const headerComponent = document.querySelector('#header-component');
+          if (headerComponent) {
+            const isTouchDevice = 'ontouchstart' in window && navigator.maxTouchPoints > 0;
+            const overflowList = headerComponent?.querySelector('overflow-list');
+            const hasReachedMinimum = overflowList && overflowList.hasAttribute('minimum-reached');
+            headerComponent.dataset.menuStyle = isTouchDevice || hasReachedMinimum ? 'drawer' : 'menu';
+          }
+        })();
+
         (function setHeaderHeighCustomProperties() {
           /*
            * Header calculation functions for maintaining CSS variables
@@ -114,16 +131,6 @@
 
           const shouldApplyOffset = !hasImmediateSection ? '1' : '0';
           document.body.style.setProperty('--transparent-header-offset-boolean', shouldApplyOffset);
-        })();
-
-        (function setHeaderMenuStyle() {
-          const headerComponent = document.querySelector('#header-component');
-          if (headerComponent) {
-            const isTouchDevice = 'ontouchstart' in window && navigator.maxTouchPoints > 0;
-            const overflowList = headerComponent?.querySelector('overflow-list');
-            const hasReachedMinimum = overflowList && overflowList.hasAttribute('minimum-reached');
-            headerComponent.dataset.menuStyle = isTouchDevice || hasReachedMinimum ? 'drawer' : 'menu';
-          }
         })();
       </script>
 

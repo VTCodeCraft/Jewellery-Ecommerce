@@ -2,7 +2,14 @@
 
 
 ## Current Phase
-Phase 4.1 — Scroll-misalignment investigation on the three homepage card sections; slider thumb-drag fix.
+Phase 4.2 — Hero post-load vertical shift fixed.
+
+### Phase 4.2 — Hero content shifting upward after page load (root-caused + fixed)
+- **Root cause measured, not guessed.** The hero's top padding includes the transparent-header offset: `--section-top-offset = --header-height × --transparent-header-offset-boolean` (base.css:2200, consumed at base.css:1377). `--header-height` is written twice: by an inline script in `layout/theme.liquid` during initial render, then by `header.js`'s ResizeObserver after hydration.
+- The inline script measured the header **before** its sibling IIFE applied `data-menu-style`, i.e. in the unhydrated state where drawer and menu chrome are both visible. Measured heights (sandboxed no-JS iframe replay): **no attribute → 82px**, `menu` → 66px, `drawer` → 60px; hydrated live header → 66px. So the hero first rendered with `24 + 82 = 106px` top padding, and when `header.js` corrected the variable to 66px the content moved **up 16px (~2% at 800px viewport)** — the reported shift.
+- **Fix:** reordered the two existing IIFEs in `layout/theme.liquid` so `setHeaderMenuStyle` runs before `setHeaderHeighCustomProperties`. No new JS, no offsets, no design change; the loaded position is byte-identical to before (h1 top 265px at 1280×800).
+- Verified after fix: `--header-height` is 66px from its first write and never changes; h1 position 265 → 265 over 2.5s (desktop 1280×800) and 272 → 272 (mobile 375×812, drawer style, 60px = actual); variable matches `offsetHeight` exactly on both; no horizontal overflow; `shopify theme check` 345 files, 0 offenses.
+- Note: fonts were ruled out (preloaded, fixed line-height ratios; measured zero movement across `document.fonts.ready`), and the hero image is out-of-flow (`object-fit: cover` in an absolute wrapper), so neither contributes.
 
 ### Phase 4.1 — Card misalignment while scrolling (investigation + fix)
 - **No scroll/reveal animation exists on these cards.** Audited the shared chain (`resource-list`, `_product-card`, `_collection-card`, card-gallery, base.css): no scroll-driven animations (`animation-timeline`), no IntersectionObserver reveals on cards, no parallax, no sticky/fixed elements inside the sections (live DOM query), no keyframes on list items. Hover lift/scale exist in Horizon but are gated on `card_hover_effect`, which is `none`; view transitions (`translateY(100px)` slide-in) are gated off. Live 60fps sampling during scripted scrolling measured **0.0px drift** of image and price relative to their card, with zero DOM mutations and zero class/style changes.
