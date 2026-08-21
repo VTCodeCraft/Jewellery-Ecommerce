@@ -138,6 +138,47 @@ product-price {
 }
 
 /* ------------------------------------------------------------
+   Cards: suppress the native link/image drag ghost
+
+   Dragging a collection or product card otherwise lifts Chrome's
+   link preview (bold title + URL in a grey box) instead of doing
+   nothing / letting the slider drag. Firefox ignores this property,
+   so custom.js also cancels dragstart on the same elements.
+   ------------------------------------------------------------ */
+:is(.collection-card, .product-card) :is(a, img),
+:is(.collection-card, .product-card) {
+  -webkit-user-drag: none;
+}
+
+/* ------------------------------------------------------------
+   Back link, top-left under the header on every route
+   except the homepage (markup in layout/theme.liquid)
+   ------------------------------------------------------------ */
+.back-link-bar {
+  padding-inline: var(--page-margin, 2rem);
+  padding-block: var(--padding-lg) 0;
+}
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--gap-2xs);
+  min-height: var(--minimum-touch-target);
+  font-family: var(--font-body--family);
+  font-size: var(--font-paragraph--size);
+  color: var(--color-foreground);
+  cursor: pointer;
+}
+
+.back-link .svg-wrapper {
+  display: inline-flex;
+}
+
+.back-link:hover {
+  color: rgb(var(--color-foreground-rgb) / var(--opacity-70));
+}
+
+/* ------------------------------------------------------------
    Footer
 
    The main columns are the generic `section` in footer-group.json,

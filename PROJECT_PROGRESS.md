@@ -2,7 +2,12 @@
 
 
 ## Current Phase
-Phase 4.3 — Slider drag-from-image fixed.
+Phase 4.4 — Card drag-ghost suppressed + back button on all routes.
+
+### Phase 4.4 — Drag ghost + back button
+- The grey "title + URL" box in the client's screenshot is **Chrome's native link-drag ghost**, lifted when a collection card (plain grid, so outside the slider's dragstart guard) is click-dragged. Suppressed on all collection/product cards: `-webkit-user-drag: none` in `custom.css` (WebKit) plus a delegated `dragstart` cancel in `custom.js` (Firefox has no CSS equivalent). Scoped to cards so links elsewhere stay draggable. Note: the URL preview in the browser's bottom-left **status bar** is browser chrome and cannot be hidden by any site.
+- **Back button** on every route except the homepage: markup in `layout/theme.liquid` (first child of `<main>`, so top-left under the header), styling in `custom.css` (Lora, chevron icon from `icon-chevron-left.svg`, 44px touch target), behaviour in `custom.js` — same-origin referrer + history → `history.back()`, otherwise falls back to `routes.root_url` passed via `data-back-fallback` (locale-prefix safe). Label uses the existing `actions.back` translation key, so all 51 locales work.
+- Verified live: button renders below the header at top-left on collection, product and cart pages, absent on the homepage; Lora, icon present, 44px height; card image computes `-webkit-user-drag: none` and `dragstart` is cancelled. `shopify theme check` 345 files, 0 offenses.
 
 ### Phase 4.3 — Mouse drag over product images (root-caused + fixed)
 - Root cause: the slider's `mousedown` handler bailed out with `e.target.closest('a, button, input, textarea, select')`. Horizon cards are covered edge-to-edge by links (`.product-card__link` overlay + the gallery link around the image), so a drag could only start in the gaps between cards — never on an image, title or price.
@@ -21,6 +26,7 @@ Phase 4.3 — Slider drag-from-image fixed.
 - The only scroll-coupled movement mechanism in these sections is the horizontal slider wrapper added in `bce2cb2`/`47de491` (Best Sellers + Featured Products; Collections has no slider and is static).
 - **Fixed a real defect in that slider** (`sections/product-list.liquid`): dragging the custom scrollbar thumb assigned `track.scrollLeft` continuously while the track has `scroll-behavior: smooth`, so every assignment started a glide and the cards visibly lagged behind the thumb before settling — content drifting from its position. The card-drag path already disabled smooth via `.is-dragging`; the thumb path now reuses the same class. Also added `overscroll-behavior-x: contain` so an edge pan cannot chain into the page.
 - Verified live: during thumb drag the track computes `scroll-behavior: auto` and follows 1:1; smooth restores on release; containment active. `shopify theme check` 345 files, 0 offenses.
+- Verification limit: the browser pane developed a harness-level scroll clamp (computed `overflow: hidden` on html/body with no author rule anywhere — not produced by theme code), so end-state visual scroll-through could not be re-captured. If misalignment is still seen after this fix, the needed datum is **device + input** (mouse wheel vs trackpad vs touch) — on trackpad/touch the two product rows pan horizontally by design, and that motion reads as cards leaving position; making the rows static grids again would mean removing the slider feature, which is a product decision.
 
 ## Completed
 - Established safe Git workflow: `main` = live/production (untouched), `develop` = all work, tag `phase1-baseline` as rollback point at develop HEAD.
