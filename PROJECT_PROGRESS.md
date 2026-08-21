@@ -2,7 +2,13 @@
 
 
 ## Current Phase
-Phase 4 — Footer restructure to match reference layout. Pushed to development theme.
+Phase 4.1 — Scroll-misalignment investigation on the three homepage card sections; slider thumb-drag fix.
+
+### Phase 4.1 — Card misalignment while scrolling (investigation + fix)
+- **No scroll/reveal animation exists on these cards.** Audited the shared chain (`resource-list`, `_product-card`, `_collection-card`, card-gallery, base.css): no scroll-driven animations (`animation-timeline`), no IntersectionObserver reveals on cards, no parallax, no sticky/fixed elements inside the sections (live DOM query), no keyframes on list items. Hover lift/scale exist in Horizon but are gated on `card_hover_effect`, which is `none`; view transitions (`translateY(100px)` slide-in) are gated off. Live 60fps sampling during scripted scrolling measured **0.0px drift** of image and price relative to their card, with zero DOM mutations and zero class/style changes.
+- The only scroll-coupled movement mechanism in these sections is the horizontal slider wrapper added in `bce2cb2`/`47de491` (Best Sellers + Featured Products; Collections has no slider and is static).
+- **Fixed a real defect in that slider** (`sections/product-list.liquid`): dragging the custom scrollbar thumb assigned `track.scrollLeft` continuously while the track has `scroll-behavior: smooth`, so every assignment started a glide and the cards visibly lagged behind the thumb before settling — content drifting from its position. The card-drag path already disabled smooth via `.is-dragging`; the thumb path now reuses the same class. Also added `overscroll-behavior-x: contain` so an edge pan cannot chain into the page.
+- Verified live: during thumb drag the track computes `scroll-behavior: auto` and follows 1:1; smooth restores on release; containment active. `shopify theme check` 345 files, 0 offenses.
 
 ## Completed
 - Established safe Git workflow: `main` = live/production (untouched), `develop` = all work, tag `phase1-baseline` as rollback point at develop HEAD.

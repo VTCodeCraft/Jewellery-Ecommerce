@@ -154,6 +154,10 @@
     scrollbar-width: none;
     -ms-overflow-style: none;
     scroll-behavior: smooth;
+    /* Keep horizontal gestures inside the row: without containment a pan
+       that reaches the row's edge chains into the page (or a back/forward
+       swipe), which reads as the cards drifting during scroll. */
+    overscroll-behavior-x: contain;
   }
 
   .product-list-slider__track::-webkit-scrollbar {
@@ -394,6 +398,7 @@
 
         function onThumbUp() {
           if (thumbDrag) {
+            track.classList.remove('is-dragging');
             thumb.classList.remove('is-scrollbar-dragging');
             thumbDrag = null;
           }
@@ -414,6 +419,11 @@
             startThumbLeft: thumbRect.left - scrollbarRect.left,
           };
 
+          /* Reuse the track's is-dragging state so `scroll-behavior: auto`
+             applies while the thumb is held. Without it every scrollLeft
+             assignment below starts a smooth-scroll glide, and the cards
+             visibly lag behind the thumb before settling. */
+          track.classList.add('is-dragging');
           thumb.classList.add('is-scrollbar-dragging');
           document.addEventListener('mousemove', onThumbMove, { passive: false });
           document.addEventListener('mouseup', onThumbUp);
