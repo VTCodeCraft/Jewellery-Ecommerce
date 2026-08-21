@@ -2,7 +2,12 @@
 
 
 ## Current Phase
-Phase 4.2 — Hero post-load vertical shift fixed.
+Phase 4.3 — Slider drag-from-image fixed.
+
+### Phase 4.3 — Mouse drag over product images (root-caused + fixed)
+- Root cause: the slider's `mousedown` handler bailed out with `e.target.closest('a, button, input, textarea, select')`. Horizon cards are covered edge-to-edge by links (`.product-card__link` overlay + the gallery link around the image), so a drag could only start in the gaps between cards — never on an image, title or price.
+- Rewrote the card-area drag in `sections/product-list.liquid` as **Pointer Events** (mouse + pen; touch deliberately left to the native `overflow-x` scroller): no `preventDefault` on pointerdown so plain clicks survive; 8px threshold with vertical-dominant cancel; `setPointerCapture` on the track once the threshold is crossed; a capture-phase click suppressor swallows exactly one click after a real drag so dragging never navigates; `dragstart` on images/links is prevented to stop native ghost-drag; a `buttons === 0` guard recovers from a pointerup missed outside the window. Quick-add and other real controls still excluded from drag starts.
+- Verified live on both Best Sellers and Featured Products: drag left/right starting on the image (0 → 180 → 55 scrollLeft), and starting on title, price and card whitespace; click-after-drag suppressed; plain click and sub-threshold click still navigate; vertical-dominant gesture cancels; stale state recovers; touch pointers ignored by the custom drag (native swipe preserved, `overflow-x: auto`, `touch-action: auto`); native image dragstart blocked; `is-dragging` always cleared. `shopify theme check` 345 files, 0 offenses.
 
 ### Phase 4.2 — Hero content shifting upward after page load (root-caused + fixed)
 - **Root cause measured, not guessed.** The hero's top padding includes the transparent-header offset: `--section-top-offset = --header-height × --transparent-header-offset-boolean` (base.css:2200, consumed at base.css:1377). `--header-height` is written twice: by an inline script in `layout/theme.liquid` during initial render, then by `header.js`'s ResizeObserver after hydration.

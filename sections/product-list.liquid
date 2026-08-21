@@ -312,13 +312,57 @@
 
       el._sliderRecalc = updateOverflow;
 
-      /* ---- product row drag ---- */
+      /* ---- product row drag ----
+         Pointer Events rather than mouse events, for two reasons:
+         - a drag must be allowed to START on the product links/images that
+           cover virtually the whole card (the old mousedown handler bailed
+           out on `closest('a')`, so only the gaps between cards were
+           draggable);
+         - pointer capture keeps the gesture alive when the pointer leaves
+           the element it started on.
+         Touch is deliberately left to the browser: the track is a native
+         overflow-x scroller, so swipe/touchpad panning already works. */
 
       var dragState = null;
+      var suppressClick = false;
 
-      function onMouseMove(e) {
+      function cleanupDrag(e) {
+        if (dragState && dragState.dragging) {
+          track.classList.remove('is-dragging');
+          if (e && track.hasPointerCapture && track.hasPointerCapture(e.pointerId)) {
+            track.releasePointerCapture(e.pointerId);
+          }
+        }
+        dragState = null;
+      }
+
+      track.addEventListener('pointerdown', function (e) {
+        if (e.pointerType !== 'mouse' && e.pointerType !== 'pen') return;
+        if (e.button !== 0) return;
+        /* Real controls (quick add) keep their own press behaviour.
+           Links are NOT excluded: the drag threshold plus the click
+           suppressor below keep normal navigation working. */
+        if (e.target.closest('button, input, textarea, select')) return;
+
+        /* No preventDefault here - a plain click must stay a plain click. */
+        dragState = {
+          pointerId: e.pointerId,
+          startX: e.clientX,
+          startY: e.clientY,
+          startScrollLeft: track.scrollLeft,
+          dragging: false,
+        };
+      });
+
+      track.addEventListener('pointermove', function (e) {
         var ds = dragState;
-        if (!ds) return;
+        if (!ds || e.pointerId !== ds.pointerId) return;
+
+        /* Missed pointerup (released outside before the threshold): reset. */
+        if (e.buttons === 0) {
+          cleanupDrag(e);
+          return;
+        }
 
         var dx = e.clientX - ds.startX;
         var dy = e.clientY - ds.startY;
@@ -326,49 +370,49 @@
         if (!ds.dragging) {
           if (Math.abs(dx) <= DRAG_THRESHOLD && Math.abs(dy) <= DRAG_THRESHOLD) return;
           if (Math.abs(dy) > Math.abs(dx)) {
-            cleanupDrag();
+            cleanupDrag(e);
             return;
           }
           ds.dragging = true;
           track.classList.add('is-dragging');
-          document.body.style.userSelect = 'none';
-          document.body.style.webkitUserSelect = 'none';
+          try {
+            track.setPointerCapture(e.pointerId);
+          } catch (err) {
+            /* pointer already gone; the buttons check above cleans up */
+          }
         }
 
         e.preventDefault();
         track.scrollLeft = ds.startScrollLeft - dx;
+      });
+
+      function onPointerEnd(e) {
+        var ds = dragState;
+        if (!ds || e.pointerId !== ds.pointerId) return;
+        if (ds.dragging) suppressClick = true;
+        cleanupDrag(e);
       }
 
-      function onMouseUp() {
-        cleanupDrag();
-      }
+      track.addEventListener('pointerup', onPointerEnd);
+      track.addEventListener('pointercancel', onPointerEnd);
 
-      function cleanupDrag() {
-        if (dragState && dragState.dragging) {
-          track.classList.remove('is-dragging');
-          document.body.style.userSelect = '';
-          document.body.style.webkitUserSelect = '';
-        }
-        dragState = null;
-        document.removeEventListener('mousemove', onMouseMove);
-        document.removeEventListener('mouseup', onMouseUp);
-      }
+      /* After a drag, the browser still fires a click on whatever the
+         pointer ended over - swallow that one click so the drag does not
+         open a product. Capture phase so it wins over the card links. */
+      track.addEventListener(
+        'click',
+        function (e) {
+          if (!suppressClick) return;
+          suppressClick = false;
+          e.preventDefault();
+          e.stopPropagation();
+        },
+        true
+      );
 
-      el.addEventListener('mousedown', function (e) {
-        if (e.button !== 0) return;
-        if (e.target.closest('a, button, input, textarea, select')) return;
-
-        e.preventDefault();
-
-        dragState = {
-          startX: e.clientX,
-          startY: e.clientY,
-          startScrollLeft: track.scrollLeft,
-          dragging: false,
-        };
-
-        document.addEventListener('mousemove', onMouseMove, { passive: false });
-        document.addEventListener('mouseup', onMouseUp);
+      /* Native ghost-drag of images/links would hijack the gesture. */
+      track.addEventListener('dragstart', function (e) {
+        if (e.target.closest('img, a')) e.preventDefault();
       });
 
       /* ---- scrollbar thumb drag ---- */
