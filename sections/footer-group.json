@@ -275,7 +275,7 @@
         "section_height": "",
         "section_height_custom": 50,
         "background_media": "none",
-        "background_color": "{{ settings.color_palette.color2 }}",
+        "background_color": "{{ settings.color_palette.foreground }}",
         "video_position": "cover",
         "background_image_position": "cover",
         "toggle_overlay": false,
@@ -297,7 +297,7 @@
         "block_23de1b3bac9d": {
           "type": "footer-policy-list",
           "settings": {
-            "text_color": "{{ settings.color_palette.color3 }}",
+            "text_color": "{{ settings.color_palette.color4 }}",
             "font_size": "0.75rem",
             "case": "none"
           },
@@ -307,7 +307,7 @@
           "type": "footer-copyright",
           "settings": {
             "show_powered_by": false,
-            "text_color": "{{ settings.color_palette.color3 }}",
+            "text_color": "{{ settings.color_palette.color4 }}",
             "font_size": "0.75rem",
             "case": "none"
           },
@@ -316,7 +316,7 @@
         "block_b099f0b21b25": {
           "type": "social-links",
           "settings": {
-            "icon_color": "{{ settings.color_palette.color3 }}",
+            "icon_color": "#B1844B",
             "facebook_url": "",
             "instagram_url": "https://www.instagram.com/shopify",
             "youtube_url": "",
@@ -342,7 +342,7 @@
       "settings": {
         "section_width": "page-width",
         "gap": 24,
-        "background_color": "{{ settings.color_palette.color2 }}",
+        "background_color": "{{ settings.color_palette.foreground }}",
         "divider_thickness": 1,
         "divider_color": "",
         "padding-block-start": 20,

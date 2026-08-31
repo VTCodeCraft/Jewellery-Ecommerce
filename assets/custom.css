@@ -27,6 +27,26 @@
   --font-h6--letter-spacing: 0.12em;
 }
 
+/* ------------------------------------------------------------
+   Brand Color System — FINAL palette per brief
+   Core: Warm Ivory #F7F1E8 (bg), Soft Cream #FFF9F2 (cards),
+   Soft Champagne #EFE5D9 (alt), Espresso #2B1A12 (text/footer),
+   Royal Cocoa #4D2816 (CTA), Deep Ruby #7B1E2B (accent),
+   Antique Gold #B1844B (luxury accent), Muted #725947,
+   Border Taupe #D8C6B3
+   ------------------------------------------------------------ */
+:root:root {
+  --brand-ivory: #F7F1E8;
+  --brand-cream: #FFF9F2;
+  --brand-champagne: #EFE5D9;
+  --brand-border: #D8C6B3;
+  --brand-espresso: #2B1A12;
+  --brand-cocoa: #4D2816;
+  --brand-ruby: #7B1E2B;
+  --brand-gold: #B1844B;
+  --brand-muted: #725947;
+}
+
 /* Instrument Serif ships regular and italic only. Without this the
    browser fakes a bold weight, which smears the thin strokes of a
    high-contrast display serif. Real bold faces (Lora) still apply -
@@ -197,4 +217,202 @@ product-price {
   footer .layout-panel-flex--row > .shopify-block {
     flex: 1 1 30%;
   }
+}
+
+/* ------------------------------------------------------------
+   Brand Color System — Global overrides
+   ------------------------------------------------------------ */
+
+/* Page */
+body {
+  background-color: var(--brand-ivory);
+  color: var(--brand-espresso);
+}
+
+/* Muted/secondary text where available */
+:root:root {
+  --color-foreground-muted: var(--brand-muted);
+}
+
+/* Links */
+a {
+  color: var(--brand-cocoa);
+}
+a:hover {
+  color: var(--brand-ruby);
+}
+
+/* Primary buttons — Royal Cocoa / Ruby hover */
+:root:root {
+  --color-primary-button-hover-background: var(--brand-ruby);
+  --color-primary-button-hover-text: var(--brand-cream);
+  --color-primary-button-hover-border: var(--brand-ruby);
+  --color-secondary-button-hover-background: var(--brand-cocoa);
+  --color-secondary-button-hover-text: var(--brand-cream);
+  --color-secondary-button-hover-border: var(--brand-cocoa);
+}
+
+/* Focus outline — Antique Gold where appropriate */
+:focus-visible {
+  outline-color: var(--brand-gold);
+}
+
+/* Forms / Inputs */
+:root:root {
+  --color-input-background: var(--brand-cream);
+  --color-input-text: var(--brand-espresso);
+  --color-input-border: var(--brand-border);
+}
+input::placeholder,
+textarea::placeholder {
+  color: var(--brand-muted);
+}
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: var(--brand-gold);
+}
+
+/* Drawers / Popovers / Modals — Soft Cream */
+/cart-drawer,
+.drawer,
+popover-content,
+.modal {
+  background-color: var(--brand-cream);
+  color: var(--brand-espresso);
+  border-color: var(--brand-border);
+}
+
+/* Badges */
+.badge--sale {
+  background-color: var(--brand-ruby);
+  color: var(--brand-cream);
+}
+.badge--sold-out,
+.badge--out-of-stock {
+  background-color: var(--brand-champagne);
+  color: var(--brand-muted);
+}
+
+/* ------------------------------------------------------------
+   Header
+   ------------------------------------------------------------ */
+
+/* Transparent hero state — cream text/icons */
+.header-section[data-transparent="true"],
+.header-section:has(.header--transparent) {
+  --color-foreground: var(--brand-cream);
+}
+
+/* Sticky / scrolled — ivory bg, espresso text, taupe divider */
+.header {
+  background-color: var(--brand-ivory);
+  color: var(--brand-espresso);
+  border-block-end: 1px solid var(--brand-border);
+}
+.header a:hover {
+  color: var(--brand-ruby);
+}
+
+/* ------------------------------------------------------------
+   Hero
+   ------------------------------------------------------------ */
+.hero__overlay,
+.hero .overlay {
+  background: rgba(43, 26, 18, 0.32) !important;
+}
+.hero .hero__heading,
+.hero h1,
+.hero h2 {
+  color: var(--brand-cream);
+}
+
+/* ------------------------------------------------------------
+   Homepage color flow
+   ------------------------------------------------------------ */
+
+/* Shop by Occasion */
+.occasions-wrapper {
+  background-color: var(--brand-ivory);
+}
+.occasions__heading {
+  color: var(--brand-espresso);
+}
+.occasions__description {
+  color: var(--brand-muted);
+}
+.occasions__card-title {
+  color: var(--brand-cream);
+}
+
+/* Our Shop / Editorial story — dark cocoa */
+.section-wrapper:has(.pull-quote),
+#shopify-section-section_x8mrnx {
+  background-color: var(--brand-cocoa);
+  color: var(--brand-cream);
+}
+#shopify-section-section_x8mrnx h2 {
+  color: var(--brand-cream);
+}
+#shopify-section-section_x8mrnx p {
+  color: var(--brand-champagne);
+}
+
+/* Best Sellers / Featured */
+#shopify-section-product_list_best_sellers,
+#shopify-section-product_list_themegen {
+  background-color: var(--brand-ivory);
+}
+
+/* Shop by Category — champagne */
+#shopify-section-collection_list_featured {
+  background-color: var(--brand-champagne);
+}
+
+/* ------------------------------------------------------------
+   Product cards — minimal editorial
+   ------------------------------------------------------------ */
+.product-card__title {
+  color: var(--brand-espresso);
+}
+.product-card__price {
+  color: var(--brand-cocoa);
+}
+.product-card__compare-at {
+  color: var(--brand-muted);
+}
+
+/* ------------------------------------------------------------
+   Footer — Espresso dark luxury
+   ------------------------------------------------------------ */
+footer,
+.footer {
+  background-color: var(--brand-espresso) !important;
+  color: var(--brand-cream);
+}
+footer a,
+.footer a {
+  color: var(--brand-cream);
+}
+footer a:hover,
+.footer a:hover {
+  color: var(--brand-gold);
+}
+footer .footer__secondary,
+.footer__secondary {
+  color: var(--brand-champagne);
+}
+footer input {
+  background-color: transparent;
+  border-color: var(--brand-champagne);
+  color: var(--brand-cream);
+}
+footer .button {
+  background-color: var(--brand-ruby);
+  color: var(--brand-cream);
+  border-color: var(--brand-ruby);
+}
+footer .button:hover {
+  background-color: var(--brand-gold);
+  color: var(--brand-cream);
 }

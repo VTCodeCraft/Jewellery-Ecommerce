@@ -120,7 +120,7 @@
                   "type": "text",
                   "name": "t:names.text",
                   "settings": {
-                    "text": "<p>Handcrafted jewellery made in small batches — for everyday wear, for gifting, and for the days that matter most.</p>",
+                    "text": "<p>Handcrafted jewellery made in small batches \u2014 for everyday wear, for gifting, and for the days that matter most.</p>",
                     "width": "100%",
                     "max_width": "narrow",
                     "alignment": "center",
@@ -261,7 +261,7 @@
         "section_height_custom": 5,
         "background_color": "rgba(0,0,0,0)",
         "toggle_overlay": true,
-        "overlay_color": "#0303034d",
+        "overlay_color": "#2B1A124D",
         "overlay_style": "gradient",
         "gradient_direction": "to top",
         "blurred_reflection": false,
@@ -565,7 +565,7 @@
         "text_eFMntb": {
           "type": "text",
           "settings": {
-            "text": "<h2>At Studio Muse, we believe every piece is a wearable narrative—crafted with intention, designed to empower modern women with individuality and artistry.</h2>",
+            "text": "<h2>At Studio Muse, we believe every piece is a wearable narrative\u2014crafted with intention, designed to empower modern women with individuality and artistry.</h2>",
             "width": "100%",
             "max_width": "narrow",
             "alignment": "center",
@@ -590,7 +590,7 @@
         "button_TmU98M": {
           "type": "button",
           "settings": {
-            "label": "Shop now →",
+            "label": "Shop now \u2192",
             "link": "shopify://collections/all",
             "open_in_new_tab": false,
             "style_class": "button-unstyled",
@@ -823,7 +823,7 @@
         "icons_shape": "none",
         "section_width": "page-width",
         "gap": 40,
-        "background_color": "",
+        "background_color": "#EFE5D9",
         "padding-block-start": 96,
         "padding-block-end": 96
       }
