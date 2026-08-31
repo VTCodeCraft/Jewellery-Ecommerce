@@ -1,0 +1,412 @@
+{% liquid
+  if section.settings.background_color != blank
+    render 'contrast-override', background_color: section.settings.background_color, section_id: section.id
+  endif
+%}
+
+<div
+  class="section-background{% if section.settings.background_color != blank %} color-custom-{{ section.id }}{% endif %}"
+></div>
+
+<div
+  class="
+    section
+    section--{{ section.settings.section_width }}
+    {% if section.settings.background_color != blank %}color-custom-{{ section.id }}{% endif %}
+    spacing-style
+  "
+  style="{% render 'spacing-style', settings: section.settings %}"
+  data-testid="occasions-section"
+>
+  {% if section.settings.heading != blank or section.settings.description != blank %}
+    <div class="occasions__header">
+      {% if section.settings.heading != blank %}
+        <h2 class="occasions__heading">{{ section.settings.heading }}</h2>
+      {% endif %}
+      {% if section.settings.description != blank %}
+        <p class="occasions__description">{{ section.settings.description }}</p>
+      {% endif %}
+    </div>
+  {% endif %}
+
+  <div class="occasions__grid">
+    {% for block in section.blocks %}
+      {% liquid
+        assign block_image = block.settings.image
+        assign block_title = block.settings.title
+        assign block_text = block.settings.text
+        assign block_link = block.settings.link
+      %}
+      <div class="occasions__card" {{ block.shopify_attributes }}>
+        {% if block_link != blank %}
+          <a href="{{ block_link }}" class="occasions__card-link" aria-label="{{ block_title | escape }}">
+        {% else %}
+          <div class="occasions__card-link occasions__card-link--no-link">
+        {% endif %}
+
+          <div class="occasions__card-media">
+            {% if block_image != blank %}
+              {{
+                block_image
+                | image_url: width: 1200
+                | image_tag:
+                  widths: '600, 800, 1200',
+                  sizes: '(min-width: 990px) 33vw, (min-width: 750px) 50vw, 100vw',
+                  alt: block_image.alt | default: block_title,
+                  class: 'occasions__card-image',
+                  loading: 'lazy'
+              }}
+            {% else %}
+              {% liquid
+                assign fallback_asset = ''
+                if block_title == 'WEDDING'
+                  assign fallback_asset = 'occasion-wedding.jpeg'
+                elsif block_title == 'TRADITIONAL FESTIVAL'
+                  assign fallback_asset = 'occasion-festival.jpeg'
+                elsif block_title == 'DAILYWEAR / PARTY WEAR'
+                  assign fallback_asset = 'occasion-daily-wear.jpeg'
+                endif
+              %}
+              {% if fallback_asset != '' %}
+                <img
+                  src="{{ fallback_asset | asset_url }}"
+                  alt="{{ block_title | escape }}"
+                  class="occasions__card-image"
+                  loading="lazy"
+                  width="800"
+                  height="1000"
+                  style="object-fit: cover;"
+                >
+              {% else %}
+                {{ 'hero-apparel-1' | placeholder_svg_tag: 'occasions__card-image occasions__card-image--placeholder' }}
+              {% endif %}
+            {% endif %}
+            <div class="occasions__card-overlay"></div>
+          </div>
+
+          <div class="occasions__card-content">
+            {% if block_title != blank %}
+              <h3 class="occasions__card-title">{{ block_title }}</h3>
+            {% endif %}
+            {% if block_text != blank %}
+              <p class="occasions__card-text">{{ block_text }}</p>
+            {% endif %}
+          </div>
+
+        {% if block_link != blank %}
+          </a>
+        {% else %}
+          </div>
+        {% endif %}
+      </div>
+    {% endfor %}
+
+    {% if section.blocks.size == 0 %}
+      {% for i in (1..3) %}
+        {% liquid
+          assign ph_title = ''
+          assign ph_asset = ''
+          if i == 1
+            assign ph_title = 'WEDDING'
+            assign ph_asset = 'occasion-wedding.jpeg'
+          elsif i == 2
+            assign ph_title = 'TRADITIONAL FESTIVAL'
+            assign ph_asset = 'occasion-festival.jpeg'
+          elsif i == 3
+            assign ph_title = 'DAILYWEAR / PARTY WEAR'
+            assign ph_asset = 'occasion-daily-wear.jpeg'
+          endif
+        %}
+        <div class="occasions__card">
+          <div class="occasions__card-media">
+            <img
+              src="{{ ph_asset | asset_url }}"
+              alt="{{ ph_title | escape }}"
+              class="occasions__card-image"
+              loading="lazy"
+              width="800"
+              height="1000"
+              style="object-fit: cover;"
+            >
+            <div class="occasions__card-overlay"></div>
+          </div>
+          <div class="occasions__card-content">
+            <h3 class="occasions__card-title">{{ ph_title }}</h3>
+          </div>
+        </div>
+      {% endfor %}
+    {% endif %}
+  </div>
+</div>
+
+{% stylesheet %}
+  .occasions__header {
+    text-align: center;
+    margin-block-end: 32px;
+    max-width: 600px;
+    margin-inline: auto;
+  }
+
+  .occasions__heading {
+    font-family: var(--font-heading--family);
+    font-weight: var(--font-heading--weight);
+    font-size: var(--font-h2--size, 2rem);
+    line-height: var(--font-h2--line-height, 1.2);
+    letter-spacing: var(--font-h2--letter-spacing, normal);
+    margin: 0 0 12px;
+    color: var(--color-foreground);
+  }
+
+  .occasions__description {
+    font-family: var(--font-body--family);
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--color-foreground);
+    opacity: 0.8;
+    margin: 0;
+  }
+
+  .occasions__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .occasions__grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+    }
+  }
+
+  @media screen and (min-width: 990px) {
+    .occasions__grid {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+  }
+
+  .occasions__card {
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--style-border-radius-card, 8px);
+    background: var(--color-background);
+    border: 1px solid rgb(var(--color-border-rgb, 0 0 0) / 0.06);
+  }
+
+  .occasions__card-link {
+    display: flex;
+    flex-direction: column;
+    text-decoration: none;
+    color: inherit;
+    height: 100%;
+  }
+
+  .occasions__card-link:focus-visible {
+    outline: 2px solid var(--color-foreground);
+    outline-offset: 2px;
+    border-radius: var(--style-border-radius-card, 8px);
+  }
+
+  .occasions__card-media {
+    position: relative;
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    background: var(--color-background);
+  }
+
+  .occasions__card-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.4s ease;
+  }
+
+  .occasions__card-link:hover .occasions__card-image {
+    transform: scale(1.03);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .occasions__card-image {
+      transition: none;
+    }
+    .occasions__card-link:hover .occasions__card-image {
+      transform: none;
+    }
+  }
+
+  .occasions__card-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0.1) 50%, transparent 100%);
+    pointer-events: none;
+  }
+
+  .occasions__card-content {
+    position: absolute;
+    inset: auto 0 0 0;
+    padding: 20px 16px 18px;
+    text-align: center;
+    z-index: 1;
+  }
+
+  .occasions__card-title {
+    font-family: var(--font-heading--family);
+    font-weight: var(--font-heading--weight);
+    font-size: 1.1rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: #fff;
+    margin: 0;
+    line-height: 1.3;
+    text-shadow: 0 1px 6px rgba(0,0,0,0.35);
+  }
+
+  .occasions__card-text {
+    font-family: var(--font-body--family);
+    font-size: 0.875rem;
+    line-height: 1.5;
+    color: rgba(255,255,255,0.9);
+    margin: 8px 0 0;
+    text-shadow: 0 1px 4px rgba(0,0,0,0.3);
+  }
+
+  .occasions__card--placeholder .occasions__card-title {
+    color: var(--color-foreground);
+    text-shadow: none;
+  }
+
+  .occasions__card--placeholder .occasions__card-overlay {
+    background: rgba(0,0,0,0.08);
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Occasions",
+  "class": "section-wrapper occasions-wrapper",
+  "tag": "section",
+  "max_blocks": 3,
+  "blocks": [
+    {
+      "type": "occasion",
+      "name": "Occasion",
+      "limit": 3,
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Occasion"
+        },
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Description",
+          "info": "Optional short supporting text"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        }
+      ]
+    }
+  ],
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Shop by Occasion"
+    },
+    {
+      "type": "text",
+      "id": "description",
+      "label": "Description",
+      "default": "Jewellery for every moment that matters."
+    },
+    {
+      "type": "select",
+      "id": "section_width",
+      "label": "t:settings.width",
+      "options": [
+        {
+          "value": "page-width",
+          "label": "t:options.page"
+        },
+        {
+          "value": "full-width",
+          "label": "t:options.full"
+        }
+      ],
+      "default": "page-width"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "t:settings.background_color",
+      "placeholder": "t:settings.default"
+    },
+    {
+      "type": "header",
+      "content": "t:content.padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "t:settings.top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "t:settings.bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 48
+    }
+  ],
+  "presets": [
+    {
+      "name": "Occasions",
+      "category": "t:categories.collections",
+      "blocks": [
+        {
+          "type": "occasion",
+          "settings": {
+            "title": "WEDDING",
+            "text": "Elegant pieces for your most memorable celebrations."
+          }
+        },
+        {
+          "type": "occasion",
+          "settings": {
+            "title": "TRADITIONAL FESTIVAL",
+            "text": "Timeless jewellery for festive and traditional moments."
+          }
+        },
+        {
+          "type": "occasion",
+          "settings": {
+            "title": "DAILYWEAR / PARTY WEAR",
+            "text": "Versatile pieces for everyday style and evening occasions."
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

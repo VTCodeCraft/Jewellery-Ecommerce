@@ -240,7 +240,7 @@
       "name": "t:names.hero",
       "settings": {
         "media_type_1": "image",
-        "image_1": "shopify://shop_images/35d696459770427bb6c38327d364b7ac.png",
+        "image_1": "shopify://shop_images/hero-jewellery-cover.jpg",
         "media_type_2": "image",
         "stack_media_on_mobile": false,
         "custom_mobile_media": false,
@@ -551,7 +551,7 @@
             "letter_spacing": "normal",
             "case": "none",
             "wrap": "pretty",
-            "text_color": "",
+            "text_color": "{{ settings.color_palette.background }}",
             "background": false,
             "background_color": "#00000026",
             "corner_radius": 0,
@@ -576,7 +576,7 @@
             "letter_spacing": "normal",
             "case": "none",
             "wrap": "pretty",
-            "text_color": "",
+            "text_color": "{{ settings.color_palette.background }}",
             "background": false,
             "background_color": "#00000026",
             "corner_radius": 0,
@@ -620,12 +620,13 @@
         "section_width": "page-width",
         "section_height": "small",
         "section_height_custom": 50,
-        "background_media": "none",
+        "background_media": "image",
+        "background_image": "",
         "background_color": "{{ settings.color_palette.color1 }}",
         "video_position": "cover",
         "background_image_position": "cover",
-        "toggle_overlay": false,
-        "overlay_color": "#00000026",
+        "toggle_overlay": true,
+        "overlay_color": "#1a1a1a66",
         "overlay_style": "solid",
         "gradient_direction": "to top",
         "border": "none",
@@ -1089,13 +1090,57 @@
         "padding-block-start": 72,
         "padding-block-end": 72
       }
+    },
+    "occasions_occasion": {
+      "type": "occasions",
+      "blocks": {
+        "occasion_wedding": {
+          "type": "occasion",
+          "settings": {
+            "title": "WEDDING",
+            "text": "Elegant pieces for your most memorable celebrations.",
+            "link": ""
+          }
+        },
+        "occasion_festival": {
+          "type": "occasion",
+          "settings": {
+            "title": "TRADITIONAL FESTIVAL",
+            "text": "Timeless jewellery for festive and traditional moments.",
+            "link": ""
+          }
+        },
+        "occasion_daily": {
+          "type": "occasion",
+          "settings": {
+            "title": "DAILYWEAR / PARTY WEAR",
+            "text": "Versatile pieces for everyday style and evening occasions.",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "occasion_wedding",
+        "occasion_festival",
+        "occasion_daily"
+      ],
+      "name": "Occasions",
+      "settings": {
+        "heading": "Shop by Occasion",
+        "description": "Jewellery for every moment that matters.",
+        "section_width": "page-width",
+        "background_color": "",
+        "padding-block-start": 48,
+        "padding-block-end": 48
+      }
     }
   },
   "order": [
     "hero_p9CmMG",
-    "collection_list_featured",
+    "occasions_occasion",
     "section_x8mrnx",
     "product_list_best_sellers",
-    "product_list_themegen"
+    "product_list_themegen",
+    "collection_list_featured"
   ]
 }

@@ -327,7 +327,17 @@
   {{ media_slot_2 }}
 
   {% if media_count == 0 %}
-    {{ 'hero-apparel-1' | placeholder_svg_tag: 'hero__media' }}
+    <img
+      src="{{ 'hero-jewellery-cover.jpg' | asset_url }}"
+      alt="Handcrafted jewellery — model wearing jhumka and layered necklace, Paridhi Creation"
+      class="hero__media"
+      width="1536"
+      height="1024"
+      sizes="{{ sizes }}"
+      fetchpriority="{{ fetch_priority }}"
+      style="object-fit: cover; object-position: center;"
+      data-testid="hero-asset-fallback"
+    >
   {%- endif -%}
 {% endcapture %}
 
@@ -359,7 +369,16 @@
     }}
   {% endif %}
   {% if media_count == 0 %}
-    {{ 'hero-apparel-1' | placeholder_svg_tag: 'hero__media' }}
+    <img
+      src="{{ 'hero-jewellery-cover.jpg' | asset_url }}"
+      alt=""
+      class="hero__media"
+      width="1536"
+      height="1024"
+      sizes="{{ sizes }}"
+      style="object-fit: cover; object-position: center;"
+      aria-hidden="true"
+    >
   {% endif %}
 {% endcapture %}
 

@@ -124,11 +124,16 @@
         | image_tag: sizes: sizes, widths: widths, loading: loading, fetchpriority: fetch_priority
       }}
     {%- else -%}
-      {%- assign placeholder_name = placeholder | default: 'hero-apparel-2' -%}
-      {%- if placeholder_name == blank -%}
-        {%- assign placeholder_name = 'hero-apparel-2' -%}
-      {%- endif -%}
-      {{ placeholder_name | placeholder_svg_tag }}
+      {%- comment -%} Asset fallback for Our Shop section when no Files image selected {%- endcomment -%}
+      <img
+        src="{{ 'our-shop-background.jpg' | asset_url }}"
+        alt="Our Shop background"
+        sizes="{{ sizes }}"
+        width="1536"
+        height="1024"
+        loading="lazy"
+        style="object-fit: cover; width: 100%; height: 100%;"
+      >
     {%- endif -%}
   </div>
 {% endif %}
