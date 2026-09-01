@@ -806,14 +806,12 @@
       "name": "t:names.collections_grid",
       "settings": {
         "collection_list": [
-          "earrings",
-          "necklaces",
-          "bracelets-bangles",
-          "rings"
+          "necklaces-pendants",
+          "jewellery-sets"
         ],
         "layout_type": "grid",
         "carousel_on_mobile": false,
-        "columns": 4,
+        "columns": 2,
         "mobile_columns": "2",
         "columns_gap": 24,
         "bento_gap": 8,
@@ -1099,7 +1097,7 @@
           "settings": {
             "title": "WEDDING",
             "text": "Elegant pieces for your most memorable celebrations.",
-            "link": ""
+            "link": "shopify://collections/wedding"
           }
         },
         "occasion_festival": {
@@ -1107,7 +1105,7 @@
           "settings": {
             "title": "TRADITIONAL FESTIVAL",
             "text": "Timeless jewellery for festive and traditional moments.",
-            "link": ""
+            "link": "shopify://collections/traditional-festival"
           }
         },
         "occasion_daily": {
@@ -1115,7 +1113,7 @@
           "settings": {
             "title": "DAILYWEAR / PARTY WEAR",
             "text": "Versatile pieces for everyday style and evening occasions.",
-            "link": ""
+            "link": "shopify://collections/dailywear-party-wear"
           }
         }
       },
