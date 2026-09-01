@@ -7,11 +7,11 @@
    ============================================================ */
 
 /* ------------------------------------------------------------
-   Typography
+   Typography — Newsreader (display) + Geist (UI)
 
    Two families mapped onto Horizon's four font roles:
-     heading / accent   -> Instrument Serif (display, editorial)
-     body / subheading  -> Lora (reading, UI, prices)
+     heading / accent   -> Newsreader (editorial, heritage)
+     body / subheading  -> Geist (modern ecommerce, UI)
 
    Sizes, leading, tracking and case stay merchant-editable in
    Theme settings > Typography. Only what the theme editor cannot
@@ -47,36 +47,14 @@
   --brand-muted: #725947;
 }
 
-/* Instrument Serif ships regular and italic only. Without this the
-   browser fakes a bold weight, which smears the thin strokes of a
-   high-contrast display serif. Real bold faces (Lora) still apply -
+/* Newsreader ships regular/medium and italic; disable synthetic bold Without this the
+   browser fakes a bold weight which smears thin strokes. Geist handles UI; 
    only synthesis is disabled. */
 :is(h1, h2, h3, h4, .h1, .h2, .h3, .h4) {
   font-synthesis-weight: none;
 }
 
-/* Display headings: word spacing.
-
-   Instrument Serif draws an unusually narrow space glyph (~0.17em against a
-   normal serif's 0.25-0.33em), which is what makes long headings read as
-   congested. Widening the word gap fixes that without stretching the letters
-   themselves - tracking stays neutral, set in Theme settings > Typography.
-
-   Scoped to h1-h3, the presets bound to the display font and the sizes where
-   the narrow space is actually visible. The :not() guard matters: heading tags
-   are reused at smaller preset sizes elsewhere in Horizon (the dense grid-view
-   product title is an <h3 class="h4"> in Lora at 13px), and Lora's space is
-   already generous, so it would read as loose there.
-
-   One case slips through by design: rich text authored as <h2> inside an h6
-   eyebrow block. Letterspaced uppercase needs a proportionally wider word gap
-   anyway, so that is left alone.
-
-   If a heading preset is ever switched to a Lora role in Theme settings,
-   drop it from this selector. */
-:is(h1, h2, h3, .h1, .h2, .h3):not(.h4, .h5, .h6, .paragraph, .rte) {
-  word-spacing: 0.12em;
-}
+/* Newsreader uses natural word spacing — no compensation needed. */
 
 /* ------------------------------------------------------------
    Header
@@ -89,8 +67,7 @@
    navbar that left it the same size as the nav links either side of it, so
    it no longer read as the brand anchor.
 
-   Size and tracking only - the family stays Lora, per the finalized type
-   system. `_header-logo.liquid` pins the family with an inline custom
+   Size and tracking only - family is Newsreader Medium per finalized system. `_header-logo.liquid` pins the family with an inline custom
    property and exposes no font setting, so this cannot be done from the
    theme editor. Superseded automatically once brand artwork is uploaded
    under Theme settings > Logo, which is the better long-term fix.
@@ -100,6 +77,8 @@
    concatenates block styles after this file, so it would otherwise win on
    source order. */
 .header-logo.header-logo {
+  font-family: var(--font-heading--family);
+  font-weight: 500;
   font-size: 1.25rem;
   letter-spacing: 0.02em;
 }
