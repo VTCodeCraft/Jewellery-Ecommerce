@@ -1,0 +1,311 @@
+{
+  "productsCount": {
+    "count": 19
+  },
+  "products": {
+    "nodes": [
+      {
+        "handle": "long-raani-haar",
+        "media": {
+          "nodes": [
+            {
+              "id": "gid://shopify/MediaImage/71978875715665"
+            }
+          ]
+        }
+      },
+      {
+        "handle": "choker-set-with-earrings",
+        "media": {
+          "nodes": [
+            {
+              "id": "gid://shopify/MediaImage/71988825620561"
+            }
+          ]
+        }
+      },
+      {
+        "handle": "pearl-necklace-set",
+        "media": {
+          "nodes": [
+            {
+              "id": "gid://shopify/MediaImage/71988829126737"
+            }
+          ]
+        }
+      },
+      {
+        "handle": "antique-gold-plated-necklace-set-with-earrings",
+        "media": {
+          "nodes": [
+            {
+              "id": "gid://shopify/MediaImage/71988830732369"
+            }
+          ]
+        }
+      },
+      {
+        "handle": "cz-necklace-set-with-earrings",
+        "media": {
+          "nodes": [
+            {
+              "id": "gid://shopify/MediaImage/71988831813713"
+            }
+          ]
+        }
+      },
+      {
+        "handle": "gold-plated-cz-necklace-set-with-earrings",
+        "media": {
+          "nodes": [
+            {
+              "id": "gid://shopify/MediaImage/71988832632913"
+            }
+          ]
+        }
+      },
+      {
+        "handle": "artificial-pearl-necklace-set-with-earring",
+        "media": {
+          "nodes": [
+            {
+              "id": "gid://shopify/MediaImage/71988833353809"
+            }
+          ]
+        }
+      },
+      {
+        "handle": "gold-plated-stone-work-choker-set",
+        "media": {
+          "nodes": [
+            {
+              "id": "gid://shopify/MediaImage/71988833648721"
+            }
+          ]
+        }
+      },
+      {
+        "handle": "pearl-beaded-mala-with-pearl-pendant-with-earrings",
+        "media": {
+          "nodes": [
+            {
+              "id": "gid://shopify/MediaImage/71988834598993"
+            }
+          ]
+        }
+      },
+      {
+        "handle": "necklace-set-with-earrings",
+        "media": {
+          "nodes": [
+            {
+              "id": "gid://shopify/MediaImage/71988966391889"
+            }
+          ]
+        }
+      },
+      {
+        "handle": "kundan-choker-set-with-earrings",
+        "media": {
+          "nodes": [
+            {
+              "id": "gid://shopify/MediaImage/71988877066321"
+            }
+          ]
+        }
+      },
+      {
+        "handle": "glass-kundan-necklace-set",
+        "media": {
+          "nodes": [
+            {
+              "id": "gid://shopify/MediaImage/71988968783953"
+            }
+          ]
+        }
+      },
+      {
+        "handle": "special-fire-stone-necklace-set",
+        "media": {
+          "nodes": [
+            {
+              "id": "gid://shopify/MediaImage/71988886798417"
+            }
+          ]
+        }
+      },
+      {
+        "handle": "paachi-kundan-sleek-design-necklace-set-with-earrings",
+        "media": {
+          "nodes": [
+            {
+              "id": "gid://shopify/MediaImage/71988887846993"
+            }
+          ]
+        }
+      },
+      {
+        "handle": "brass-base-antique-gold-plated-necklace-set-with-earrings",
+        "media": {
+          "nodes": [
+            {
+              "id": "gid://shopify/MediaImage/71988888928337"
+            }
+          ]
+        }
+      },
+      {
+        "handle": "antique-gold-plated-choker-set-with-earrings",
+        "media": {
+          "nodes": [
+            {
+              "id": "gid://shopify/MediaImage/71988889944145"
+            }
+          ]
+        }
+      },
+      {
+        "handle": "multicolour-glass-stones-necklace-set-with-earring",
+        "media": {
+          "nodes": [
+            {
+              "id": "gid://shopify/MediaImage/71988891353169"
+            }
+          ]
+        }
+      },
+      {
+        "handle": "gold-plated-long-pendant-set-with-ear-studds",
+        "media": {
+          "nodes": [
+            {
+              "id": "gid://shopify/MediaImage/71988893253713"
+            }
+          ]
+        }
+      },
+      {
+        "handle": "long-raani-haar-style-neck-piece-with-earrings-maang-tika",
+        "media": {
+          "nodes": [
+            {
+              "id": "gid://shopify/MediaImage/71988973043793"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "collections": {
+    "nodes": [
+      {
+        "handle": "frontpage",
+        "productsCount": {
+          "count": 0
+        }
+      },
+      {
+        "handle": "asset-pack-97238417410-example-products",
+        "productsCount": {
+          "count": 0
+        }
+      },
+      {
+        "handle": "earrings",
+        "productsCount": {
+          "count": 0
+        }
+      },
+      {
+        "handle": "necklaces",
+        "productsCount": {
+          "count": 0
+        }
+      },
+      {
+        "handle": "bracelets-bangles",
+        "productsCount": {
+          "count": 0
+        }
+      },
+      {
+        "handle": "rings",
+        "productsCount": {
+          "count": 0
+        }
+      },
+      {
+        "handle": "anklets",
+        "productsCount": {
+          "count": 0
+        }
+      },
+      {
+        "handle": "sets",
+        "productsCount": {
+          "count": 0
+        }
+      },
+      {
+        "handle": "hair-accessories",
+        "productsCount": {
+          "count": 0
+        }
+      },
+      {
+        "handle": "nose-pins",
+        "productsCount": {
+          "count": 0
+        }
+      },
+      {
+        "handle": "other",
+        "productsCount": {
+          "count": 0
+        }
+      },
+      {
+        "handle": "best-sellers",
+        "productsCount": {
+          "count": 19
+        }
+      },
+      {
+        "handle": "featured-products",
+        "productsCount": {
+          "count": 0
+        }
+      },
+      {
+        "handle": "jewellery-sets",
+        "productsCount": {
+          "count": 5
+        }
+      },
+      {
+        "handle": "necklaces-pendants",
+        "productsCount": {
+          "count": 14
+        }
+      },
+      {
+        "handle": "wedding",
+        "productsCount": {
+          "count": 11
+        }
+      },
+      {
+        "handle": "traditional-festival",
+        "productsCount": {
+          "count": 15
+        }
+      },
+      {
+        "handle": "dailywear-party-wear",
+        "productsCount": {
+          "count": 12
+        }
+      }
+    ]
+  }
+}

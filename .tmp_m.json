@@ -1,0 +1,882 @@
+{
+  "products": {
+    "nodes": [
+      {
+        "handle": "ghungroo-payal-anklet",
+        "featuredMedia": null,
+        "media": {
+          "nodes": []
+        }
+      },
+      {
+        "handle": "temple-jewellery-necklace-set",
+        "featuredMedia": null,
+        "media": {
+          "nodes": []
+        }
+      },
+      {
+        "handle": "floral-enamel-hair-pin-set",
+        "featuredMedia": null,
+        "media": {
+          "nodes": []
+        }
+      },
+      {
+        "handle": "kundan-clip-on-nose-pin",
+        "featuredMedia": null,
+        "media": {
+          "nodes": []
+        }
+      },
+      {
+        "handle": "handcrafted-beaded-keyring-charm",
+        "featuredMedia": null,
+        "media": {
+          "nodes": []
+        }
+      },
+      {
+        "handle": "long-raani-haar",
+        "featuredMedia": {
+          "image": {
+            "url": "https://cdn.shopify.com/s/files/1/1063/3088/2129/files/1-VINEETAPANDEY.png?v=1788188518"
+          },
+          "status": "READY"
+        },
+        "media": {
+          "nodes": [
+            {
+              "id": "gid://shopify/MediaImage/71978875715665",
+              "status": "READY",
+              "mediaErrors": [],
+              "image": {
+                "url": "https://cdn.shopify.com/s/files/1/1063/3088/2129/files/1-VINEETAPANDEY.png?v=1788188518",
+                "width": 4000
+              }
+            },
+            {
+              "id": "gid://shopify/MediaImage/71978893967441",
+              "status": "READY",
+              "mediaErrors": [],
+              "image": {
+                "url": "https://cdn.shopify.com/s/files/1/1063/3088/2129/files/4_-_VINEETA_PANDEY.png?v=1788189497",
+                "width": 2048
+              }
+            },
+            {
+              "id": "gid://shopify/MediaImage/71978893934673",
+              "status": "READY",
+              "mediaErrors": [],
+              "image": {
+                "url": "https://cdn.shopify.com/s/files/1/1063/3088/2129/files/2_-_VINEETA_PANDEY.png?v=1788189496",
+                "width": 4000
+              }
+            }
+          ]
+        }
+      },
+      {
+        "handle": "choker-set-with-earrings",
+        "featuredMedia": {
+          "image": {
+            "url": "https://cdn.shopify.com/s/files/1/1063/3088/2129/files/download.png?v=1788279999"
+          },
+          "status": "READY"
+        },
+        "media": {
+          "nodes": [
+            {
+              "id": "gid://shopify/MediaImage/71988825620561",
+              "status": "READY",
+              "mediaErrors": [],
+              "image": {
+                "url": "https://cdn.shopify.com/s/files/1/1063/3088/2129/files/download.png?v=1788279999",
+                "width": 4000
+              }
+            },
+            {
+              "id": "gid://shopify/MediaImage/71988828766289",
+              "status": "READY",
+              "mediaErrors": [],
+              "image": {
+                "url": "https://cdn.shopify.com/s/files/1/1063/3088/2129/files/download_02be8746-5a80-4e3e-867b-44a167b83462.png?v=1788280049",
+                "width": 4000
+              }
+            },
+            {
+              "id": "gid://shopify/MediaImage/71988828799057",
+              "status": "READY",
+              "mediaErrors": [],
+              "image": {
+                "url": "https://cdn.shopify.com/s/files/1/1063/3088/2129/files/download_58922043-62aa-4fb7-bec7-de02d0f91c33.png?v=1788280049",
+                "width": 4000
+              }
+            }
+          ]
+        }
+      },
+      {
+        "handle": "pearl-necklace-set",
+        "featuredMedia": {
+          "image": {
+            "url": "https://cdn.shopify.com/s/files/1/1063/3088/2129/files/download_5c08cbee-bc00-4721-a18e-9ce637124be3.png?v=1788280077"
+          },
+          "status": "READY"
+        },
+        "media": {
+          "nodes": [
+            {
+              "id": "gid://shopify/MediaImage/71988829126737",
+              "status": "READY",
+              "mediaErrors": [],
+              "image": {
+                "url": "https://cdn.shopify.com/s/files/1/1063/3088/2129/files/download_5c08cbee-bc00-4721-a18e-9ce637124be3.png?v=1788280077",
+                "width": 4000
+              }
+            },
+            {
+              "id": "gid://shopify/MediaImage/71988829159505",
+              "status": "READY",
+              "mediaErrors": [],
+              "image": {
+                "url": "https://cdn.shopify.com/s/files/1/1063/3088/2129/files/download_90191ea8-7778-447a-9b89-ef37431202ab.png?v=1788280073",
+                "width": 4000
+              }
+            },
+            {
+              "id": "gid://shopify/MediaImage/71988829192273",
+              "status": "READY",
+              "mediaErrors": [],
+              "image": {
+                "url": "https://cdn.shopify.com/s/files/1/1063/3088/2129/files/download_f35df835-7ae7-4f49-8c0f-1c338f361558.png?v=1788280072",
+                "width": 4000
+              }
+            }
+          ]
+        }
+      },
+      {
+        "handle": "antique-gold-plated-necklace-set-with-earrings",
+        "featuredMedia": {
+          "image": {
+            "url": "https://cdn.shopify.com/s/files/1/1063/3088/2129/files/download_2d8e21bd-95aa-49c1-bab3-775469cb8f40.png?v=1788280098"
+          },
+          "status": "READY"
+        },
+        "media": {
+          "nodes": [
+            {
+              "id": "gid://shopify/MediaImage/71988830732369",
+              "status": "READY",
+              "mediaErrors": [],
+              "image": {
+                "url": "https://cdn.shopify.com/s/files/1/1063/3088/2129/files/download_2d8e21bd-95aa-49c1-bab3-775469cb8f40.png?v=1788280098",
+                "width": 4000
+              }
+            },
+            {
+              "id": "gid://shopify/MediaImage/71988830765137",
+              "status": "READY",
+              "mediaErrors": [],
+              "image": {
+                "url": "https://cdn.shopify.com/s/files/1/1063/3088/2129/files/download_97870546-9790-4a8e-b411-be43d4cffa6b.png?v=1788280101",
+                "width": 4000
+              }
+            },
+            {
+              "id": "gid://shopify/MediaImage/71988830797905",
+              "status": "READY",
+              "mediaErrors": [],
+              "image": {
+                "url": "https://cdn.shopify.com/s/files/1/1063/3088/2129/files/download_d0992bc4-a72d-49bc-be94-ac69654914d8.png?v=1788280096",
+                "width": 4000
+              }
+            }
+          ]
+        }
+      },
+      {
+        "handle": "cz-necklace-set-with-earrings",
+        "featuredMedia": {
+          "image": {
+            "url": "https://cdn.shopify.com/s/files/1/1063/3088/2129/files/download_7172f367-5915-460c-a4ca-4a1738a5e6f8.png?v=1788280120"
+          },
+          "status": "READY"
+        },
+        "media": {
+          "nodes": [
+            {
+              "id": "gid://shopify/MediaImage/71988831813713",
+              "status": "READY",
+              "mediaErrors": [],
+              "image": {
+                "url": "https://cdn.shopify.com/s/files/1/1063/3088/2129/files/download_7172f367-5915-460c-a4ca-4a1738a5e6f8.png?v=1788280120",
+                "width": 4000
+              }
+            },
+            {
+              "id": "gid://shopify/MediaImage/71988831846481",
+              "status": "READY",
+              "mediaErrors": [],
+              "image": {
+                "url": "https://cdn.shopify.com/s/files/1/1063/3088/2129/files/download_f04640b4-7e33-4b93-a3a0-d25787234271.png?v=1788280121",
+                "width": 4000
+              }
+            },
+            {
+              "id": "gid://shopify/MediaImage/71988831879249",
+              "status": "READY",
+              "mediaErrors": [],
+              "image": {
+                "url": "https://cdn.shopify.com/s/files/1/1063/3088/2129/files/download_8b5c5bfb-2bdd-40b6-93e9-fffffe22c068.png?v=1788280120",
+                "width": 4000
+              }
+            }
+          ]
+        }
+      },
+      {
+        "handle": "gold-plated-cz-necklace-set-with-earrings",
+        "featuredMedia": {
+          "image": {
+            "url": "https://cdn.shopify.com/s/files/1/1063/3088/2129/files/download_17ba6804-7d52-4eae-85c8-509d2e89bbcd.png?v=1788280143"
+          },
+          "status": "READY"
+        },
+        "media": {
+          "nodes": [
+            {
+              "id": "gid://shopify/MediaImage/71988832632913",
+              "status": "READY",
+              "mediaErrors": [],
+              "image": {
+                "url": "https://cdn.shopify.com/s/files/1/1063/3088/2129/files/download_17ba6804-7d52-4eae-85c8-509d2e89bbcd.png?v=1788280143",
+                "width": 4000
+              }
+            },
+            {
+              "id": "gid://shopify/MediaImage/71988832665681",
+              "status": "READY",
+              "mediaErrors": [],
+              "image": {
+                "url": "https://cdn.shopify.com/s/files/1/1063/3088/2129/files/download_593cae56-b8ba-4768-b087-dd657613754f.png?v=1788280143",
+                "width": 4000
+              }
+            },
+            {
+              "id": "gid://shopify/MediaImage/71988832698449",
+              "status": "READY",
+              "mediaErrors": [],
+              "image": {
+                "url": "https://cdn.shopify.com/s/files/1/1063/3088/2129/files/download_2b30353f-a80c-475d-90df-c9e6f53a54fb.png?v=1788280142",
+                "width": 4000
+              }
+            }
+          ]
+        }
+      },
+      {
+        "handle": "artificial-pearl-necklace-set-with-earring",
+        "featuredMedia": {
+          "image": {
+            "url": "https://cdn.shopify.com/s/files/1/1063/3088/2129/files/download_ce4c1ea8-c5a8-4ce7-ab57-a0471e7f66f6.png?v=1788280164"
+          },
+          "status": "READY"
+        },
+        "media": {
+          "nodes": [
+            {
+              "id": "gid://shopify/MediaImage/71988833353809",
+              "status": "READY",
+              "mediaErrors": [],
+              "image": {
+                "url": "https://cdn.shopify.com/s/files/1/1063/3088/2129/files/download_ce4c1ea8-c5a8-4ce7-ab57-a0471e7f66f6.png?v=1788280164",
+                "width": 4000
+              }
+            },
+            {
+              "id": "gid://shopify/MediaImage/71988833386577",
+              "status": "READY",
+              "mediaErrors": [],
+              "image": {
+                "url": "https://cdn.shopify.com/s/files/1/1063/3088/2129/files/download_5c7516de-b1a5-4d94-904c-fc37eff89ce3.png?v=1788280166",
+                "width": 4000
+              }
+            },
+            {
+              "id": "gid://shopify/MediaImage/71988833419345",
+              "status": "READY",
+              "mediaErrors": [],
+              "image": {
+                "url": "https://cdn.shopify.com/s/files/1/1063/3088/2129/files/download_a4a7ce1c-e0b8-4cc4-a15b-38526b6fd804.png?v=1788280164",
+                "width": 4000
+              }
+            }
+          ]
+        }
+      },
+      {
+        "handle": "gold-plated-stone-work-choker-set",
+        "featuredMedia": {
+          "image": {
+            "url": "https://cdn.shopify.com/s/files/1/1063/3088/2129/files/download_5b60e509-e38b-43af-9b2e-99bcb6204d74.png?v=1788280188"
+          },
+          "status": "READY"
+        },
+        "media": {
+          "nodes": [
+            {
+              "id": "gid://shopify/MediaImage/71988833648721",
+              "status": "READY",
+              "mediaErrors": [],
+              "image": {
+                "url": "https://cdn.shopify.com/s/files/1/1063/3088/2129/files/download_5b60e509-e38b-43af-9b2e-99bcb6204d74.png?v=1788280188",
+                "width": 4000
+              }
+            },
+            {
+              "id": "gid://shopify/MediaImage/71988833681489",
+              "status": "READY",
+              "mediaErrors": [],
+              "image": {
+                "url": "https://cdn.shopify.com/s/files/1/1063/3088/2129/files/download_8547620e-19da-4185-be3e-a0f85c769b7e.png?v=1788280188",
+                "width": 4000
+              }
+            },
+            {
+              "id": "gid://shopify/MediaImage/71988833714257",
+              "status": "READY",
+              "mediaErrors": [],
+              "image": {
+                "url": "https://cdn.shopify.com/s/files/1/1063/3088/2129/files/download_964d7b7b-781b-4943-ab2e-b3ee98cfebe9.png?v=1788280187",
+                "width": 4000
+              }
+            }
+          ]
+        }
+      },
+      {
+        "handle": "pearl-beaded-mala-with-pearl-pendant-with-earrings",
+        "featuredMedia": {
+          "image": {
+            "url": "https://cdn.shopify.com/s/files/1/1063/3088/2129/files/download_5aef5835-438d-4a97-9708-5576f6095d51.png?v=1788280211"
+          },
+          "status": "READY"
+        },
+        "media": {
+          "nodes": [
+            {
+              "id": "gid://shopify/MediaImage/71988834598993",
+              "status": "READY",
+              "mediaErrors": [],
+              "image": {
+                "url": "https://cdn.shopify.com/s/files/1/1063/3088/2129/files/download_5aef5835-438d-4a97-9708-5576f6095d51.png?v=1788280211",
+                "width": 4000
+              }
+            },
+            {
+              "id": "gid://shopify/MediaImage/71988834631761",
+              "status": "READY",
+              "mediaErrors": [],
+              "image": {
+                "url": "https://cdn.shopify.com/s/files/1/1063/3088/2129/files/download_403a91ab-dc34-4dea-a13c-cc0936f9a9d3.png?v=1788280213",
+                "width": 4000
+              }
+            },
+            {
+              "id": "gid://shopify/MediaImage/71988834664529",
+              "status": "READY",
+              "mediaErrors": [],
+              "image": {
+                "url": "https://cdn.shopify.com/s/files/1/1063/3088/2129/files/download_35633d09-53eb-4285-8109-3337d123885f.png?v=1788280212",
+                "width": 4000
+              }
+            }
+          ]
+        }
+      },
+      {
+        "handle": "necklace-set-with-earrings",
+        "featuredMedia": {
+          "image": {
+            "url": "https://cdn.shopify.com/s/files/1/1063/3088/2129/files/download_ace34d97-fff1-40e1-a553-78d71cb66870.png?v=1788281500"
+          },
+          "status": "READY"
+        },
+        "media": {
+          "nodes": [
+            {
+              "id": "gid://shopify/MediaImage/71988966391889",
+              "status": "READY",
+              "mediaErrors": [],
+              "image": {
+                "url": "https://cdn.shopify.com/s/files/1/1063/3088/2129/files/download_ace34d97-fff1-40e1-a553-78d71cb66870.png?v=1788281500",
+                "width": 4000
+              }
+            },
+            {
+              "id": "gid://shopify/MediaImage/71988835057745",
+              "status": "READY",
+              "mediaErrors": [],
+              "image": {
+                "url": "https://cdn.shopify.com/s/files/1/1063/3088/2129/files/download_9d93d03d-ec1e-4cef-b21b-813ee41e608c.png?v=1788280236",
+                "width": 4000
+              }
+            },
+            {
+              "id": "gid://shopify/MediaImage/71988835090513",
+              "status": "READY",
+              "mediaErrors": [],
+              "image": {
+                "url": "https://cdn.shopify.com/s/files/1/1063/3088/2129/files/download_9768647e-9d6d-499b-afca-c01f6d6a2e6d.png?v=1788280240",
+                "width": 4000
+              }
+            }
+          ]
+        }
+      },
+      {
+        "handle": "kundan-choker-set-with-earrings",
+        "featuredMedia": {
+          "image": {
+            "url": "https://cdn.shopify.com/s/files/1/1063/3088/2129/files/download_a0b89b9f-3412-47d7-9cc0-41d1c87dd751.png?v=1788280468"
+          },
+          "status": "READY"
+        },
+        "media": {
+          "nodes": [
+            {
+              "id": "gid://shopify/MediaImage/71988877066321",
+              "status": "READY",
+              "mediaErrors": [],
+              "image": {
+                "url": "https://cdn.shopify.com/s/files/1/1063/3088/2129/files/download_a0b89b9f-3412-47d7-9cc0-41d1c87dd751.png?v=1788280468",
+                "width": 4000
+              }
+            },
+            {
+              "id": "gid://shopify/MediaImage/71988877099089",
+              "status": "READY",
+              "mediaErrors": [],
+              "image": {
+                "url": "https://cdn.shopify.com/s/files/1/1063/3088/2129/files/download_fa5e044f-3a59-4614-ba61-5add939e0f56.png?v=1788280467",
+                "width": 4000
+              }
+            },
+            {
+              "id": "gid://shopify/MediaImage/71988877131857",
+              "status": "READY",
+              "mediaErrors": [],
+              "image": {
+                "url": "https://cdn.shopify.com/s/files/1/1063/3088/2129/files/download_e9f547a4-7fe3-42e6-9bd2-433e51b65f6e.png?v=1788280467",
+                "width": 4000
+              }
+            },
+            {
+              "id": "gid://shopify/MediaImage/71988877164625",
+              "status": "READY",
+              "mediaErrors": [],
+              "image": {
+                "url": "https://cdn.shopify.com/s/files/1/1063/3088/2129/files/download_5591518e-8b80-4f3c-9daf-957f738a6527.png?v=1788280466",
+                "width": 4000
+              }
+            }
+          ]
+        }
+      },
+      {
+        "handle": "glass-kundan-necklace-set",
+        "featuredMedia": {
+          "image": {
+            "url": "https://cdn.shopify.com/s/files/1/1063/3088/2129/files/download_188c3e97-4082-47e0-a45e-22a0c036cd19.png?v=1788281604"
+          },
+          "status": "READY"
+        },
+        "media": {
+          "nodes": [
+            {
+              "id": "gid://shopify/MediaImage/71988968783953",
+              "status": "READY",
+              "mediaErrors": [],
+              "image": {
+                "url": "https://cdn.shopify.com/s/files/1/1063/3088/2129/files/download_188c3e97-4082-47e0-a45e-22a0c036cd19.png?v=1788281604",
+                "width": 4000
+              }
+            },
+            {
+              "id": "gid://shopify/MediaImage/71988877721681",
+              "status": "READY",
+              "mediaErrors": [],
+              "image": {
+                "url": "https://cdn.shopify.com/s/files/1/1063/3088/2129/files/download_08f268cd-838f-4608-8047-0b04a65a33f3.png?v=1788280492",
+                "width": 4000
+              }
+            },
+            {
+              "id": "gid://shopify/MediaImage/71988877754449",
+              "status": "READY",
+              "mediaErrors": [],
+              "image": {
+                "url": "https://cdn.shopify.com/s/files/1/1063/3088/2129/files/download_067403ac-682a-4410-a95a-d985c1a924b0.png?v=1788280487",
+                "width": 4000
+              }
+            },
+            {
+              "id": "gid://shopify/MediaImage/71988877787217",
+              "status": "READY",
+              "mediaErrors": [],
+              "image": {
+                "url": "https://cdn.shopify.com/s/files/1/1063/3088/2129/files/download_6e6c1d8a-5d71-4d6c-a1ba-c2a7c8b66795.png?v=1788280491",
+                "width": 4000
+              }
+            }
+          ]
+        }
+      },
+      {
+        "handle": "special-fire-stone-necklace-set",
+        "featuredMedia": {
+          "image": {
+            "url": "https://cdn.shopify.com/s/files/1/1063/3088/2129/files/download_ac6901b9-4d59-4b7a-b607-8b8328d2588c.png?v=1788280700"
+          },
+          "status": "READY"
+        },
+        "media": {
+          "nodes": [
+            {
+              "id": "gid://shopify/MediaImage/71988886798417",
+              "status": "READY",
+              "mediaErrors": [],
+              "image": {
+                "url": "https://cdn.shopify.com/s/files/1/1063/3088/2129/files/download_ac6901b9-4d59-4b7a-b607-8b8328d2588c.png?v=1788280700",
+                "width": 4000
+              }
+            },
+            {
+              "id": "gid://shopify/MediaImage/71988886831185",
+              "status": "READY",
+              "mediaErrors": [],
+              "image": {
+                "url": "https://cdn.shopify.com/s/files/1/1063/3088/2129/files/download_168839b4-9892-4789-bd36-cc86d4913bbf.png?v=1788280707",
+                "width": 4000
+              }
+            },
+            {
+              "id": "gid://shopify/MediaImage/71988886863953",
+              "status": "READY",
+              "mediaErrors": [],
+              "image": {
+                "url": "https://cdn.shopify.com/s/files/1/1063/3088/2129/files/download_a2fff26b-294c-45e8-85f1-66fbabf00ace.png?v=1788280699",
+                "width": 4000
+              }
+            },
+            {
+              "id": "gid://shopify/MediaImage/71988886896721",
+              "status": "READY",
+              "mediaErrors": [],
+              "image": {
+                "url": "https://cdn.shopify.com/s/files/1/1063/3088/2129/files/download_a614a5c0-adae-40f0-a135-a1b8974b4cac.png?v=1788280698",
+                "width": 4000
+              }
+            }
+          ]
+        }
+      },
+      {
+        "handle": "paachi-kundan-sleek-design-necklace-set-with-earrings",
+        "featuredMedia": {
+          "image": {
+            "url": "https://cdn.shopify.com/s/files/1/1063/3088/2129/files/download_9b86ae9e-19b7-41a0-93a2-40e99371de36.png?v=1788280731"
+          },
+          "status": "READY"
+        },
+        "media": {
+          "nodes": [
+            {
+              "id": "gid://shopify/MediaImage/71988887846993",
+              "status": "READY",
+              "mediaErrors": [],
+              "image": {
+                "url": "https://cdn.shopify.com/s/files/1/1063/3088/2129/files/download_9b86ae9e-19b7-41a0-93a2-40e99371de36.png?v=1788280731",
+                "width": 4000
+              }
+            },
+            {
+              "id": "gid://shopify/MediaImage/71988887879761",
+              "status": "READY",
+              "mediaErrors": [],
+              "image": {
+                "url": "https://cdn.shopify.com/s/files/1/1063/3088/2129/files/download_21d62412-fb03-4706-bb6d-104168da9f20.png?v=1788280730",
+                "width": 4000
+              }
+            },
+            {
+              "id": "gid://shopify/MediaImage/71988887912529",
+              "status": "READY",
+              "mediaErrors": [],
+              "image": {
+                "url": "https://cdn.shopify.com/s/files/1/1063/3088/2129/files/download_1d20610d-2ced-42ba-bc51-a2721316b143.png?v=1788280728",
+                "width": 4000
+              }
+            },
+            {
+              "id": "gid://shopify/MediaImage/71988887945297",
+              "status": "READY",
+              "mediaErrors": [],
+              "image": {
+                "url": "https://cdn.shopify.com/s/files/1/1063/3088/2129/files/download_4fc43417-1e6b-465e-920a-75cad09f29b7.png?v=1788280728",
+                "width": 4000
+              }
+            }
+          ]
+        }
+      },
+      {
+        "handle": "brass-base-antique-gold-plated-necklace-set-with-earrings",
+        "featuredMedia": {
+          "image": {
+            "url": "https://cdn.shopify.com/s/files/1/1063/3088/2129/files/download_18ddd47e-e7ed-4819-b84d-f7004b64a875.png?v=1788280750"
+          },
+          "status": "READY"
+        },
+        "media": {
+          "nodes": [
+            {
+              "id": "gid://shopify/MediaImage/71988888928337",
+              "status": "READY",
+              "mediaErrors": [],
+              "image": {
+                "url": "https://cdn.shopify.com/s/files/1/1063/3088/2129/files/download_18ddd47e-e7ed-4819-b84d-f7004b64a875.png?v=1788280750",
+                "width": 4000
+              }
+            },
+            {
+              "id": "gid://shopify/MediaImage/71988888961105",
+              "status": "READY",
+              "mediaErrors": [],
+              "image": {
+                "url": "https://cdn.shopify.com/s/files/1/1063/3088/2129/files/download_7040b6e7-28c7-44d0-b147-41e1869f56c2.png?v=1788280750",
+                "width": 4000
+              }
+            },
+            {
+              "id": "gid://shopify/MediaImage/71988888993873",
+              "status": "READY",
+              "mediaErrors": [],
+              "image": {
+                "url": "https://cdn.shopify.com/s/files/1/1063/3088/2129/files/download_240c12b5-2df9-4f2e-8de3-36d5ab100e62.png?v=1788280749",
+                "width": 4000
+              }
+            },
+            {
+              "id": "gid://shopify/MediaImage/71988889026641",
+              "status": "READY",
+              "mediaErrors": [],
+              "image": {
+                "url": "https://cdn.shopify.com/s/files/1/1063/3088/2129/files/download_bd6c384e-be81-40c3-ab24-18e68c10b598.png?v=1788280748",
+                "width": 4000
+              }
+            }
+          ]
+        }
+      },
+      {
+        "handle": "antique-gold-plated-choker-set-with-earrings",
+        "featuredMedia": {
+          "image": {
+            "url": "https://cdn.shopify.com/s/files/1/1063/3088/2129/files/download_ac20f551-6c1b-4fff-8f54-61b9fcc7d7d0.png?v=1788280769"
+          },
+          "status": "READY"
+        },
+        "media": {
+          "nodes": [
+            {
+              "id": "gid://shopify/MediaImage/71988889944145",
+              "status": "READY",
+              "mediaErrors": [],
+              "image": {
+                "url": "https://cdn.shopify.com/s/files/1/1063/3088/2129/files/download_ac20f551-6c1b-4fff-8f54-61b9fcc7d7d0.png?v=1788280769",
+                "width": 4000
+              }
+            },
+            {
+              "id": "gid://shopify/MediaImage/71988889976913",
+              "status": "READY",
+              "mediaErrors": [],
+              "image": {
+                "url": "https://cdn.shopify.com/s/files/1/1063/3088/2129/files/download_e03f561d-39ca-413d-aba5-f079f64ad503.png?v=1788280768",
+                "width": 4000
+              }
+            },
+            {
+              "id": "gid://shopify/MediaImage/71988890009681",
+              "status": "READY",
+              "mediaErrors": [],
+              "image": {
+                "url": "https://cdn.shopify.com/s/files/1/1063/3088/2129/files/download_58738a66-09df-44b0-8f34-eb2d524c1479.png?v=1788280767",
+                "width": 4000
+              }
+            },
+            {
+              "id": "gid://shopify/MediaImage/71988890042449",
+              "status": "READY",
+              "mediaErrors": [],
+              "image": {
+                "url": "https://cdn.shopify.com/s/files/1/1063/3088/2129/files/download_25f404bc-de4f-4ca0-95ab-e17bacf5edce.png?v=1788280769",
+                "width": 4000
+              }
+            }
+          ]
+        }
+      },
+      {
+        "handle": "multicolour-glass-stones-necklace-set-with-earring",
+        "featuredMedia": {
+          "image": {
+            "url": "https://cdn.shopify.com/s/files/1/1063/3088/2129/files/download_f0c72145-5d53-4d3e-bb5a-ea9611c19d55.png?v=1788280793"
+          },
+          "status": "READY"
+        },
+        "media": {
+          "nodes": [
+            {
+              "id": "gid://shopify/MediaImage/71988891353169",
+              "status": "READY",
+              "mediaErrors": [],
+              "image": {
+                "url": "https://cdn.shopify.com/s/files/1/1063/3088/2129/files/download_f0c72145-5d53-4d3e-bb5a-ea9611c19d55.png?v=1788280793",
+                "width": 4000
+              }
+            },
+            {
+              "id": "gid://shopify/MediaImage/71988891385937",
+              "status": "READY",
+              "mediaErrors": [],
+              "image": {
+                "url": "https://cdn.shopify.com/s/files/1/1063/3088/2129/files/download_921a2ca2-891b-4805-8f93-92c745cba02a.png?v=1788280792",
+                "width": 4000
+              }
+            },
+            {
+              "id": "gid://shopify/MediaImage/71988891418705",
+              "status": "READY",
+              "mediaErrors": [],
+              "image": {
+                "url": "https://cdn.shopify.com/s/files/1/1063/3088/2129/files/download_d32780e4-5eac-4521-82d3-ee23afa34711.png?v=1788280792",
+                "width": 4000
+              }
+            },
+            {
+              "id": "gid://shopify/MediaImage/71988891451473",
+              "status": "READY",
+              "mediaErrors": [],
+              "image": {
+                "url": "https://cdn.shopify.com/s/files/1/1063/3088/2129/files/download_a82a7c67-93c0-4dad-9229-ce278ca6e124.png?v=1788280791",
+                "width": 4000
+              }
+            }
+          ]
+        }
+      },
+      {
+        "handle": "gold-plated-long-pendant-set-with-ear-studds",
+        "featuredMedia": {
+          "image": {
+            "url": "https://cdn.shopify.com/s/files/1/1063/3088/2129/files/download_5fd7bc0a-7f5b-43ca-a1bd-3f726a690738.png?v=1788280816"
+          },
+          "status": "READY"
+        },
+        "media": {
+          "nodes": [
+            {
+              "id": "gid://shopify/MediaImage/71988893253713",
+              "status": "READY",
+              "mediaErrors": [],
+              "image": {
+                "url": "https://cdn.shopify.com/s/files/1/1063/3088/2129/files/download_5fd7bc0a-7f5b-43ca-a1bd-3f726a690738.png?v=1788280816",
+                "width": 4000
+              }
+            },
+            {
+              "id": "gid://shopify/MediaImage/71988893286481",
+              "status": "READY",
+              "mediaErrors": [],
+              "image": {
+                "url": "https://cdn.shopify.com/s/files/1/1063/3088/2129/files/download_a4e1dc53-a1ea-418e-af83-19d9aaaeaccd.png?v=1788280815",
+                "width": 4000
+              }
+            },
+            {
+              "id": "gid://shopify/MediaImage/71988893319249",
+              "status": "READY",
+              "mediaErrors": [],
+              "image": {
+                "url": "https://cdn.shopify.com/s/files/1/1063/3088/2129/files/download_8b990d91-6c64-4128-85f7-342d22f4deb5.png?v=1788280814",
+                "width": 4000
+              }
+            },
+            {
+              "id": "gid://shopify/MediaImage/71988893352017",
+              "status": "READY",
+              "mediaErrors": [],
+              "image": {
+                "url": "https://cdn.shopify.com/s/files/1/1063/3088/2129/files/download_84335746-0b19-40c8-b46a-5896700b9750.png?v=1788280813",
+                "width": 1254
+              }
+            }
+          ]
+        }
+      },
+      {
+        "handle": "long-raani-haar-style-neck-piece-with-earrings-maang-tika",
+        "featuredMedia": {
+          "image": {
+            "url": "https://cdn.shopify.com/s/files/1/1063/3088/2129/files/download_1c4c837a-72c0-4536-99f5-ebc45cf02e4d.png?v=1788281642"
+          },
+          "status": "READY"
+        },
+        "media": {
+          "nodes": [
+            {
+              "id": "gid://shopify/MediaImage/71988973043793",
+              "status": "READY",
+              "mediaErrors": [],
+              "image": {
+                "url": "https://cdn.shopify.com/s/files/1/1063/3088/2129/files/download_1c4c837a-72c0-4536-99f5-ebc45cf02e4d.png?v=1788281642",
+                "width": 4000
+              }
+            },
+            {
+              "id": "gid://shopify/MediaImage/71988894171217",
+              "status": "READY",
+              "mediaErrors": [],
+              "image": {
+                "url": "https://cdn.shopify.com/s/files/1/1063/3088/2129/files/download_38402076-73ad-4ea3-a525-4946e3b0e091.png?v=1788280836",
+                "width": 4000
+              }
+            },
+            {
+              "id": "gid://shopify/MediaImage/71988894203985",
+              "status": "READY",
+              "mediaErrors": [],
+              "image": {
+                "url": "https://cdn.shopify.com/s/files/1/1063/3088/2129/files/download_4602fc86-e746-4122-9568-82284ccbf138.png?v=1788280835",
+                "width": 4000
+              }
+            },
+            {
+              "id": "gid://shopify/MediaImage/71988894236753",
+              "status": "READY",
+              "mediaErrors": [],
+              "image": {
+                "url": "https://cdn.shopify.com/s/files/1/1063/3088/2129/files/download_209a5caf-04d9-4b75-abb2-4b7f738013c5.png?v=1788280835",
+                "width": 4000
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+}
