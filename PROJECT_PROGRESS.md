@@ -2,7 +2,19 @@
 
 
 ## Current Phase
-Phase 4.4 — Card drag-ghost suppressed + back button on all routes.
+Phase 5 — Client catalogue imported from CSV into Shopify Admin (19 products, 66 images, 6 collections). Store-data task; only docs changed in the repo.
+
+### Phase 5 — Client CSV catalogue import (Shopify Admin data, verified by readback)
+- Source of truth: `paridhi_shopify_product_import_with_metafields.csv` (66 rows -> 19 unique products grouped by URL handle). Parse matched the brief exactly: types Necklaces & Pendants 14 / Jewellery Sets 5; best sellers 19; occasions wedding 11, festival 15, party/daily 12; zero data issues (no SKUs/barcodes/weights to invent).
+- Upsert by handle: **18 created, 1 updated** (`long-raani-haar` existed from a manual import - merged productType, full tag set and SEO; its price, inventory, metafields and 3 media already matched the CSV and were left untouched). 0 duplicates, 0 failures.
+- Prices, compare-at, tracked inventory (policy DENY), quantities at the single active location (M Block, Shastri Nagar), Online Store publication - all from CSV values.
+- Metafields: **reused the store's existing `custom.*` definitions; none created.** Key mapping: CSV `colour_finish` -> store `color_finish`, CSV `occasion_style` -> store `ocassion_style` (existing store key includes that spelling). material / size_length / best_seller / care_instructions map 1:1. The theme must read the store keys.
+- Media: Shopify ingested the Drive `uc?export=download` URLs directly (no local downloads, nothing in theme assets or git). **66/66 images READY** on the Shopify CDN, CSV order and alt text preserved. 3 transient `IMAGE_DOWNLOAD_FAILURE`s were retried and reordered to position 1 - see `FAILED_PRODUCT_IMAGES.md` (all resolved).
+- Collections: created + published `necklaces-pendants` (TYPE rule, 14), `wedding` (tag occasion-wedding, 11), `traditional-festival` (tag occasion-festival, 15), `dailywear-party-wear` (tags occasion-partywear OR occasion-dailywear, 12). Reused `best-sellers` (TAG rule; CSV products join via their `best-seller` tag). `jewellery-sets` already existed as a **manual** collection (rulesets are immutable, cannot convert) - the 4 missing Jewellery Sets products were added manually; now 5/5. Normalized occasion tags added on top of CSV tags, originals preserved.
+- Homepage wiring verified, **zero theme changes needed**: Find your piece already points at `necklaces-pendants` + `jewellery-sets`, Best Sellers at `best-sellers`, Featured at `featured-products`, occasion cards at `/collections/wedding`, `/collections/traditional-festival`, `/collections/dailywear-party-wear`.
+- Featured Products: CSV has no featured flag - existing `featured-products` collection preserved untouched, currently holding 4 DEV-SAMPLE products. Curate separately.
+- Verification: full API readback of all 19 products - title, type, status, price, compare-at, inventory policy/tracking/quantity, publication, media count+READY, CSV+normalized tags, all metafield values, blank SKU - **19/19 pass**. (SEO note: Shopify stores no seo.title override when it equals the product title; the CSV SEO descriptions are stored, effective titles match the CSV.)
+- Warnings: `best-sellers` counts 23 = 19 CSV + 4 DEV-SAMPLE dev products that still carry the `best-seller` tag; the 13 DEV-SAMPLE + 4 asset-pack demo products remain in the store (deletion excluded from this task - remove them to clean Best Sellers/Featured on the homepage). `jewellery-sets` being manual means future set products must be added to it by hand.
 
 ### Phase 4.4 — Drag ghost + back button
 - The grey "title + URL" box in the client's screenshot is **Chrome's native link-drag ghost**, lifted when a collection card (plain grid, so outside the slider's dragstart guard) is click-dragged. Suppressed on all collection/product cards: `-webkit-user-drag: none` in `custom.css` (WebKit) plus a delegated `dragstart` cancel in `custom.js` (Firefox has no CSS equivalent). Scoped to cards so links elsewhere stay draggable. Note: the URL preview in the browser's bottom-left **status bar** is browser chrome and cannot be hidden by any site.
