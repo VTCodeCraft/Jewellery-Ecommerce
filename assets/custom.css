@@ -289,6 +289,13 @@ popover-content,
   color: var(--brand-espresso);
   border-block-end: 1px solid var(--brand-border);
 }
+
+/* The homepage header sits over the hero until it becomes sticky. Keep the
+   divider for the solid sticky state, but never paint it over the hero. */
+.header[transparent]:not([data-sticky-state='active']) {
+  border-block-end-color: transparent;
+}
+
 .header a:hover {
   color: var(--brand-ruby);
 }
@@ -304,6 +311,29 @@ popover-content,
 .hero h1,
 .hero h2 {
   color: var(--brand-cream);
+}
+
+/* The secondary hero CTA is the only outlined button that fills with cream
+   on hover. Keep this independent from the global secondary-button palette. */
+[id$='__hero_p9CmMG'] .button-custom[class*='__button_hero_secondary'] {
+  --button-background-color: transparent;
+  --button-color: var(--brand-cream);
+  --button-border-color: var(--brand-cream);
+
+  transition:
+    background-color 180ms ease,
+    color 180ms ease,
+    border-color 180ms ease;
+}
+
+[id$='__hero_p9CmMG'] .button-custom[class*='__button_hero_secondary']:hover {
+  --button-background-color: var(--brand-cream);
+  --button-color: var(--brand-espresso);
+  --button-border-color: var(--brand-cream);
+
+  background-color: var(--brand-cream);
+  color: var(--brand-espresso);
+  border-color: var(--brand-cream);
 }
 
 /* ------------------------------------------------------------
@@ -346,6 +376,41 @@ popover-content,
 /* Shop by Category — champagne */
 #shopify-section-collection_list_featured {
   background-color: var(--brand-champagne);
+}
+
+/* Keep the two homepage category cards centered at a normal card width.
+   The explicit columns win over Horizon's generated/container grid rules. */
+@media screen and (min-width: 990px) {
+  [id$='__collection_list_featured'] [data-testid='collections-list-grid'].resource-list--grid {
+    width: 100%;
+    max-width: 800px;
+    margin-inline: auto;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    justify-content: center;
+  }
+}
+
+@media screen and (min-width: 750px) and (max-width: 989px) {
+  [id$='__collection_list_featured'] [data-testid='collections-list-grid'].resource-list--grid {
+    width: 90%;
+    max-width: 800px;
+    margin-inline: auto;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    justify-content: center;
+  }
+}
+
+@media screen and (max-width: 749px) {
+  [id$='__collection_list_featured'] [data-testid='collections-list-grid'].resource-list--grid {
+    width: 100%;
+    margin-inline: auto;
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+}
+
+[id$='__collection_list_featured'] .temporary-homepage-collection-card__title {
+  --width: 100%;
+  --text-align: center;
 }
 
 /* ------------------------------------------------------------

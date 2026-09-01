@@ -13,6 +13,13 @@
   elsif section.settings.layout_type == 'grid'
     assign max_items = section.settings.columns
   endif
+
+  # TEMPORARY: Keep both intended homepage categories visible until catalog
+  # feeding creates the real Shopify collections. Remove after integration.
+  if section.id == 'collection_list_featured'
+    assign section_collections = 'necklaces-pendants,jewellery-sets' | split: ','
+    assign max_items = 2
+  endif
 %}
 
 {% liquid
@@ -53,9 +60,60 @@
   {% endif %}
 
   {% capture list_items %}
-    {% for collection in section_collections limit: max_items %}
+    {% for collection_item in section_collections limit: max_items %}
+      {% liquid
+        assign collection = collection_item
+        assign collection_handle = collection.handle
+
+        if section.id == 'collection_list_featured'
+          assign collection_handle = collection_item
+          assign collection = collections[collection_handle]
+        endif
+      %}
       <div class="resource-list__item">
-        {% content_for 'block', type: '_collection-card', id: 'static-collection-card', closest.collection: collection %}
+        {% if section.id == 'collection_list_featured' and collection == blank %}
+          {% liquid
+            if collection_handle == 'necklaces-pendants'
+              assign fallback_title = 'Necklaces & Pendants'
+              assign fallback_image = 'hero-jewellery-cover.jpg'
+            else
+              assign fallback_title = 'Jewellery Sets'
+              assign fallback_image = 'our-shop-background.jpg'
+            endif
+          %}
+          {% comment %}
+            TEMPORARY FALLBACK: replaced automatically by the native collection
+            card once the matching Shopify collection exists.
+          {% endcomment %}
+          <div
+            class="collection-card border-style temporary-homepage-collection-card"
+            data-temporary-collection-handle="{{ collection_handle }}"
+            style="--horizontal-alignment: center; --vertical-alignment: center; --gap: 12px; --ratio: 1 / 1;"
+          >
+            <a class="collection-card__link" href="{{ routes.all_products_collection_url }}">
+              <span class="visually-hidden">{{ fallback_title }}</span>
+            </a>
+            <div class="collection-card__inner">
+              <div class="resource-image collection-card__image">
+                <img
+                  class="resource-image__image"
+                  src="{{ fallback_image | asset_url }}"
+                  alt="{{ fallback_title | escape }}"
+                  width="3840"
+                  height="2560"
+                  loading="eager"
+                >
+              </div>
+              <div class="collection-card__content layout-panel-flex--column">
+                <div class="text-block text-block--align-center h5 temporary-homepage-collection-card__title">
+                  <p>{{ fallback_title }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        {% else %}
+          {% content_for 'block', type: '_collection-card', id: 'static-collection-card', closest.collection: collection %}
+        {% endif %}
       </div>
       {% unless forloop.last %}
         <!--@list/split-->
