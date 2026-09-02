@@ -1,11 +1,5 @@
 import { Component } from '@theme/component';
-import {
-  supportsViewTransitions,
-  startViewTransition,
-  onAnimationEnd,
-  isLowPowerDevice,
-  preloadImage,
-} from '@theme/utilities';
+import { preloadImage } from '@theme/utilities';
 import { ZoomMediaSelectedEvent } from '@theme/events';
 import { DialogCloseEvent } from '@theme/dialog';
 
@@ -113,31 +107,10 @@ export class ZoomDialog extends Component {
     if (!media || media.length === 0) return;
     const safeIndex = Math.max(0, Math.min(index, media.length - 1));
     this.#activeIndex = safeIndex;
-
-    const openDialog = () => {
-      dialog.showModal();
-      document.body.style.overflow = 'hidden';
-      this.#showSlide(this.#activeIndex);
-      this.#bindEvents();
-    };
-
-    const sourceImage = event?.target instanceof Element ? event.target.closest('li,slideshow-slide') : null;
-    if (!supportsViewTransitions() || isLowPowerDevice() || !sourceImage || !media[safeIndex]) {
-      openDialog();
-      return;
-    }
-
-    const itemTransitionName = `gallery-item-open`;
-    sourceImage.style.setProperty('view-transition-name', itemTransitionName);
-    const focalPoint = sourceImage.dataset.focalPoint;
-    if (focalPoint) document.documentElement.style.setProperty('--gallery-media-focal-point', focalPoint);
-    await startViewTransition(() => {
-      openDialog();
-      sourceImage.style.removeProperty('view-transition-name');
-      media[safeIndex]?.style.setProperty('view-transition-name', itemTransitionName);
-    });
-    document.documentElement.style.removeProperty('--gallery-media-focal-point');
-    media[safeIndex]?.style.removeProperty('view-transition-name');
+    dialog.showModal();
+    document.body.style.overflow = 'hidden';
+    this.#showSlide(this.#activeIndex);
+    this.#bindEvents();
   }
 
   #showSlide(index) {
@@ -227,34 +200,7 @@ export class ZoomDialog extends Component {
   async close() {
     const { dialog } = this.refs;
     if (!dialog.open) return;
-    // View transition close
-    if (supportsViewTransitions() && !isLowPowerDevice()) {
-      const activeEl = this.refs.media[this.#activeIndex];
-      const mediaGallery = this.closest('media-gallery');
-      const slide = mediaGallery?.media?.[this.#activeIndex];
-      if (activeEl && slide) {
-        const itemTransitionName = `gallery-item-close`;
-        const focalPoint = slide.dataset.focalPoint;
-        if (focalPoint) document.documentElement.style.setProperty('--gallery-media-focal-point', focalPoint);
-        dialog.classList.add('dialog--closed');
-        await onAnimationEnd(this.refs.thumbnails || dialog);
-        activeEl.style.setProperty('view-transition-name', itemTransitionName);
-        await startViewTransition(() => {
-          activeEl.style.removeProperty('view-transition-name');
-          slide.style.setProperty('view-transition-name', itemTransitionName);
-          this.closeDialog();
-        });
-        slide.style.removeProperty('view-transition-name');
-        dialog.classList.remove('dialog--closed');
-        document.documentElement.style.removeProperty('--gallery-media-focal-point');
-        this.#unbindEvents();
-        document.body.style.overflow = '';
-        return;
-      }
-    }
     this.closeDialog();
-    this.#unbindEvents();
-    document.body.style.overflow = '';
   }
 
   closeDialog() {

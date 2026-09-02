@@ -1118,7 +1118,20 @@
     width: auto;
     height: auto;
     object-fit: contain !important;
+    object-position: center !important;
     background: var(--color-background);
+  }
+  .lightbox-slide .product-media__drag-zoom-wrapper {
+    --drag-zoom-scale: 1 !important;
+    --drag-zoom-translate-x: 0px !important;
+    --drag-zoom-translate-y: 0px !important;
+    display: grid !important;
+    place-items: center !important;
+    overflow: hidden !important;
+  }
+  .lightbox-slide .product-media__drag-zoom-wrapper .product-media__image {
+    transform: none !important;
+    scale: 1 !important;
   }
   .lightbox-arrow {
     position: absolute;
@@ -1140,8 +1153,9 @@
     background: #fff;
   }
   .lightbox-prev { left: 14px; }
+  .lightbox-prev svg { transform: rotate(90deg); }
   .lightbox-next { right: 14px; }
-  .lightbox-next svg { transform: rotate(180deg); }
+  .lightbox-next svg { transform: rotate(-90deg); }
   .lightbox-arrow svg { width: 18px; height: 18px; }
   .lightbox-close {
     position: fixed;
@@ -1157,6 +1171,17 @@
     box-shadow: 0 4px 16px rgba(0,0,0,0.18);
     display: grid;
     place-items: center;
+    opacity: 1;
+    mix-blend-mode: normal;
+  }
+  .lightbox-close:hover {
+    background: #FFF9F2;
+    color: #2B1A12;
+    opacity: 1;
+    mix-blend-mode: normal;
+  }
+  .lightbox-close svg {
+    opacity: 1;
   }
   .lightbox-counter {
     position: fixed;
@@ -1177,4 +1202,15 @@
   .lightbox-dialog .dialog-zoomed-gallery__dialog { background: transparent; }
   /* Hide old scroll gallery when lightbox is used */
   .lightbox-dialog .product-media-container { cursor: default; }
+  .lightbox-dialog[open] {
+    animation: lightboxFade 0.22s ease;
+  }
+  .lightbox-stage {
+    animation: lightboxStage 0.24s ease;
+  }
+  @keyframes lightboxFade { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes lightboxStage { from { opacity: 0; transform: scale(0.97); } to { opacity: 1; transform: scale(1); } }
+  @media (prefers-reduced-motion: reduce) {
+    .lightbox-dialog[open], .lightbox-stage { animation: none; }
+  }
 {% endstylesheet %}
