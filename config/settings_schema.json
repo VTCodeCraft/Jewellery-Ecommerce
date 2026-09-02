@@ -1849,6 +1849,24 @@
     ]
   },
   {
+    "name": "Wishlist",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "show_wishlist",
+        "label": "Show wishlist link in header",
+        "default": true
+      },
+      {
+        "type": "text",
+        "id": "wishlist_page_handle",
+        "label": "Wishlist page handle",
+        "default": "wishlist",
+        "info": "Handle of the page using the Wishlist template. The heart on product cards works regardless."
+      }
+    ]
+  },
+  {
     "name": "t:names.product_cards",
     "settings": [
       {

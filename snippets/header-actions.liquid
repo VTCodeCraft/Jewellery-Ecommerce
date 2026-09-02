@@ -113,6 +113,33 @@
     </div>
   {% endif %}
 
+  {% if settings.show_wishlist %}
+    <a
+      href="{{ routes.root_url }}pages/{{ settings.wishlist_page_handle | default: 'wishlist' }}"
+      class="header-actions__action header-actions__wishlist{% if display_style == 'text' %} header-actions__wishlist--text header-actions__text-style{% endif %}"
+      aria-label="Wishlist"
+    >
+      <span class="{% if display_style == 'icon' %}hidden{% else %}mobile:hidden{% endif %}">
+        Wishlist
+      </span>
+      <span
+        class="svg-wrapper {% if display_style != 'icon' %}desktop:hidden{% endif %}"
+        aria-hidden="true"
+      >
+        {{ 'icon-heart.svg' | inline_asset_content }}
+      </span>
+
+      {%- comment -%}
+        Reuses the cart's own badge component so the two counts are visually
+        identical. `interactive: false` keeps its refs and id off this copy,
+        which would otherwise collide with the cart icon's.
+      {%- endcomment -%}
+      <wishlist-count class="header-actions__wishlist-count">
+        {% render 'cart-bubble', limit: 100, count: 0, interactive: false, testid: 'wishlist-bubble' %}
+      </wishlist-count>
+    </a>
+  {% endif %}
+
   {% if settings.cart_type == 'drawer' and template.name != 'cart' %}
     <button
       class="header-actions__action button-unstyled{% if display_style == 'text' %} header-actions__text-style{% endif %}"
@@ -165,6 +192,62 @@
   .account-button {
     /* Remove the background color from the color scheme, we want to inherit the color of the header */
     background: transparent;
+  }
+
+  /* Mirrors .header-actions__cart-icon so the wishlist badge sits and behaves
+     exactly like the cart one: over the icon on mobile, inline after the label
+     on desktop in text mode. */
+  .header-actions__wishlist {
+    --cart-bubble-size: 20px;
+    --cart-bubble-top: 4.5px;
+    --cart-bubble-right: 2.5px;
+
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--gap-xs);
+    text-decoration: none;
+  }
+
+  .header-actions__wishlist .cart-bubble {
+    position: absolute;
+    width: var(--cart-bubble-size, 20px);
+    top: var(--cart-bubble-top);
+    right: var(--cart-bubble-right);
+  }
+
+  @media screen and (min-width: 750px) {
+    .header-actions__wishlist--text .cart-bubble {
+      position: relative;
+      top: 0;
+    }
+  }
+
+  /* Donut mask behind the badge, same as the cart icon gets when non-empty. */
+  .header-actions__wishlist--has-items .svg-wrapper svg {
+    mask: radial-gradient(
+      calc(var(--cart-bubble-size) + 2px) at calc(100% - var(--cart-bubble-right)) var(--cart-bubble-top),
+      transparent 45.45%,
+      #fff 45.45%,
+      #fff 100%
+    );
+  }
+
+  .header-actions__wishlist:has(.cart-bubble__text-count:empty) {
+    --cart-bubble-size: 10px;
+    --cart-bubble-top: 9px;
+    --cart-bubble-right: 9px;
+
+    .svg-wrapper {
+      --cart-bubble-top: 4px;
+      --cart-bubble-right: 4px;
+    }
+  }
+
+  @media screen and (min-width: 750px) {
+    .header-actions__wishlist--text:has(.cart-bubble__text-count:empty) {
+      --cart-bubble-right: 2.5px;
+    }
   }
 
   .account-button__icon,

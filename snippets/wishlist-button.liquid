@@ -1,0 +1,46 @@
+{%- doc -%}
+  Wishlist heart toggle.
+
+  Both icon states are rendered up front and CSS swaps which one is visible,
+  so toggling never fetches anything and never shifts layout. State itself
+  lives in localStorage and is applied by assets/wishlist.js on connect, so
+  this markup stays cacheable.
+
+  @param {object} product - The product to toggle
+  @param {string} [variant] - 'overlay' floats it over card media, 'inline'
+                              sits it in a row of controls. Default 'overlay'.
+
+  @example
+  {% render 'wishlist-button', product: product, variant: 'inline' %}
+{%- enddoc -%}
+
+{%- if product != blank and product.handle != blank -%}
+  <wishlist-button
+    class="wishlist-button wishlist-button--{{ variant | default: 'overlay' }}"
+    data-handle="{{ product.handle }}"
+    data-label-add="Add {{ product.title | escape }} to wishlist"
+    data-label-remove="Remove {{ product.title | escape }} from wishlist"
+  >
+    <button
+      type="button"
+      class="wishlist-button__control button-unstyled"
+      aria-pressed="false"
+      aria-label="Add {{ product.title | escape }} to wishlist"
+    >
+      <span class="svg-wrapper wishlist-button__icon wishlist-button__icon--off" aria-hidden="true">
+        {{- 'icon-heart.svg' | inline_asset_content -}}
+      </span>
+      <span class="svg-wrapper wishlist-button__icon wishlist-button__icon--on" aria-hidden="true">
+        {{- 'icon-heart-filled.svg' | inline_asset_content -}}
+      </span>
+      {%- if variant == 'inline' -%}
+        <span class="wishlist-button__text" aria-hidden="true">
+          <span class="wishlist-button__text--off">Save</span>
+          <span class="wishlist-button__text--on">Saved</span>
+        </span>
+      {%- endif -%}
+    </button>
+  </wishlist-button>
+{%- endif -%}
+
+{% render 'wishlist-button-styles' %}

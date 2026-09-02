@@ -1,0 +1,89 @@
+{% # theme-check-disable ValidScopedCSSClass %}
+{%- comment -%}
+  Single product card, rendered on its own for the Section Rendering API.
+
+  The wishlist page fetches /products/{handle}?section_id=wishlist-card for
+  each saved handle, which gives back the theme's real product card - correct
+  price, compare-at, sale and sold-out badges, quick add - without the
+  wishlist storing any product data.
+
+  The children are composed here rather than through a static `_product-card`
+  block: a section rendered outside any template gets no block tree (presets
+  are not applied by the Section Rendering API), so a static block renders its
+  wrapper with an empty `content_for 'blocks'`. The underlying snippets are
+  still the theme's own, so cards match the collection grid.
+
+  Outputs nothing when there is no product, so a deleted or unpublished
+  handle comes back empty and the page prunes it from storage.
+{%- endcomment -%}
+
+{%- if product != blank -%}
+  {% liquid
+    # Sit the heart in the corner the sale / sold-out badge is not using.
+    assign wishlist_corner = 'top-right'
+    if settings.badge_position == 'top-right'
+      assign wishlist_corner = 'top-left'
+    endif
+  %}
+
+  {% capture gallery_children %}
+    <div class="product-card__wishlist product-card__wishlist--{{ wishlist_corner }}">
+      {% render 'wishlist-button', product: product, variant: 'overlay' %}
+    </div>
+
+    {%- if product.available == false or product.compare_at_price > product.price -%}
+      <div
+        class="product-badges product-badges--{{ settings.badge_position }}"
+        style="
+          --badge-border-radius: {{ settings.badge_corner_radius }}px;
+          --badge-font-family: var(--font-{{ settings.badge_font_family }}--family); --badge-font-weight: var(--font-{{ settings.badge_font_family }}--weight); --badge-text-transform: {{ settings.badge_text_transform }};
+        "
+      >
+        <div
+          class="
+            product-badges__badge product-badges__badge--rectangle
+            {% if product.available == false %} color-custom-badge-sold-out{% elsif product.compare_at_price > product.price %} color-custom-badge-sale{% endif %}
+          "
+        >
+          {%- if product.available == false -%}
+            {{ 'content.product_badge_sold_out' | t }}
+          {%- elsif product.compare_at_price > product.price -%}
+            {{ 'content.product_badge_sale' | t }}
+          {%- endif -%}
+        </div>
+      </div>
+    {%- endif -%}
+
+    {% if product.available and settings.quick_add or settings.mobile_quick_add %}
+      {% render 'quick-add', product: product, section_id: section.id %}
+    {% endif %}
+  {% endcapture %}
+
+  {% capture children %}
+    {% render 'card-gallery', children: gallery_children, section: section %}
+
+    <a class="wishlist-card__title-link" href="{{ product.url }}" ref="productTitleLink">
+      <p role="heading" aria-level="3" class="wishlist-card__title">{{ product.title }}</p>
+    </a>
+
+    <product-price class="wishlist-card__price">
+      {% render 'price', product_resource: product, show_unit_price: true %}
+    </product-price>
+  {% endcapture %}
+
+  {% render 'product-card', children: children, product: product, product_view_context: 'collection', product_card_gap: 4 %}
+{%- endif -%}
+
+{% # theme-check-enable ValidScopedCSSClass %}
+
+{% schema %}
+{
+  "name": "Wishlist card",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Used by the wishlist page to render saved products. Not meant to be added to a page directly."
+    }
+  ]
+}
+{% endschema %}

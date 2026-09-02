@@ -2,7 +2,21 @@
 
 {% assign product = closest.product %}
 
+{% liquid
+  # Sit the heart in the corner the sale / sold-out badge is not using, so the
+  # two never overlap. Badge placement itself is left exactly as configured.
+  assign wishlist_corner = 'top-right'
+  if settings.badge_position == 'top-right'
+    assign wishlist_corner = 'top-left'
+  endif
+%}
+
 {% capture children %}
+  {% unless product == blank %}
+    <div class="product-card__wishlist product-card__wishlist--{{ wishlist_corner }}">
+      {% render 'wishlist-button', product: product, variant: 'overlay' %}
+    </div>
+  {% endunless %}
   {% unless product == blank %}
     {%- if product.available == false or product.compare_at_price > product.price -%}
       <div
@@ -45,6 +59,28 @@
 
 {% render 'product-card-gallery-zoom-details-styles' %}
 {% render 'product-badges-styles' %}
+
+{% stylesheet %}
+  .product-card__wishlist {
+    position: absolute;
+    z-index: var(--layer-raised);
+  }
+
+  .product-card__wishlist--top-right {
+    inset-block-start: var(--padding-2xs);
+    inset-inline-end: var(--padding-2xs);
+  }
+
+  .product-card__wishlist--top-left {
+    inset-block-start: var(--padding-2xs);
+    inset-inline-start: var(--padding-2xs);
+  }
+
+  /* The overlay variant positions itself; inside this wrapper it should not. */
+  .product-card__wishlist .wishlist-button--overlay {
+    position: static;
+  }
+{% endstylesheet %}
 
 {% schema %}
 {

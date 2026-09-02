@@ -1,0 +1,20 @@
+{
+  "sections": {
+    "main": {
+      "type": "wishlist",
+      "settings": {
+        "heading": "Wishlist",
+        "subheading": "Pieces you've saved for later.",
+        "columns": 4,
+        "show_clear": true,
+        "empty_heading": "Your wishlist is empty",
+        "empty_text": "Save pieces you love and find them here later.",
+        "empty_button": "Explore jewellery",
+        "section_width": "page-width",
+        "padding-block-start": 40,
+        "padding-block-end": 80
+      }
+    }
+  },
+  "order": ["main"]
+}

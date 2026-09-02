@@ -1,0 +1,113 @@
+{%- doc -%}
+  Wishlist button block, so the heart can be placed anywhere in the product
+  details column from the Theme Editor.
+{%- enddoc -%}
+
+{% liquid
+  assign product = closest.product
+  if request.visual_preview_mode and product == blank
+    assign product = collections.all.products.first
+  endif
+%}
+
+<div
+  class="wishlist-button-block wishlist-button-block--{{ block.settings.alignment }} spacing-style"
+  style="{% render 'spacing-style', settings: block.settings %}"
+  {{ block.shopify_attributes }}
+>
+  {% render 'wishlist-button', product: product, variant: block.settings.style %}
+</div>
+
+{% stylesheet %}
+  .wishlist-button-block {
+    display: flex;
+    width: 100%;
+  }
+
+  .wishlist-button-block--flex-start {
+    justify-content: flex-start;
+  }
+
+  .wishlist-button-block--center {
+    justify-content: center;
+  }
+
+  .wishlist-button-block--flex-end {
+    justify-content: flex-end;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Wishlist button",
+  "tag": null,
+  "settings": [
+    {
+      "type": "select",
+      "id": "style",
+      "label": "Style",
+      "options": [
+        {
+          "value": "inline",
+          "label": "Heart and label"
+        },
+        {
+          "value": "overlay",
+          "label": "Heart only"
+        }
+      ],
+      "default": "inline"
+    },
+    {
+      "type": "select",
+      "id": "alignment",
+      "label": "Alignment",
+      "options": [
+        {
+          "value": "flex-start",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "flex-end",
+          "label": "Right"
+        }
+      ],
+      "default": "flex-start"
+    },
+    {
+      "type": "header",
+      "content": "t:content.padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "t:settings.top",
+      "min": 0,
+      "max": 60,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "t:settings.bottom",
+      "min": 0,
+      "max": 60,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    }
+  ],
+  "presets": [
+    {
+      "name": "Wishlist button",
+      "category": "t:categories.products"
+    }
+  ]
+}
+{% endschema %}

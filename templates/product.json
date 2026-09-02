@@ -411,6 +411,17 @@
                 "product_info_care",
                 "product_info_shipping"
               ]
+            },
+            "wishlist_button": {
+              "type": "wishlist-button",
+              "name": "Wishlist button",
+              "settings": {
+                "style": "inline",
+                "alignment": "flex-start",
+                "padding-block-start": 0,
+                "padding-block-end": 0
+              },
+              "blocks": {}
             }
           },
           "block_order": [
@@ -418,6 +429,7 @@
             "divider_VJhene",
             "variant_picker_R3rGDr",
             "buy_buttons_eYQEYi",
+            "wishlist_button",
             "product_info_description",
             "group_product_info"
           ]

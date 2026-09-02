@@ -1,0 +1,100 @@
+{%- doc -%}
+  Styles for the wishlist heart. Kept in their own snippet so both the
+  card overlay and the product-page block can pull them in independently,
+  which matters when CSS subsetting is enabled.
+{%- enddoc -%}
+
+{% stylesheet %}
+  .wishlist-button__control {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--gap-2xs);
+    min-width: var(--minimum-touch-target);
+    min-height: var(--minimum-touch-target);
+    color: var(--color-foreground);
+    background: transparent;
+    border: 0;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .wishlist-button__icon {
+    display: inline-flex;
+    width: var(--icon-size-md);
+    height: var(--icon-size-md);
+    transition: transform var(--animation-speed) var(--animation-easing);
+  }
+
+  /* Only one heart is ever visible; the other stays in the DOM so the
+     control never resizes when toggled. */
+  .wishlist-button__icon--on,
+  .wishlist-button--active .wishlist-button__icon--off {
+    display: none;
+  }
+
+  .wishlist-button--active .wishlist-button__icon--on {
+    display: inline-flex;
+    color: var(--brand-ruby, var(--color-foreground));
+  }
+
+  .wishlist-button__control:hover .wishlist-button__icon {
+    transform: scale(1.08);
+  }
+
+  .wishlist-button__control:focus-visible {
+    outline: var(--focus-outline-width) solid currentcolor;
+    outline-offset: calc(var(--focus-outline-offset) * -1);
+  }
+
+  /* Overlay variant: floats over card media, above the card-wide link. */
+  .wishlist-button--overlay {
+    position: absolute;
+    inset-block-start: var(--padding-2xs);
+    inset-inline-end: var(--padding-2xs);
+    z-index: var(--layer-raised);
+  }
+
+  .wishlist-button--overlay .wishlist-button__control {
+    border-radius: var(--style-border-radius-50);
+    background: rgb(var(--color-background-rgb) / var(--opacity-85));
+    backdrop-filter: blur(4px);
+  }
+
+  /* Inline variant: sits in a row with other product-page controls. */
+  .wishlist-button--inline .wishlist-button__control {
+    justify-content: flex-start;
+    padding-inline: 0;
+    font-family: var(--font-body--family);
+    font-size: var(--font-paragraph--size);
+  }
+
+  .wishlist-button__text--on,
+  .wishlist-button--active .wishlist-button__text--off {
+    display: none;
+  }
+
+  .wishlist-button--active .wishlist-button__text--on {
+    display: inline;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .wishlist-button--pop .wishlist-button__icon--on {
+      animation: wishlist-pop var(--animation-speed-slow) var(--animation-timing-bounce);
+    }
+  }
+
+  @keyframes wishlist-pop {
+    0% {
+      transform: scale(0.7);
+    }
+
+    60% {
+      transform: scale(1.2);
+    }
+
+    100% {
+      transform: scale(1);
+    }
+  }
+{% endstylesheet %}

@@ -3,6 +3,15 @@
 
   The maximum number of items to display. Anything above shows as "99+".
 
+  @param [count] - {number} Overrides cart.item_count. Lets a non-cart counter
+  (the wishlist badge) reuse this component instead of copying its markup.
+
+  @param [interactive] - {boolean} Defaults to true. Pass false outside the cart
+  icon: the refs and the cart-bubble-text id are then omitted, so a second bubble
+  cannot steal cart-icon.js's refs or duplicate that id.
+
+  @param [testid] - {string} Defaults to "cart-bubble".
+
   Colors: reads --cart-bubble-background / --cart-bubble-text from an ancestor. Falls back to a contrasting pair
   computed from the palette foreground when unset.
 {%- enddoc -%}
@@ -10,31 +19,48 @@
 {% liquid
   assign bubble_bg_fallback = settings.page_text_color
   assign bubble_text_fallback = settings.page_background_color
+
+  assign item_count = count
+  if count == blank
+    assign item_count = cart.item_count
+  endif
+
+  assign is_interactive = true
+  if interactive == false
+    assign is_interactive = false
+  endif
+
+  assign bubble_testid = testid | default: 'cart-bubble'
 %}
 
 <div
-  ref="cartBubble"
-  class="cart-bubble{% if cart == empty %} visually-hidden{% endif %}"
+  {% if is_interactive %}
+    ref="cartBubble"
+  {% endif %}
+  class="cart-bubble{% if item_count == 0 %} visually-hidden{% endif %}"
   style="--cart-bubble-background-fallback: {{ bubble_bg_fallback }}; --cart-bubble-text-fallback: {{ bubble_text_fallback }};"
-  {% assign item_count = cart.item_count %}
   {% if item_count <= 99 %}
     data-maintain-ratio
   {% endif %}
 >
   <span class="cart-bubble__background"></span>
   <span
-    ref="cartBubbleText"
-    id="cart-bubble-text"
+    {% if is_interactive %}
+      ref="cartBubbleText"
+      id="cart-bubble-text"
+    {% endif %}
     class="cart-bubble__text"
   >
     <span
-      class="cart-bubble__text-count{% if cart == empty %} hidden{% endif %}"
-      ref="cartBubbleCount"
+      class="cart-bubble__text-count{% if item_count == 0 %} hidden{% endif %}"
+      {% if is_interactive %}
+        ref="cartBubbleCount"
+      {% endif %}
       aria-hidden="true"
-      data-testid="cart-bubble"
+      data-testid="{{ bubble_testid }}"
     >
-      {%- if limit == blank or cart.item_count < limit %}
-        {{- cart.item_count -}}
+      {%- if limit == blank or item_count < limit %}
+        {{- item_count -}}
       {%- endif -%}
     </span>
   </span>

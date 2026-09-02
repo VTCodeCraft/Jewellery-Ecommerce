@@ -1,0 +1,323 @@
+{%- comment -%}
+  Wishlist page section.
+
+  Renders the shell only. Cards are resolved client-side from localStorage
+  handles through the Section Rendering API (see assets/wishlist.js), because
+  the wishlist is per-visitor and cannot be known at render time.
+
+  The product-card style snippets are pulled in here so injected cards are
+  styled on arrival, even with CSS subsetting enabled.
+{%- endcomment -%}
+
+{% liquid
+  if section.settings.background_color != blank
+    render 'contrast-override', background_color: section.settings.background_color, section_id: section.id
+  endif
+
+  assign shop_url = section.settings.empty_link
+  if shop_url == blank
+    assign shop_url = routes.all_products_collection_url
+  endif
+%}
+
+<div
+  class="section-background{% if section.settings.background_color != blank %} color-custom-{{ section.id }}{% endif %}"
+></div>
+
+<wishlist-page
+  class="wishlist section section--{{ section.settings.section_width }} spacing-style{% if section.settings.background_color != blank %} color-custom-{{ section.id }}{% endif %}"
+  style="{% render 'spacing-style', settings: section.settings %} --wishlist-columns: {{ section.settings.columns }};"
+  data-card-section="wishlist-card"
+  data-confirm-clear="{{ section.settings.confirm_clear | default: 'Remove all items from your wishlist?' | escape }}"
+  {{ section.shopify_attributes }}
+>
+  <div class="wishlist__inner">
+    <header class="wishlist__header">
+      <h1 class="wishlist__title h2">{{ section.settings.heading | escape }}</h1>
+      {%- if section.settings.subheading != blank -%}
+        <p class="wishlist__subtitle">{{ section.settings.subheading | escape }}</p>
+      {%- endif -%}
+    </header>
+
+    <p class="visually-hidden" role="status" aria-live="polite" data-wishlist-status></p>
+
+    <p class="wishlist__loading" data-wishlist-loading hidden>Loading your wishlist…</p>
+
+    <ul class="wishlist__grid list-unstyled" data-wishlist-grid hidden></ul>
+
+    <div class="wishlist__actions" data-wishlist-actions hidden>
+      {%- if section.settings.show_clear -%}
+        <button type="button" class="button-unstyled wishlist__clear" data-wishlist-clear>
+          Clear wishlist
+        </button>
+      {%- endif -%}
+    </div>
+
+    <div class="wishlist__empty" data-wishlist-empty hidden>
+      <span class="svg-wrapper wishlist__empty-icon" aria-hidden="true">
+        {{- 'icon-heart.svg' | inline_asset_content -}}
+      </span>
+      <h2 class="wishlist__empty-title h3">{{ section.settings.empty_heading | escape }}</h2>
+      <p class="wishlist__empty-text">{{ section.settings.empty_text | escape }}</p>
+      <a href="{{ shop_url }}" class="button">{{ section.settings.empty_button | escape }}</a>
+    </div>
+  </div>
+</wishlist-page>
+
+{% comment %} Styles the injected product cards depend on. {% endcomment %}
+{% render 'product-card-styles' %}
+{% render 'product-badges-styles' %}
+{% render 'quick-add-styles' %}
+{% render 'quantity-selector-styles' %}
+{% render 'buy-buttons-styles' %}
+{% render 'variant-picker-styles' %}
+{% render 'swatch-styles' %}
+{% render 'wishlist-button-styles' %}
+
+{% stylesheet %}
+  .wishlist__inner {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap-2xl);
+  }
+
+  /* These children set their own display, which would otherwise beat the
+     user-agent [hidden] rule and leave the empty state visible. */
+  .wishlist [hidden] {
+    display: none;
+  }
+
+  .wishlist__header {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap-xs);
+  }
+
+  .wishlist__title {
+    margin: 0;
+  }
+
+  .wishlist__subtitle {
+    margin: 0;
+    color: rgb(var(--color-foreground-rgb) / var(--opacity-subdued-text));
+  }
+
+  .wishlist__loading {
+    margin: 0;
+    color: rgb(var(--color-foreground-rgb) / var(--opacity-muted-text));
+  }
+
+  .wishlist__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--gap-2xl) var(--gap-lg);
+    margin: 0;
+    padding: 0;
+  }
+
+  @media screen and (min-width: 750px) {
+    .wishlist__grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  @media screen and (min-width: 1200px) {
+    .wishlist__grid {
+      grid-template-columns: repeat(var(--wishlist-columns, 4), minmax(0, 1fr));
+    }
+  }
+
+  .wishlist__item {
+    display: flex;
+    min-width: 0;
+  }
+
+  /* Injected cards are composed in sections/wishlist-card.liquid, whose own
+     stylesheet is not loaded on this page - so their type lives here. */
+  .wishlist-card__title-link {
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .wishlist-card__title {
+    margin: 0;
+    font-family: var(--font-paragraph--family);
+    font-size: var(--font-paragraph--size);
+    line-height: var(--line-height-normal);
+    text-wrap: pretty;
+  }
+
+  .wishlist-card__price {
+    display: block;
+  }
+
+  .wishlist__item > * {
+    width: 100%;
+  }
+
+  .wishlist__actions {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .wishlist__clear {
+    min-height: var(--minimum-touch-target);
+    color: rgb(var(--color-foreground-rgb) / var(--opacity-muted-text));
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    cursor: pointer;
+  }
+
+  .wishlist__clear:hover {
+    color: var(--color-foreground);
+  }
+
+  .wishlist__empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: var(--gap-lg);
+    padding-block: var(--padding-6xl);
+  }
+
+  .wishlist__empty-icon {
+    display: inline-flex;
+    width: 2.5rem;
+    height: 2.5rem;
+    color: rgb(var(--color-foreground-rgb) / var(--opacity-40));
+  }
+
+  .wishlist__empty-title,
+  .wishlist__empty-text {
+    margin: 0;
+  }
+
+  .wishlist__empty-text {
+    max-width: var(--max-width--body-narrow);
+    color: rgb(var(--color-foreground-rgb) / var(--opacity-subdued-text));
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Wishlist",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Wishlist"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Pieces you've saved for later."
+    },
+    {
+      "type": "range",
+      "id": "columns",
+      "label": "Columns on large screens",
+      "min": 2,
+      "max": 5,
+      "step": 1,
+      "default": 4,
+      "info": "Smaller screens step down to 3 and then 2 columns."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_clear",
+      "label": "Show \"Clear wishlist\"",
+      "default": true,
+      "info": "Asks for confirmation before removing everything."
+    },
+    {
+      "type": "text",
+      "id": "confirm_clear",
+      "label": "Clear confirmation message",
+      "default": "Remove all items from your wishlist?",
+      "visible_if": "{{ section.settings.show_clear }}"
+    },
+    {
+      "type": "header",
+      "content": "Empty state"
+    },
+    {
+      "type": "text",
+      "id": "empty_heading",
+      "label": "Heading",
+      "default": "Your wishlist is empty"
+    },
+    {
+      "type": "text",
+      "id": "empty_text",
+      "label": "Text",
+      "default": "Save pieces you love and find them here later."
+    },
+    {
+      "type": "text",
+      "id": "empty_button",
+      "label": "Button label",
+      "default": "Explore jewellery"
+    },
+    {
+      "type": "url",
+      "id": "empty_link",
+      "label": "Button link",
+      "info": "Defaults to all products."
+    },
+    {
+      "type": "header",
+      "content": "t:content.layout"
+    },
+    {
+      "type": "select",
+      "id": "section_width",
+      "label": "t:settings.width",
+      "options": [
+        {
+          "value": "page-width",
+          "label": "t:options.page"
+        },
+        {
+          "value": "full-width",
+          "label": "t:options.full"
+        }
+      ],
+      "default": "page-width"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "t:settings.background_color",
+      "placeholder": "t:settings.default"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "t:settings.top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "t:settings.bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 80
+    }
+  ],
+  "presets": [
+    {
+      "name": "Wishlist"
+    }
+  ]
+}
+{% endschema %}
