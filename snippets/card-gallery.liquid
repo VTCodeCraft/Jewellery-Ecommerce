@@ -127,77 +127,62 @@
           assign variant_images = product.images | where: 'attached_to_variant?', true | map: 'src'
           assign generic_media_size = product.media.size | minus: variant_images.size
 
-          # Sort media so product.featured_media.preview_image comes first as that is the most relevant image to display
-          # product.featured_media updates based on search context and filters applied
+          # Product card hover: two-image only, no arrows, no carousel
+          assign show_arrows = false
 
-          assign other_media = product.media | reject: 'src', product.featured_media
-          assign media_list_to_show = product.featured_media | concat: other_media
-
-          if product.media.size > 2 and generic_media_size > 0
-            assign show_arrows = true
+          # Find hover (worn/model) image: Image 2 = Face/Worn per spec
+          # Prefer media where alt contains model/worn/face, else use second media
+          assign hover_media = null
+          if product.media.size > 1
+            for m in product.media
+              assign alt_down = m.alt | downcase
+              if alt_down contains 'model' or alt_down contains 'worn' or alt_down contains 'face' or alt_down contains 'on body'
+                assign hover_media = m
+                break
+              endif
+            endfor
+            if hover_media == null
+              assign hover_media = product.media[1]
+            endif
+            # Ensure hover is not the featured/main if duplicate
+            if hover_media.id == product.featured_media.id and product.media.size > 2
+              assign hover_media = product.media[2]
+            endif
           endif
 
-          # Don't overfetch media if we don't need to
           assign max_visible_slide_count = 1
-          if settings.product_card_carousel
-            assign max_visible_slide_count = 5
-          elsif settings.show_second_image_on_hover
+          if hover_media != null
             assign max_visible_slide_count = 2
           endif
 
           capture slides
-            for media in media_list_to_show
-              assign hidden = false
-              assign attributes = ''
-              if variant_images contains media.src
-                assign attributes = 'variant-image'
+            # Slide 1: Main image (featured)
+            assign media = product.featured_media
+            assign class = media_class | replace: '[media_type]', media.media_type | append: media_class_suffix
+            capture slideshow_children
+              render 'product-media', media: media, sizes: featured_media_sizes, loading: featured_media_loading, preview_image_only: true
+            endcapture
+            render 'slideshow-slide', slide_id: media.id, index: 0, hidden: false, class: class, attributes: '', children: slideshow_children, media_fit: media_fit
 
-                if forloop.first == false
-                  # hide all variant images that aren't the first one
-                  assign hidden = true
-                endif
-              endif
-
-              # Performance improvement: don't render more than 5 visible images into the slideshow
-              # We'll keep the images that we need for the variant images and hover next.
-              if forloop.first
-                assign visible_slide_count = 0
-              endif
-              unless hidden
-                assign visible_slide_count = visible_slide_count | plus: 1
-              endunless
-              if hidden == false and visible_slide_count > max_visible_slide_count
-                continue
-              endif
-
-              if forloop.first
-                assign loading = featured_media_loading
-                assign sizes = featured_media_sizes
-              else
-                assign loading = 'lazy'
-                assign sizes = 'auto, ' | append: image_sizes
-              endif
-
-              assign class = media_class | replace: '[media_type]', media.media_type | append: media_class_suffix
-
+            # Slide 2: Hover image only if exists and not same as main
+            if hover_media != null and hover_media.id != product.featured_media.id
+              assign class = media_class | replace: '[media_type]', hover_media.media_type | append: media_class_suffix
+              assign hover_sizes = 'auto, ' | append: image_sizes
               capture slideshow_children
-                render 'product-media', media: media, sizes: sizes, loading: loading, preview_image_only: true
+                render 'product-media', media: hover_media, sizes: hover_sizes, loading: 'lazy', preview_image_only: true
               endcapture
-
-              render 'slideshow-slide', slide_id: media.id, index: forloop.index0, hidden: hidden, class: class, attributes: attributes, children: slideshow_children, media_fit: media_fit
-            endfor
+              render 'slideshow-slide', slide_id: hover_media.id, index: 1, hidden: true, class: class, attributes: '', children: slideshow_children, media_fit: media_fit
+            endif
           endcapture
 
           assign slideshow_attributes = 'data-generic-media-size="[generic_media_size]"' | replace: '[generic_media_size]', generic_media_size
-          if settings.product_card_carousel == false
-            assign slideshow_attributes = slideshow_attributes | append: ' disabled="true"'
-          endif
+          assign slideshow_attributes = slideshow_attributes | append: ' disabled="true"'
         %}
         {% render 'slideshow',
           ref: 'slideshow',
           initial_slide: 0,
           slides: slides,
-          slide_count: media_list_to_show.size,
+          slide_count: max_visible_slide_count,
           show_arrows: show_arrows,
           attributes: slideshow_attributes
         %}
