@@ -54,6 +54,7 @@ export class ProductCardLink extends ProductComponent {
     const activeImage =
       imagesToTransition?.find(
         (/** @type {HTMLImageElement} */ image) =>
+          image.closest('.card-gallery__media--primary') ||
           image.closest('slideshow-slide')?.getAttribute('aria-hidden') === 'false'
       ) || imagesToTransition?.[imagesToTransition.length - 1];
 
@@ -101,6 +102,7 @@ if (!customElements.get('product-card-link')) {
  * @property {import('slideshow').Slideshow} [slideshow] - The slideshow component.
  * @property {import('quick-add').QuickAddComponent} [quickAdd] - The quick add component.
  * @property {HTMLElement} [cardGallery] - The card gallery component.
+ * @property {HTMLElement} [cardGalleryMedia] - The stable primary/hover media stack.
  * @property {HTMLImageElement[]} [imagesToTransition] - The images to transition.
  * @extends {ProductCardLink<ProductCardRefs>}
  */
@@ -267,7 +269,7 @@ export class ProductCard extends ProductCardLink {
           this.variantPicker?.updateVariantPicker(html);
         }
 
-        this.#updateVariantImages();
+        this.#updateVariantImages(html);
         this.#previousSlideIndex = null;
 
         // Remove attribute after re-rendering since a variant selection has been made
@@ -410,24 +412,12 @@ export class ProductCard extends ProductCardLink {
   /**
    * Hide the variant images that are not for the selected variant.
    */
-  #updateVariantImages() {
-    const { slideshow } = this.refs;
-    if (!this.variantPicker?.selectedOption) {
-      return;
-    }
+  #updateVariantImages(html) {
+    const { cardGalleryMedia } = this.refs;
+    const updatedCardGalleryMedia = html.querySelector('[ref="cardGalleryMedia"]');
 
-    const selectedImageId = this.variantPicker?.selectedOption.dataset.optionMediaId;
-
-    if (slideshow && selectedImageId) {
-      const { slides = [] } = slideshow.refs;
-
-      for (const slide of slides) {
-        if (slide.getAttribute('variant-image') == null) continue;
-
-        slide.hidden = slide.getAttribute('slide-id') !== selectedImageId;
-      }
-
-      slideshow.select({ id: selectedImageId }, undefined, { animate: false });
+    if (cardGalleryMedia && updatedCardGalleryMedia) {
+      morph(cardGalleryMedia, updatedCardGalleryMedia);
     }
   }
 
