@@ -273,11 +273,11 @@
               },
               "block_order": []
             },
-            "text_aEtTtq": {
+            "text_short_desc": {
               "type": "text",
               "name": "t:names.product_description",
               "settings": {
-                "text": "{{ closest.product.description }}",
+                "text": "{% assign desc = closest.product.description %}{% if desc contains 'Jewellery care:' %}{{ desc | split: 'Jewellery care:' | first }}{% elsif desc contains 'Jewellery Care:' %}{{ desc | split: 'Jewellery Care:' | first }}{% else %}{{ desc }}{% endif %}",
                 "width": "100%",
                 "max_width": "normal",
                 "alignment": "left",
@@ -293,11 +293,171 @@
                 "background_color": "#00000026",
                 "corner_radius": 0,
                 "padding-block-start": 0,
-                "padding-block-end": 0,
+                "padding-block-end": 12,
                 "padding-inline-start": 0,
                 "padding-inline-end": 0
               },
               "blocks": {}
+            },
+            "accordion_size": {
+              "type": "_accordion-row",
+              "name": "t:names.accordion_row",
+              "settings": {
+                "heading": "SIZE & FIT",
+                "open_by_default": false,
+                "icon": "ruler",
+                "width": 20
+              },
+              "blocks": {
+                "text_size": {
+                  "type": "text",
+                  "settings": {
+                    "text": "{% if closest.product.metafields.custom.size_length != blank %}Size / Length<br><strong>{{ closest.product.metafields.custom.size_length }}</strong>{% endif %}",
+                    "width": "100%",
+                    "max_width": "normal",
+                    "alignment": "left",
+                    "type_preset": "rte",
+                    "font": "var(--font-body--family)",
+                    "font_size": "1rem",
+                    "line_height": "normal",
+                    "letter_spacing": "normal",
+                    "case": "none",
+                    "wrap": "pretty",
+                    "text_color": "",
+                    "background": false,
+                    "background_color": "#00000026",
+                    "corner_radius": 0,
+                    "padding-block-start": 8,
+                    "padding-block-end": 8,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "text_size"
+              ]
+            },
+            "accordion_materials": {
+              "type": "_accordion-row",
+              "name": "t:names.accordion_row",
+              "settings": {
+                "heading": "MATERIALS & FINISH",
+                "open_by_default": false,
+                "icon": "star",
+                "width": 20
+              },
+              "blocks": {
+                "text_mat": {
+                  "type": "text",
+                  "settings": {
+                    "text": "{% if closest.product.metafields.custom.material != blank %}Material<br><strong>{{ closest.product.metafields.custom.material }}</strong>{% endif %}{% if closest.product.metafields.custom.colour_finish != blank %}{% if closest.product.metafields.custom.material != blank %}<br><br>{% endif %}Finish / Colour<br><strong>{{ closest.product.metafields.custom.colour_finish }}</strong>{% endif %}",
+                    "width": "100%",
+                    "max_width": "normal",
+                    "alignment": "left",
+                    "type_preset": "rte",
+                    "font": "var(--font-body--family)",
+                    "font_size": "1rem",
+                    "line_height": "normal",
+                    "letter_spacing": "normal",
+                    "case": "none",
+                    "wrap": "pretty",
+                    "text_color": "",
+                    "background": false,
+                    "background_color": "#00000026",
+                    "corner_radius": 0,
+                    "padding-block-start": 8,
+                    "padding-block-end": 8,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "text_mat"
+              ]
+            },
+            "accordion_occasion": {
+              "type": "_accordion-row",
+              "name": "t:names.accordion_row",
+              "settings": {
+                "heading": "OCCASION & STYLE",
+                "open_by_default": false,
+                "icon": "heart",
+                "width": 20
+              },
+              "blocks": {
+                "text_occ": {
+                  "type": "text",
+                  "settings": {
+                    "text": "{% if closest.product.metafields.custom.occasion_style != blank %}Best suited for<br><strong>{{ closest.product.metafields.custom.occasion_style }}</strong>{% endif %}{% if closest.product.type != blank %}{% if closest.product.metafields.custom.occasion_style != blank %}<br><br>{% endif %}Category<br><strong>{{ closest.product.type }}</strong>{% endif %}",
+                    "width": "100%",
+                    "max_width": "normal",
+                    "alignment": "left",
+                    "type_preset": "rte",
+                    "font": "var(--font-body--family)",
+                    "font_size": "1rem",
+                    "line_height": "normal",
+                    "letter_spacing": "normal",
+                    "case": "none",
+                    "wrap": "pretty",
+                    "text_color": "",
+                    "background": false,
+                    "background_color": "#00000026",
+                    "corner_radius": 0,
+                    "padding-block-start": 8,
+                    "padding-block-end": 8,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "text_occ"
+              ]
+            },
+            "accordion_care": {
+              "type": "_accordion-row",
+              "name": "t:names.accordion_row",
+              "settings": {
+                "heading": "CARE INSTRUCTIONS",
+                "open_by_default": false,
+                "icon": "washing",
+                "width": 20
+              },
+              "blocks": {
+                "text_care": {
+                  "type": "text",
+                  "settings": {
+                    "text": "{% assign care = closest.product.metafields.custom.care_instructions %}{% if care != blank %}{% assign clean_care = care | replace: 'THIS JEWELLERY SET CONSIST OF A NECKLACE AND A PAIR OF EARRINGS, GOLD TONED CHOKER NECKLACE SET. ', '' | replace: 'THIS JEWELLERY SET CONSIST OF A NECKLACE AND A PAIR OF EARRINGS, ', '' %}{% assign sentences = clean_care | split: '. ' %}<ul style='margin:0; padding-left:18px; list-style: disc;'>{% for s in sentences %}{% assign t = s | strip %}{% if t != blank %}<li>{{ t }}{% unless t contains '.' %}.{% endunless %}</li>{% endif %}{% endfor %}</ul>{% endif %}",
+                    "width": "100%",
+                    "max_width": "normal",
+                    "alignment": "left",
+                    "type_preset": "rte",
+                    "font": "var(--font-body--family)",
+                    "font_size": "1rem",
+                    "line_height": "normal",
+                    "letter_spacing": "normal",
+                    "case": "none",
+                    "wrap": "pretty",
+                    "text_color": "",
+                    "background": false,
+                    "background_color": "#00000026",
+                    "corner_radius": 0,
+                    "padding-block-start": 8,
+                    "padding-block-end": 8,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "text_care"
+              ]
             }
           },
           "block_order": [
@@ -305,7 +465,11 @@
             "divider_VJhene",
             "variant_picker_R3rGDr",
             "buy_buttons_eYQEYi",
-            "text_aEtTtq"
+            "text_short_desc",
+            "accordion_size",
+            "accordion_materials",
+            "accordion_occasion",
+            "accordion_care"
           ]
         }
       },
