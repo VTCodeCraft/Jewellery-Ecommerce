@@ -171,11 +171,13 @@
               capture slideshow_children
                 render 'product-media', media: hover_media, sizes: hover_sizes, loading: 'lazy', preview_image_only: true
               endcapture
-              render 'slideshow-slide', slide_id: hover_media.id, index: 1, hidden: true, class: class, attributes: '', children: slideshow_children, media_fit: media_fit
+              render 'slideshow-slide', slide_id: hover_media.id, index: 1, hidden: false, class: class, attributes: '', children: slideshow_children, media_fit: media_fit
             endif
           endcapture
 
           assign slideshow_attributes = 'data-generic-media-size="[generic_media_size]"' | replace: '[generic_media_size]', generic_media_size
+          # disabled="true" keeps the card inert to swipe/drag (no carousel), and
+          # does not block select() - so the hover swap below still works.
           assign slideshow_attributes = slideshow_attributes | append: ' disabled="true"'
         %}
         {% render 'slideshow',

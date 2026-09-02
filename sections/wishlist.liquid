@@ -132,6 +132,16 @@
     min-width: 0;
   }
 
+  /* card-gallery is rendered here without a block, so border-override emits
+     `--border-radius: px` (an empty setting plus the unit). That token makes
+     quick-add's calc() insets invalid, and the Add button lands at
+     inset-inline-end: -36px - just outside the card, where it can't be seen or
+     clicked, so the fly-to-cart animation never appeared on this page.
+     !important is required: the broken value comes from an inline style. */
+  .wishlist__item .card-gallery {
+    --border-radius: 0px !important;
+  }
+
   /* Injected cards are composed in sections/wishlist-card.liquid, whose own
      stylesheet is not loaded on this page - so their type lives here. */
   .wishlist-card__title-link {
