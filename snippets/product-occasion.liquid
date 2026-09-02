@@ -1,0 +1,7 @@
+{% doc %}Occasion & Style - smaller muted{% enddoc %}
+{% if product.metafields.custom.occasion_style != blank %}
+<div style="font-size: 13px; color: #725947; font-weight: 400;">{{ product.metafields.custom.occasion_style }}</div>
+{% endif %}
+{% if product.type != blank %}
+<div style="font-size: 12px; color: #725947; margin-top: 4px; opacity: 0.9;">{{ product.type }}</div>
+{% endif %}

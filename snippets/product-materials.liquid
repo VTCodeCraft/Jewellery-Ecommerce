@@ -1,0 +1,7 @@
+{% doc %}Materials & Finish - smaller muted{% enddoc %}
+{% if product.metafields.custom.material != blank %}
+<div style="font-size: 13px; color: #725947; font-weight: 400; text-transform: capitalize;">{{ product.metafields.custom.material | downcase | capitalize }}</div>
+{% endif %}
+{% if product.metafields.custom.colour_finish != blank %}
+<div style="font-size: 13px; color: #725947; font-weight: 400; margin-top: 4px; text-transform: capitalize;">{{ product.metafields.custom.colour_finish | downcase | capitalize }}</div>
+{% endif %}

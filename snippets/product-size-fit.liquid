@@ -1,0 +1,4 @@
+{% doc %}Size & Fit - smaller muted info{% enddoc %}
+{% if product.metafields.custom.size_length != blank %}
+<div style="font-size: 13px; color: #725947; font-weight: 400; text-transform: capitalize;">{{ product.metafields.custom.size_length | downcase | capitalize }}</div>
+{% endif %}
