@@ -280,10 +280,10 @@
           "settings": {
             "content_direction": "column",
             "vertical_on_mobile": false,
-            "horizontal_alignment": "flex-start",
+            "horizontal_alignment": "center",
             "vertical_alignment": "center",
-            "align_baseline": true,
-            "horizontal_alignment_flex_direction_column": "flex-start",
+            "align_baseline": false,
+            "horizontal_alignment_flex_direction_column": "center",
             "vertical_alignment_flex_direction_column": "center",
             "gap": 16,
             "width": "fill",
@@ -313,7 +313,7 @@
                 "text": "<h2>Featured products</h2>",
                 "width": "100%",
                 "max_width": "normal",
-                "alignment": "left",
+                "alignment": "center",
                 "type_preset": "h2",
                 "font": "var(--font-heading--family)",
                 "font_size": "",
@@ -331,37 +331,10 @@
                 "padding-inline-end": 0
               },
               "blocks": {}
-            },
-            "text_featured_description": {
-              "type": "text",
-              "name": "t:names.text",
-              "settings": {
-                "text": "<p>A rotating edit of the pieces we are loving right now.</p>",
-                "width": "100%",
-                "max_width": "normal",
-                "alignment": "left",
-                "type_preset": "paragraph",
-                "font": "var(--font-body--family)",
-                "font_size": "1rem",
-                "line_height": "normal",
-                "letter_spacing": "normal",
-                "case": "none",
-                "wrap": "pretty",
-                "text_color": "",
-                "background": false,
-                "background_color": "#00000026",
-                "corner_radius": 0,
-                "padding-block-start": 0,
-                "padding-block-end": 0,
-                "padding-inline-start": 0,
-                "padding-inline-end": 0
-              },
-              "blocks": {}
             }
           },
           "block_order": [
-            "product_list_text_Bd9pVh",
-            "text_featured_description"
+            "product_list_text_Bd9pVh"
           ]
         },
         "static-product-card": {
@@ -679,32 +652,6 @@
             "padding-inline-end": 0
           },
           "blocks": {
-            "text_collections_eyebrow": {
-              "type": "text",
-              "name": "t:names.text",
-              "settings": {
-                "text": "<h6>Shop by category</h6>",
-                "width": "100%",
-                "max_width": "normal",
-                "alignment": "center",
-                "type_preset": "h6",
-                "font": "var(--font-subheading--family)",
-                "font_size": "1rem",
-                "line_height": "normal",
-                "letter_spacing": "normal",
-                "case": "none",
-                "wrap": "pretty",
-                "text_color": "",
-                "background": false,
-                "background_color": "#00000026",
-                "corner_radius": 0,
-                "padding-block-start": 0,
-                "padding-block-end": 0,
-                "padding-inline-start": 0,
-                "padding-inline-end": 0
-              },
-              "blocks": {}
-            },
             "text_collections_heading": {
               "type": "text",
               "name": "t:names.heading",
@@ -733,7 +680,6 @@
             }
           },
           "block_order": [
-            "text_collections_eyebrow",
             "text_collections_heading"
           ]
         },
@@ -836,10 +782,10 @@
           "settings": {
             "content_direction": "column",
             "vertical_on_mobile": false,
-            "horizontal_alignment": "flex-start",
+            "horizontal_alignment": "center",
             "vertical_alignment": "center",
-            "align_baseline": true,
-            "horizontal_alignment_flex_direction_column": "flex-start",
+            "align_baseline": false,
+            "horizontal_alignment_flex_direction_column": "center",
             "vertical_alignment_flex_direction_column": "center",
             "gap": 16,
             "width": "fill",
@@ -869,35 +815,9 @@
                 "text": "<h2>Best sellers</h2>",
                 "width": "100%",
                 "max_width": "normal",
-                "alignment": "left",
+                "alignment": "center",
                 "type_preset": "h2",
                 "font": "var(--font-heading--family)",
-                "font_size": "1rem",
-                "line_height": "normal",
-                "letter_spacing": "normal",
-                "case": "none",
-                "wrap": "pretty",
-                "text_color": "",
-                "background": false,
-                "background_color": "#00000026",
-                "corner_radius": 0,
-                "padding-block-start": 0,
-                "padding-block-end": 0,
-                "padding-inline-start": 0,
-                "padding-inline-end": 0
-              },
-              "blocks": {}
-            },
-            "text_best_sellers_description": {
-              "type": "text",
-              "name": "t:names.text",
-              "settings": {
-                "text": "<p>The pieces our customers come back for.</p>",
-                "width": "100%",
-                "max_width": "normal",
-                "alignment": "left",
-                "type_preset": "paragraph",
-                "font": "var(--font-body--family)",
                 "font_size": "1rem",
                 "line_height": "normal",
                 "letter_spacing": "normal",
@@ -916,8 +836,7 @@
             }
           },
           "block_order": [
-            "product_list_text_best_sellers",
-            "text_best_sellers_description"
+            "product_list_text_best_sellers"
           ]
         },
         "static-product-card": {
@@ -1096,7 +1015,7 @@
           "type": "occasion",
           "settings": {
             "title": "WEDDING",
-            "text": "Elegant pieces for your most memorable celebrations.",
+            "text": "",
             "link": "shopify://collections/wedding"
           }
         },
@@ -1104,7 +1023,7 @@
           "type": "occasion",
           "settings": {
             "title": "TRADITIONAL FESTIVAL",
-            "text": "Timeless jewellery for festive and traditional moments.",
+            "text": "",
             "link": "shopify://collections/traditional-festival"
           }
         },
@@ -1112,7 +1031,7 @@
           "type": "occasion",
           "settings": {
             "title": "DAILYWEAR / PARTY WEAR",
-            "text": "Versatile pieces for everyday style and evening occasions.",
+            "text": "",
             "link": "shopify://collections/dailywear-party-wear"
           }
         }
@@ -1125,7 +1044,7 @@
       "name": "Occasions",
       "settings": {
         "heading": "Shop by Occasion",
-        "description": "Jewellery for every moment that matters.",
+        "description": "Jewellery for every moment that matters",
         "section_width": "page-width",
         "background_color": "",
         "padding-block-start": 48,
