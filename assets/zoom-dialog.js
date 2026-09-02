@@ -111,6 +111,46 @@ export class ZoomDialog extends Component {
     document.body.style.overflow = 'hidden';
     this.#showSlide(this.#activeIndex);
     this.#bindEvents();
+    this.#animateFrom(event);
+  }
+
+  /**
+   * FLIP entrance: measure the thumbnail that was clicked and play the viewer
+   * image from that exact rect to its final one, so the piece appears to grow
+   * out of the gallery instead of a panel appearing over it. Falls back to a
+   * plain fade when there is no source element or motion is not wanted.
+   * @param {Event} [event] - The click that opened the viewer.
+   */
+  #animateFrom(event) {
+    const slide = this.refs.media?.[this.#activeIndex];
+    const target = slide?.querySelector('img');
+    if (!target) return;
+
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const source = /** @type {Element | null} */ (
+      event?.target instanceof Element ? event.target.closest('.product-media-container') : null
+    );
+    const from = source?.querySelector('img')?.getBoundingClientRect();
+    const to = target.getBoundingClientRect();
+
+    if (reduced || !from || !to.width || !to.height) {
+      this.refs.dialog?.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 160, easing: 'ease-out' });
+      return;
+    }
+
+    this.refs.dialog?.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 200, easing: 'ease-out' });
+    target.animate(
+      [
+        {
+          transformOrigin: 'top left',
+          transform: `translate(${from.left - to.left}px, ${from.top - to.top}px) scale(${from.width / to.width}, ${
+            from.height / to.height
+          })`,
+        },
+        { transformOrigin: 'top left', transform: 'none' },
+      ],
+      { duration: 320, easing: 'cubic-bezier(0.22, 0.61, 0.36, 1)' }
+    );
   }
 
   #showSlide(index) {

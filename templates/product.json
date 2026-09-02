@@ -1,11 +1,11 @@
-/*
- * ------------------------------------------------------------
- * IMPORTANT: The contents of this file are auto-generated.
- *
- * This file may be updated by the Shopify admin theme editor
- * or related systems. Please exercise caution as any changes
- * made to this file may be overwritten.
- * ------------------------------------------------------------
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
  */{
   "sections": {
     "main": {
@@ -43,9 +43,9 @@
             "thumbnail_position": "right",
             "thumbnail_width": 44,
             "thumbnail_radius": 0,
-            "aspect_ratio": "1",
+            "aspect_ratio": "adapt",
             "constrain_to_viewport": false,
-            "media_fit": "cover",
+            "media_fit": "contain",
             "media_radius": 0,
             "extend_media": false,
             "zoom": true,

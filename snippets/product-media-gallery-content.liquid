@@ -1064,27 +1064,35 @@
   .lightbox-dialog[open] {
     display: grid;
   }
+  /* No card chrome: the piece sits on the backdrop so it reads as the subject
+     rather than a thumbnail inside a panel. Sized to the viewport minus room
+     for the arrows and counter. */
   .lightbox-stage {
     position: relative;
-    width: min(72vw, 1100px);
-    height: min(82vh, 850px);
+    width: min(92vw, 1500px);
+    height: min(86vh, 1200px);
+    /* stretch, not center: a centred grid item sizes to max-content, so the
+       gallery grew past the stage and the piece ran off screen. */
     display: grid;
-    place-items: center;
-    background: var(--color-background);
-    border-radius: 12px;
+    grid-template: 1fr / 1fr;
+    place-items: stretch;
+    background: transparent;
     overflow: hidden;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.35);
   }
+
   @media screen and (max-width: 749px) {
     .lightbox-stage {
-      width: 92vw;
-      height: 72vh;
-      max-height: 78vh;
+      width: 100vw;
+      height: 78vh;
+      max-height: 82vh;
     }
   }
   .lightbox-gallery {
     width: 100%;
     height: 100%;
+    max-height: 100%;
+    min-height: 0;
+    min-width: 0;
     display: grid;
     place-items: center;
     list-style: none;
@@ -1095,13 +1103,27 @@
     grid-area: 1 / 1;
     width: 100%;
     height: 100%;
+    max-height: 100%;
     display: none;
     place-items: center;
-    background: var(--color-background);
+    background: transparent;
   }
   .lightbox-slide[aria-hidden="false"] {
     display: grid;
   }
+  /* The slide is a .product-media-container, so it carries the gallery's
+     aspect-ratio. Left alone that forces a square box taller than the stage and
+     the piece spills off screen. Inside the viewer the stage decides the size
+     and object-fit: contain decides the shape. min-height: 0 lets these grid
+     children actually shrink to it. */
+  .lightbox-slide,
+  .lightbox-slide .product-media,
+  .lightbox-slide .product-media__drag-zoom-wrapper {
+    aspect-ratio: auto !important;
+    min-height: 0;
+    min-width: 0;
+  }
+
   .lightbox-slide .product-media,
   .lightbox-slide .product-media__drag-zoom-wrapper {
     width: 100%;
@@ -1109,17 +1131,21 @@
     display: grid;
     place-items: center;
   }
+  /* width/height: auto let the intrinsic size win, so the "zoomed" image
+     rendered smaller than the gallery thumbnail. Filling the stage and leaning
+     on object-fit: contain scales the piece up without ever cropping it -
+     empty space around the image is fine, a clipped piece is not. */
   .lightbox-slide .product-media__image,
   .lightbox-slide .deferred-media__poster-image,
   .lightbox-slide video,
   .lightbox-slide iframe {
+    width: 100%;
+    height: 100%;
     max-width: 100%;
     max-height: 100%;
-    width: auto;
-    height: auto;
     object-fit: contain !important;
     object-position: center !important;
-    background: var(--color-background);
+    background: transparent;
   }
   .lightbox-slide .product-media__drag-zoom-wrapper {
     --drag-zoom-scale: 1 !important;
