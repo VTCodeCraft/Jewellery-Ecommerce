@@ -3,287 +3,269 @@ import {
   supportsViewTransitions,
   startViewTransition,
   onAnimationEnd,
-  prefersReducedMotion,
-  debounce,
-  preloadImage,
   isLowPowerDevice,
+  preloadImage,
 } from '@theme/utilities';
-import { scrollIntoView } from '@theme/scrolling';
 import { ZoomMediaSelectedEvent } from '@theme/events';
 import { DialogCloseEvent } from '@theme/dialog';
+
 /**
- * A custom element that renders a zoom dialog.
- *
+ * Premium lightbox carousel — one image at a time, bounded viewer.
  * @typedef {object} Refs
- * @property {HTMLDialogElement} dialog - The dialog element.
- * @property {HTMLElement[]} media - The media elements.
- * @property {HTMLElement} thumbnails - The thumbnails elements.
- *
+ * @property {HTMLDialogElement} dialog
+ * @property {HTMLElement[]} media
+ * @property {HTMLElement} thumbnails
+ * @property {HTMLElement} gallery
+ * @property {HTMLElement} stage
+ * @property {HTMLElement} counter
  * @extends Component<Refs>
  */
 export class ZoomDialog extends Component {
-  requiredRefs = ['dialog', 'media', 'thumbnails'];
+  requiredRefs = ['dialog', 'media'];
 
-  #highResImagesLoaded = /** @type {Set<string>} */ (new Set());
+  #activeIndex = 0;
+  #highResImagesLoaded = new Set();
+  #boundKeyHandler = null;
+  #boundWheelHandler = null;
+  #touchStartX = 0;
+  #touchStartY = 0;
 
   connectedCallback() {
     super.connectedCallback();
-    this.refs.dialog.addEventListener('scroll', this.handleScroll);
   }
 
   disconnectedCallback() {
     super.disconnectedCallback();
-    this.refs.dialog.removeEventListener('scroll', this.handleScroll);
+    this.#unbindEvents();
   }
 
-  /**
-   * Opens the zoom dialog.
-   *
-   * @param {number} index - The index of the media to zoom.
-   * @param {PointerEvent} event - The pointer event.
-   */
+  #bindEvents() {
+    this.#boundKeyHandler = this.#handleKeyDownGlobal.bind(this);
+    this.#boundWheelHandler = this.#handleWheel.bind(this);
+    document.addEventListener('keydown', this.#boundKeyHandler);
+    this.refs.dialog.addEventListener('wheel', this.#boundWheelHandler, { passive: false });
+    this.refs.dialog.addEventListener('click', this.#handleBackdropClick);
+    this.refs.stage?.addEventListener('touchstart', this.#handleTouchStart, { passive: true });
+    this.refs.stage?.addEventListener('touchend', this.#handleTouchEnd, { passive: true });
+  }
+
+  #unbindEvents() {
+    if (this.#boundKeyHandler) document.removeEventListener('keydown', this.#boundKeyHandler);
+    if (this.#boundWheelHandler) this.refs.dialog?.removeEventListener('wheel', this.#boundWheelHandler);
+    this.refs.dialog?.removeEventListener('click', this.#handleBackdropClick);
+    this.refs.stage?.removeEventListener('touchstart', this.#handleTouchStart);
+    this.refs.stage?.removeEventListener('touchend', this.#handleTouchEnd);
+    this.#boundKeyHandler = null;
+    this.#boundWheelHandler = null;
+  }
+
+  #handleTouchStart = (e) => {
+    const t = e.touches[0];
+    if (!t) return;
+    this.#touchStartX = t.clientX;
+    this.#touchStartY = t.clientY;
+  };
+
+  #handleTouchEnd = (e) => {
+    const t = e.changedTouches[0];
+    if (!t) return;
+    const dx = t.clientX - this.#touchStartX;
+    const dy = t.clientY - this.#touchStartY;
+    if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 50) {
+      if (dx < 0) this.next();
+      else this.prev();
+    }
+  };
+
+  #handleWheel = (e) => {
+    if (this.refs.dialog.open) e.preventDefault();
+  };
+
+  #handleBackdropClick = (e) => {
+    if (e.target === this.refs.dialog) this.close();
+  };
+
+  #handleKeyDownGlobal = (e) => {
+    if (!this.refs.dialog.open) return;
+    if (e.key === 'ArrowRight') {
+      e.preventDefault();
+      this.next();
+    } else if (e.key === 'ArrowLeft') {
+      e.preventDefault();
+      this.prev();
+    } else if (e.key === 'Escape') {
+      e.preventDefault();
+      this.close();
+    }
+  };
+
+  // Legacy handler for dialog on:keydown
+  handleKeyDown(event) {
+    if (event.key === 'Escape') {
+      event.preventDefault();
+      this.close();
+    }
+  }
+
   async open(index, event) {
-    event.preventDefault();
+    if (event) event.preventDefault();
+    const { dialog, media } = this.refs;
+    if (!media || media.length === 0) return;
+    const safeIndex = Math.max(0, Math.min(index, media.length - 1));
+    this.#activeIndex = safeIndex;
 
-    const { dialog, media, thumbnails } = this.refs;
-    const targetImage = media[index];
-    const targetThumbnail = thumbnails.children[index];
-
-    const open = () => {
+    const openDialog = () => {
       dialog.showModal();
-
-      for (const target of [targetThumbnail, targetImage]) {
-        target?.scrollIntoView({ behavior: 'instant' });
-      }
+      document.body.style.overflow = 'hidden';
+      this.#showSlide(this.#activeIndex);
+      this.#bindEvents();
     };
 
-    /** @type {HTMLElement | null} */
-    const sourceImage = event.target instanceof Element ? event.target.closest('li,slideshow-slide') : null;
-
-    if (!supportsViewTransitions() || isLowPowerDevice() || !sourceImage || !targetImage) return open();
+    const sourceImage = event?.target instanceof Element ? event.target.closest('li,slideshow-slide') : null;
+    if (!supportsViewTransitions() || isLowPowerDevice() || !sourceImage || !media[safeIndex]) {
+      openDialog();
+      return;
+    }
 
     const itemTransitionName = `gallery-item-open`;
     sourceImage.style.setProperty('view-transition-name', itemTransitionName);
-
     const focalPoint = sourceImage.dataset.focalPoint;
-    if (focalPoint) {
-      document.documentElement.style.setProperty('--gallery-media-focal-point', focalPoint);
-    }
-
+    if (focalPoint) document.documentElement.style.setProperty('--gallery-media-focal-point', focalPoint);
     await startViewTransition(() => {
-      open();
+      openDialog();
       sourceImage.style.removeProperty('view-transition-name');
-      targetImage.style.setProperty('view-transition-name', itemTransitionName);
+      media[safeIndex]?.style.setProperty('view-transition-name', itemTransitionName);
     });
-
     document.documentElement.style.removeProperty('--gallery-media-focal-point');
-    targetImage.style.removeProperty('view-transition-name');
-
-    this.selectThumbnail(index, { behavior: 'instant' });
+    media[safeIndex]?.style.removeProperty('view-transition-name');
   }
 
-  /**
-   * Loads a high-resolution image for a specific media container
-   * @param {HTMLElement} mediaContainer - The media container element
-   */
+  #showSlide(index) {
+    const { media, counter } = this.refs;
+    if (!media || media.length === 0) return;
+    const total = media.length;
+    let idx = index;
+    if (idx < 0) idx = total - 1;
+    if (idx >= total) idx = 0;
+    this.#activeIndex = idx;
+    media.forEach((el, i) => {
+      const isActive = i === idx;
+      el.setAttribute('aria-hidden', isActive ? 'false' : 'true');
+      el.style.display = isActive ? 'grid' : 'none';
+      if (isActive) {
+        el.style.opacity = '1';
+        this.loadHighResolutionImage(el);
+      }
+    });
+    if (counter) {
+      counter.textContent = `${idx + 1} / ${total}`;
+      counter.style.display = total > 1 ? '' : 'none';
+    }
+    const prevBtn = this.refs.dialog.querySelector('.lightbox-prev');
+    const nextBtn = this.refs.dialog.querySelector('.lightbox-next');
+    if (prevBtn) prevBtn.style.display = total > 1 ? '' : 'none';
+    if (nextBtn) nextBtn.style.display = total > 1 ? '' : 'none';
+    const thumbs = this.refs.thumbnails?.querySelectorAll('button');
+    thumbs?.forEach((b, i) => b.setAttribute('aria-selected', `${i === idx}`));
+    this.dispatchEvent(new ZoomMediaSelectedEvent(idx));
+    // Preload adjacent
+    const nextIdx = (idx + 1) % total;
+    const prevIdx = (idx - 1 + total) % total;
+    if (media[nextIdx]) this.loadHighResolutionImage(media[nextIdx]);
+    if (media[prevIdx]) this.loadHighResolutionImage(media[prevIdx]);
+  }
+
+  next() {
+    this.#showSlide(this.#activeIndex + 1);
+  }
+
+  prev() {
+    this.#showSlide(this.#activeIndex - 1);
+  }
+
+  // Keep for thumbnail clicks (hidden but for compatibility)
+  async handleThumbnailClick(index) {
+    this.#showSlide(index);
+  }
+
+  async handleThumbnailPointerEnter(index) {
+    const m = this.refs.media[index];
+    if (m) this.loadHighResolutionImage(m);
+  }
+
+  // No scroll-based selection
+  handleScroll = () => {};
+
+  async selectThumbnail(index) {
+    this.#showSlide(index);
+  }
+
+  getMostVisibleElement() {
+    return this.refs.media[this.#activeIndex];
+  }
+
   loadHighResolutionImage(mediaContainer) {
     if (!mediaContainer.classList.contains('product-media-container--image')) return false;
-
     const image = mediaContainer.querySelector('img.product-media__image');
     if (!image || !(image instanceof HTMLImageElement)) return false;
-
     const highResolutionUrl = image.getAttribute('data_max_resolution');
     if (!highResolutionUrl || this.#highResImagesLoaded.has(highResolutionUrl)) return false;
-
     preloadImage(highResolutionUrl);
-
     const newImage = new Image();
     newImage.className = image.className;
     newImage.alt = image.alt;
     newImage.setAttribute('data_max_resolution', highResolutionUrl);
     newImage.setAttribute('ref', 'image');
-
-    // When the high-resolution image loads, replace the existing image
     newImage.onload = () => {
       image.replaceWith(newImage);
       this.#highResImagesLoaded.add(highResolutionUrl);
     };
-
     newImage.src = highResolutionUrl;
+    return true;
   }
 
-  /**
-   * Handles the scroll event of the dialog, which is used to update the active thumbnail when the corresponding image is visible in the main view.
-   * @param {Event} event - The scroll event.
-   */
-  handleScroll = debounce(async () => {
-    const { media, thumbnails } = this.refs;
-
-    const mostVisibleElement = await getMostVisibleElement(media);
-    const activeIndex = media.indexOf(mostVisibleElement);
-    const targetThumbnail = thumbnails.children[activeIndex];
-
-    if (!targetThumbnail || !(targetThumbnail instanceof HTMLElement)) return;
-
-    Array.from(thumbnails.querySelectorAll('button')).forEach((button, i) => {
-      button.setAttribute('aria-selected', `${i === activeIndex}`);
-    });
-
-    this.loadHighResolutionImage(mostVisibleElement);
-    this.dispatchEvent(new ZoomMediaSelectedEvent(activeIndex));
-  }, 50);
-
-  /**
-   * Closes the zoom dialog.
-   */
   async close() {
-    const { dialog, media } = this.refs;
-
-    if (!supportsViewTransitions() || isLowPowerDevice()) return this.closeDialog();
-
-    // Find the most visible image using IntersectionObserver
-    const mostVisibleElement = await getMostVisibleElement(media);
-
-    // Get the index and set up transition
-    const activeIndex = media.indexOf(mostVisibleElement);
-    const itemTransitionName = `gallery-item-close`;
-
-    const mediaGallery = /** @type {import('./media-gallery').MediaGallery | undefined} */ (
-      this.closest('media-gallery')
-    );
-
-    const slideshowActive = mediaGallery?.presentation === 'carousel';
-
-    const slide = slideshowActive ? mediaGallery.slideshow?.slides?.[activeIndex] : mediaGallery?.media?.[activeIndex];
-
-    if (!slide) return this.closeDialog();
-    const focalPoint = slide.dataset.focalPoint;
-    if (focalPoint) {
-      document.documentElement.style.setProperty('--gallery-media-focal-point', focalPoint);
+    const { dialog } = this.refs;
+    if (!dialog.open) return;
+    // View transition close
+    if (supportsViewTransitions() && !isLowPowerDevice()) {
+      const activeEl = this.refs.media[this.#activeIndex];
+      const mediaGallery = this.closest('media-gallery');
+      const slide = mediaGallery?.media?.[this.#activeIndex];
+      if (activeEl && slide) {
+        const itemTransitionName = `gallery-item-close`;
+        const focalPoint = slide.dataset.focalPoint;
+        if (focalPoint) document.documentElement.style.setProperty('--gallery-media-focal-point', focalPoint);
+        dialog.classList.add('dialog--closed');
+        await onAnimationEnd(this.refs.thumbnails || dialog);
+        activeEl.style.setProperty('view-transition-name', itemTransitionName);
+        await startViewTransition(() => {
+          activeEl.style.removeProperty('view-transition-name');
+          slide.style.setProperty('view-transition-name', itemTransitionName);
+          this.closeDialog();
+        });
+        slide.style.removeProperty('view-transition-name');
+        dialog.classList.remove('dialog--closed');
+        document.documentElement.style.removeProperty('--gallery-media-focal-point');
+        this.#unbindEvents();
+        document.body.style.overflow = '';
+        return;
+      }
     }
-
-    dialog.classList.add('dialog--closed');
-
-    await onAnimationEnd(this.refs.thumbnails);
-
-    mostVisibleElement.style.setProperty('view-transition-name', itemTransitionName);
-
-    await startViewTransition(() => {
-      mostVisibleElement.style.removeProperty('view-transition-name');
-      slide.style.setProperty('view-transition-name', itemTransitionName);
-      this.closeDialog();
-    });
-
-    slide.style.removeProperty('view-transition-name');
-    dialog.classList.remove('dialog--closed');
-    document.documentElement.style.removeProperty('--gallery-media-focal-point');
+    this.closeDialog();
+    this.#unbindEvents();
+    document.body.style.overflow = '';
   }
 
   closeDialog() {
     const { dialog } = this.refs;
     dialog.close();
+    document.body.style.overflow = '';
+    this.#unbindEvents();
     window.dispatchEvent(new DialogCloseEvent());
-  }
-
-  /**
-   * Closes the dialog when the user presses the escape key.
-   *
-   * @param {KeyboardEvent} event - The keyboard event.
-   */
-  handleKeyDown(event) {
-    if (event.key !== 'Escape') return;
-
-    event.preventDefault();
-    this.close();
-  }
-
-  /**
-   * Handles the click event of a thumbnail.
-   * @param {number} index - The index of the thumbnail to select.
-   */
-  async handleThumbnailClick(index) {
-    const behavior = prefersReducedMotion() ? 'instant' : 'smooth';
-    this.selectThumbnail(index, { behavior });
-  }
-
-  /**
-   * Handles the pointer enter event of a thumbnail.
-   * @param {number} index - The index of the thumbnail to load the high-resolution image for.
-   */
-  async handleThumbnailPointerEnter(index) {
-    const { media } = this.refs;
-    if (!media[index]) return;
-
-    this.loadHighResolutionImage(media[index]);
-  }
-
-  /**
-   * Handles the selection of a thumbnail.
-   * @param {number} index - The index of the thumbnail to select.
-   * @param {Object} options - The options for the selection.
-   * @param {ScrollBehavior} options.behavior - The behavior of the scroll.
-   */
-  async selectThumbnail(index, options = { behavior: 'smooth' }) {
-    if (!this.refs.thumbnails || !this.refs.thumbnails.children.length) return;
-
-    // Guard if invalid
-    if (isNaN(index) || index < 0 || index >= this.refs.thumbnails.children.length) return;
-
-    const { media, thumbnails } = this.refs;
-    const targetThumbnail = thumbnails.children[index];
-
-    if (!targetThumbnail || !(targetThumbnail instanceof HTMLElement)) return;
-
-    Array.from(thumbnails.querySelectorAll('button')).forEach((button, i) => {
-      button.setAttribute('aria-selected', `${i === index}`);
-    });
-
-    scrollIntoView(targetThumbnail, {
-      ancestor: thumbnails,
-      behavior: options.behavior,
-      block: 'center',
-      inline: 'center',
-    });
-
-    const targetImage = media[index];
-
-    if (targetImage) {
-      targetImage.scrollIntoView({
-        behavior: options.behavior,
-      });
-
-      this.loadHighResolutionImage(targetImage);
-    }
-    this.dispatchEvent(new ZoomMediaSelectedEvent(index));
   }
 }
 
 if (!customElements.get('zoom-dialog')) {
   customElements.define('zoom-dialog', ZoomDialog);
-}
-
-/**
- * Get the most visible element from a list of elements.
- * @param {HTMLElement[]} elements - The elements to get the most visible element from.
- * @returns {Promise<HTMLElement>} A promise that resolves to the most visible element.
- */
-function getMostVisibleElement(elements) {
-  return new Promise((resolve) => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const mostVisible = entries.reduce((prev, current) =>
-          current.intersectionRatio > prev.intersectionRatio ? current : prev
-        );
-        observer.disconnect();
-        resolve(/** @type {HTMLElement} */ (mostVisible.target));
-      },
-      {
-        threshold: Array.from({ length: 100 }, (_, i) => i / 100),
-      }
-    );
-
-    for (const element of elements) {
-      observer.observe(element);
-    }
-  });
 }
