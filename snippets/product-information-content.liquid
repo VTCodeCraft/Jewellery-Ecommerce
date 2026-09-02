@@ -67,6 +67,17 @@
     endif
   endif
 
+  # Merchant-chosen media/details split (product-information section only;
+  # the featured-product section has no such setting and keeps the stock grid).
+  assign ratio_style = ''
+  if settings.media_width != blank and settings.equal_columns != true
+    assign details_width = 100 | minus: settings.media_width
+    assign media_track = 'minmax(0, ' | append: settings.media_width | append: 'fr)'
+    assign details_track = 'minmax(0, ' | append: details_width | append: 'fr)'
+    assign ratio_style = '--product-grid-columns: ' | append: media_track | append: ' ' | append: details_track | append: '; --product-grid-columns-reverse: ' | append: details_track | append: ' ' | append: media_track | append: ';'
+    assign product_grid_class = product_grid_class | append: ' product-information__grid--ratio'
+  endif
+
   # Determine content width
   case settings.content_width
     when 'content-center-aligned'
@@ -96,6 +107,9 @@
   {% endif %}
   <product-component
     class="{{ product_grid_class }}"
+    {% if ratio_style != blank %}
+      style="{{ ratio_style }}"
+    {% endif %}
     data-product-grid-content
     {% # theme-check-disable UnknownFilter %}
     view-event-payload="{{ product | standard_event_data: 'view' | escape }}"
@@ -307,6 +321,19 @@
         .product-information--media-none
       ).product-information--media-right {
       grid-template-columns: 1fr 2fr;
+    }
+  }
+
+  /* Merchant-chosen media/details split. Declared after the fixed-ratio
+     rules above at equal specificity so it wins on source order; only the
+     product-information section emits the variables. */
+  @media screen and (min-width: 990px) {
+    .product-information__grid.product-information__grid--ratio.product-information--media-left {
+      grid-template-columns: var(--product-grid-columns);
+    }
+
+    .product-information__grid.product-information__grid--ratio.product-information--media-right {
+      grid-template-columns: var(--product-grid-columns-reverse);
     }
   }
 

@@ -1,0 +1,49 @@
+{%- doc -%}
+  Splits a product description into its descriptive body and any
+  "Jewellery care" paragraph the merchant embedded in it, so care notes can
+  be shown once, inside the Care instructions accordion, instead of twice.
+
+  Works paragraph by paragraph so no tag is ever cut open: the previous
+  string-split approach left an unclosed <strong> behind, which the browser
+  reconstructed as a stray grid item and pushed the product details under
+  the gallery.
+
+  @param {product} product - The product whose description is split
+  @param {string} part - 'body' for the description without care notes,
+                        'care' for the care notes only
+
+  @example
+  {% render 'product-description-parts', product: closest.product, part: 'body' %}
+{%- enddoc -%}
+
+{%- liquid
+  assign description = product.description | strip
+  unless description contains '</p>'
+    assign description = '<p>' | append: description | append: '</p>'
+  endunless
+
+  assign paragraphs = description | split: '</p>'
+  assign body = ''
+  assign care = ''
+
+  for paragraph in paragraphs
+    assign plain = paragraph | strip_html | strip
+    if plain == blank
+      continue
+    endif
+
+    assign probe = plain | downcase
+    if probe contains 'jewellery care' or probe contains 'jewelry care'
+      assign care = care | append: paragraph | append: '</p>'
+    else
+      assign body = body | append: paragraph | append: '</p>'
+    endif
+  endfor
+
+  if part == 'care'
+    # Drop the inline label; the accordion heading already says it.
+    echo care | replace: 'Jewellery care:', '' | replace: 'Jewellery Care:', '' | replace: 'JEWELLERY CARE:', '' | replace: 'Jewelry care:', '' | remove: '<strong></strong>' | remove: '<strong> </strong>'
+  else
+    echo body
+  endif
+-%}

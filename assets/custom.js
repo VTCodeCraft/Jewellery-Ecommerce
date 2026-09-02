@@ -18,23 +18,3 @@ document.addEventListener('dragstart', (event) => {
     event.preventDefault();
   }
 });
-
-/**
- * Back button (layout/theme.liquid renders [data-back-button] on every
- * route except the homepage). Uses browser history when the visitor
- * arrived from within the store; falls back to the homepage for direct
- * entries so the button always does something.
- */
-document.addEventListener('click', (event) => {
-  if (!(event.target instanceof Element)) return;
-  const button = event.target.closest('[data-back-button]');
-  if (!button) return;
-
-  const cameFromStore = document.referrer && new URL(document.referrer).origin === location.origin;
-
-  if (cameFromStore && history.length > 1) {
-    history.back();
-  } else {
-    location.href = button.dataset.backFallback || '/';
-  }
-});

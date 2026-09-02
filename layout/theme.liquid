@@ -143,20 +143,21 @@
         data-template="{{ template }}"
       >
         {% comment %}
-          Back navigation on every route except the homepage. Behaviour lives
-          in assets/custom.js (data-back-button); styling in assets/custom.css.
+          Back link on every route except the homepage. Deliberately a plain
+          link to the home page rather than browser history, so it behaves
+          the same however the visitor arrived (product -> product -> back
+          goes home, not to the previous product). Styling in custom.css.
         {% endcomment %}
         {% unless template.name == 'index' %}
           <div class="back-link-bar">
-            <button
-              type="button"
-              class="button-unstyled back-link"
-              data-back-button
-              data-back-fallback="{{ routes.root_url }}"
+            <a
+              href="{{ routes.root_url }}"
+              class="back-link"
+              aria-label="{{ 'actions.back_to' | t: title: shop.name }}"
             >
               <span class="svg-wrapper" aria-hidden="true">{{ 'icon-chevron-left.svg' | inline_asset_content }}</span>
               {{ 'actions.back' | t }}
-            </button>
+            </a>
           </div>
         {% endunless %}
         {{ content_for_layout }}

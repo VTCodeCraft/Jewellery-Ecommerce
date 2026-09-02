@@ -426,6 +426,18 @@
       "default": false
     },
     {
+      "type": "range",
+      "id": "media_width",
+      "label": "Media column width",
+      "info": "Share of the width given to the gallery on screens 990px and wider.",
+      "min": 50,
+      "max": 70,
+      "step": 1,
+      "unit": "%",
+      "default": 58,
+      "visible_if": "{{ section.settings.equal_columns == false }}"
+    },
+    {
       "type": "checkbox",
       "id": "limit_details_width",
       "label": "t:settings.limit_product_details_width",

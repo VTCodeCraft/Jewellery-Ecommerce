@@ -150,8 +150,9 @@ product-price {
 }
 
 /* ------------------------------------------------------------
-   Back link, top-left under the header on every route
-   except the homepage (markup in layout/theme.liquid)
+   Back link, top-left under the header on every route except the
+   homepage (markup in layout/theme.liquid). A plain anchor to the
+   home page - no history logic - so it is deterministic.
    ------------------------------------------------------------ */
 .back-link-bar {
   padding-inline: var(--page-margin, 2rem);
@@ -166,6 +167,7 @@ product-price {
   font-family: var(--font-body--family);
   font-size: var(--font-paragraph--size);
   color: var(--color-foreground);
+  text-decoration: none;
   cursor: pointer;
 }
 

@@ -23,63 +23,6 @@
       </a>
     </div>
     {% content_for 'blocks' %}
-    <div class="product-info-accordions" style="margin-top: 12px;">
-      <div class="product-short-desc rte" style="margin-bottom: 16px;">
-        {% render 'product-short-desc', product: closest.product %}
-      </div>
-      {% if closest.product.metafields.custom.size_length != blank %}
-      <details class="details" data-testid="accordion-details">
-        <summary class="details__header">
-          SIZE & FIT
-          <span class="svg-wrapper icon-plus">{{- 'icon-plus.svg' | inline_asset_content -}}</span>
-        </summary>
-        <div class="details-content">
-          <div class="rte" style="padding-block: 12px;">
-            {% render 'product-size-fit', product: closest.product %}
-          </div>
-        </div>
-      </details>
-      {% endif %}
-      {% if closest.product.metafields.custom.material != blank or closest.product.metafields.custom.colour_finish != blank %}
-      <details class="details" data-testid="accordion-details">
-        <summary class="details__header">
-          MATERIALS & FINISH
-          <span class="svg-wrapper icon-plus">{{- 'icon-plus.svg' | inline_asset_content -}}</span>
-        </summary>
-        <div class="details-content">
-          <div class="rte" style="padding-block: 12px;">
-            {% render 'product-materials', product: closest.product %}
-          </div>
-        </div>
-      </details>
-      {% endif %}
-      {% if closest.product.metafields.custom.occasion_style != blank or closest.product.type != blank %}
-      <details class="details" data-testid="accordion-details">
-        <summary class="details__header">
-          OCCASION & STYLE
-          <span class="svg-wrapper icon-plus">{{- 'icon-plus.svg' | inline_asset_content -}}</span>
-        </summary>
-        <div class="details-content">
-          <div class="rte" style="padding-block: 12px;">
-            {% render 'product-occasion', product: closest.product %}
-          </div>
-        </div>
-      </details>
-      {% endif %}
-      {% if closest.product.metafields.custom.care_instructions != blank %}
-      <details class="details" data-testid="accordion-details">
-        <summary class="details__header">
-          CARE INSTRUCTIONS
-          <span class="svg-wrapper icon-plus">{{- 'icon-plus.svg' | inline_asset_content -}}</span>
-        </summary>
-        <div class="details-content">
-          <div class="rte" style="padding-block: 12px;">
-            {% render 'product-care', product: closest.product %}
-          </div>
-        </div>
-      </details>
-      {% endif %}
-    </div>
   {% endcapture %}
 
   {% render 'group',
@@ -125,28 +68,6 @@
       align-self: var(--details-position, 'flex-start');
     }
   }
-
-  /* Product info accordions — heading larger than description */
-  .product-info-accordions .details__header {
-    font-size: 14px;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    color: #2B1A12;
-    font-weight: 600;
-    padding-block: 16px;
-  }
-  .product-info-accordions .details-content {
-    font-size: 13px;
-    color: #725947;
-    line-height: 1.6;
-  }
-  .product-info-accordions .product-short-desc {
-    font-size: 15px;
-    color: #2B1A12;
-    line-height: 1.6;
-    margin-bottom: 8px;
-  }
-
 {% endstylesheet %}
 
 {% schema %}
