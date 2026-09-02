@@ -4,6 +4,7 @@ import { cartPerformance } from '@theme/performance';
 import { morph } from '@theme/morph';
 import { CartLinesUpdateEvent, CartErrorEvent, ProductSelectEvent, StandardEvents } from '@shopify/events';
 import { resolveVariantId } from '@theme/variant-resolution';
+import { flyToTarget } from '@theme/fly-to-cart';
 
 // Error message display duration - gives users time to read the message
 const ERROR_MESSAGE_DISPLAY_DURATION = 10000;
@@ -108,21 +109,9 @@ export class AddToCartComponent extends Component {
 
     const image = this.dataset.productVariantMedia;
 
-    if (!cartIcon || !addToCartButton || !image) return;
+    const variant = addToCartButton?.classList.contains('quick-add__button') ? 'quick' : 'main';
 
-    const flyToCartElement = /** @type {FlyToCart} */ (document.createElement('fly-to-cart'));
-
-    let flyToCartClass = addToCartButton.classList.contains('quick-add__button')
-      ? 'fly-to-cart--quick'
-      : 'fly-to-cart--main';
-
-    flyToCartElement.classList.add(flyToCartClass);
-    flyToCartElement.style.setProperty('background-image', `url(${image})`);
-    flyToCartElement.style.setProperty('--start-opacity', '0');
-    flyToCartElement.source = addToCartButton;
-    flyToCartElement.destination = cartIcon;
-
-    document.body.appendChild(flyToCartElement);
+    flyToTarget(addToCartButton, cartIcon, { image, variant });
   }
 
   /**

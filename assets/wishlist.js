@@ -14,6 +14,7 @@
  */
 
 import { onAnimationEnd } from '@theme/utilities';
+import { flyToTarget } from '@theme/fly-to-cart';
 
 const STORAGE_KEY = 'paridhi:wishlist';
 const CHANGE_EVENT = 'wishlist:change';
@@ -155,8 +156,39 @@ class WishlistButton extends HTMLElement {
       // Force a reflow so the animation replays on every add.
       void this.button?.offsetWidth;
       this.button?.classList.add('wishlist-button--pop');
+      this.#flyToWishlist();
     }
   };
+
+  /**
+   * Flies the product image to the header wishlist link, reusing the theme's
+   * add-to-cart animation verbatim - same <fly-to-cart> element, CSS, timings
+   * and cleanup. Only the destination differs. Runs on add only, never on
+   * remove, and skips silently when the header entry or an image is missing.
+   */
+  #flyToWishlist() {
+    const destination = document.querySelector('.header-actions__wishlist');
+    if (!destination) return;
+
+    // Product cards and the product page nest the button differently; scope the
+    // image lookup so a card never picks up a neighbouring card's image.
+    const card = this.closest('product-card');
+    const gallery = card
+      ? card.querySelector('.card-gallery')
+      : this.closest('product-component')?.querySelector('media-gallery');
+    if (!gallery) return;
+
+    // The slide on show, so hovering a card flies the image the shopper sees.
+    const image =
+      gallery.querySelector('slideshow-slide[aria-hidden="false"] img') ?? gallery.querySelector('img');
+    const source = image ?? this.button ?? this;
+
+    flyToTarget(source, destination, {
+      image: image instanceof HTMLImageElement ? image.currentSrc || image.src : null,
+      // Matches how add-to-cart picks its curve: the compact one on cards.
+      variant: this.classList.contains('wishlist-button--overlay') ? 'quick' : 'main',
+    });
+  }
 
   #render = () => {
     if (!this.button) return;

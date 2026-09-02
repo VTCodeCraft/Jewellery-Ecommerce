@@ -78,3 +78,38 @@ class FlyToCart extends Component {
 if (!customElements.get('fly-to-cart')) {
   customElements.define('fly-to-cart', FlyToCart);
 }
+
+/**
+ * Flies an image from one element to another using the animation above.
+ *
+ * This is the construction that product-form.js and sticky-add-to-cart.js were
+ * each doing inline; it lives here so any new caller (the wishlist heart) gets
+ * the identical element, classes, timings and cleanup rather than a second
+ * implementation. Only the destination differs per caller.
+ *
+ * @param {Element | null | undefined} source - Element the image flies from.
+ * @param {Element | null | undefined} destination - Element it flies to.
+ * @param {object} options
+ * @param {string | null | undefined} options.image - Image URL to fly.
+ * @param {'main' | 'quick' | 'sticky'} [options.variant] - Which timing curve to use.
+ * @param {boolean} [options.useSourceSize] - Start at the source's size rather than the default 40px.
+ * @returns {FlyToCart | null} The element, or null when it could not run.
+ */
+export function flyToTarget(source, destination, { image, variant = 'main', useSourceSize = false } = {}) {
+  // A missing destination is expected - the header entry is optional - so this
+  // stays silent rather than throwing and interrupting the real action.
+  if (!source || !destination || !image) return null;
+
+  const flyToCartElement = /** @type {FlyToCart} */ (document.createElement('fly-to-cart'));
+
+  flyToCartElement.classList.add(`fly-to-cart--${variant}`);
+  flyToCartElement.style.setProperty('background-image', `url(${image})`);
+  flyToCartElement.style.setProperty('--start-opacity', '0');
+  flyToCartElement.useSourceSize = useSourceSize;
+  flyToCartElement.source = source;
+  flyToCartElement.destination = destination;
+
+  document.body.appendChild(flyToCartElement);
+
+  return flyToCartElement;
+}

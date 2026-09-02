@@ -1,0 +1,331 @@
+{% # theme-check-disable ValidScopedCSSClass %}
+{%- doc -%}
+  Footer link column.
+
+  Behaves exactly like the `menu` block - same `menu`/`menu__*` classes and the
+  same `accordion-custom-component` wrapper, so it inherits every existing menu
+  style and the mobile accordion for free - but it can also render a list of
+  label/URL pairs when no navigation menu is selected.
+
+  That matters because a footer needs links on day one, while the navigation
+  menus that will eventually drive it are created later in Shopify Admin. Pick a
+  menu here and it wins; leave it empty and the pairs below are used. Either way
+  everything is editable from the Theme Editor with no code change.
+{%- enddoc -%}
+
+{% liquid
+  assign block_settings = block.settings
+  assign menu = block_settings.menu
+  assign heading = block_settings.heading
+  assign show_as_accordion = block_settings.show_as_accordion
+
+  assign menu_class = 'menu footer-links'
+  if show_as_accordion
+    assign menu_class = menu_class | append: ' menu--accordion'
+  endif
+
+  assign should_disable_on_mobile = true
+  assign should_open_by_default_on_mobile = true
+  if show_as_accordion
+    assign should_disable_on_mobile = false
+    assign should_open_by_default_on_mobile = false
+  endif
+
+  # Fallback pairs, used only when no menu is picked.
+  assign labels = ''
+  assign urls = ''
+  for i in (1..8)
+    assign label_key = 'link_' | append: i | append: '_label'
+    assign url_key = 'link_' | append: i | append: '_url'
+    assign label = block_settings[label_key]
+    if label != blank
+      assign labels = labels | append: label | append: '~|~'
+      assign urls = urls | append: block_settings[url_key] | append: '~|~'
+    endif
+  endfor
+  assign label_list = labels | split: '~|~'
+  assign url_list = urls | split: '~|~'
+%}
+
+{% if menu != blank or label_list.size > 0 or heading != blank %}
+  {% capture footer_links_children %}
+    <details
+      class="menu__details spacing-style"
+      style="--spacing--size: {{ block_settings.menu_spacing }}px; {% render 'spacing-style', settings: block_settings %}"
+      {% unless show_as_accordion %}
+        open
+      {% endunless %}
+      {{ block.shopify_attributes }}
+    >
+      <summary class="menu__heading{% if heading == blank %} menu__heading--empty{% endif %} {{ block_settings.heading_preset }}">
+        <span class="menu__heading__default">{{ heading }}</span>
+        <span class="menu__heading__accordion">
+          {{ heading }}
+          {% if block_settings.accordion_icon == 'plus' %}
+            <span class="menu__heading__toggle svg-wrapper icon-plus">
+              {{- 'icon-plus.svg' | inline_asset_content -}}
+            </span>
+          {% else %}
+            <span class="menu__heading__toggle svg-wrapper icon-caret icon-animated">
+              {{- 'icon-caret.svg' | inline_asset_content -}}
+            </span>
+          {% endif %}
+        </span>
+      </summary>
+
+      <nav
+        class="details-content"
+        {% if heading == blank %}
+          aria-label="Footer navigation"
+        {% endif %}
+      >
+        <ul class="list-unstyled">
+          {% if menu != blank %}
+            {% for link in menu.links %}
+              <li class="menu__item {{ block_settings.link_preset }}">
+                <a href="{{ link.url }}">{{ link.title }}</a>
+              </li>
+            {% endfor %}
+          {% else %}
+            {% for label in label_list %}
+              <li class="menu__item {{ block_settings.link_preset }}">
+                <a href="{{ url_list[forloop.index0] | default: '#' }}">{{ label }}</a>
+              </li>
+            {% endfor %}
+          {% endif %}
+        </ul>
+      </nav>
+    </details>
+  {% endcapture %}
+
+  {% render 'accordion-custom-component',
+    children: footer_links_children,
+    class: menu_class,
+    disable_on_desktop: true,
+    open_by_default_on_desktop: true,
+    disable_on_mobile: should_disable_on_mobile,
+    open_by_default_on_mobile: should_open_by_default_on_mobile
+  %}
+{% endif %}
+
+{% # theme-check-enable ValidScopedCSSClass %}
+
+{% stylesheet %}
+  /* Only the touch-target floors; every other rule comes from the menu block. */
+  .footer-links .menu__item a {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--minimum-touch-target);
+  }
+
+  /* The summary is the accordion toggle on mobile, so it needs the same floor. */
+  .footer-links .menu__heading {
+    display: flex;
+    align-items: center;
+    min-height: var(--minimum-touch-target);
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Footer links",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Shop"
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Menu",
+      "info": "Optional. When set, this replaces the links below."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_as_accordion",
+      "label": "Collapse on mobile",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "accordion_icon",
+      "label": "Collapse icon",
+      "options": [
+        {
+          "value": "caret",
+          "label": "Caret"
+        },
+        {
+          "value": "plus",
+          "label": "Plus"
+        }
+      ],
+      "default": "plus",
+      "visible_if": "{{ block.settings.show_as_accordion }}"
+    },
+    {
+      "type": "range",
+      "id": "menu_spacing",
+      "label": "Space between links",
+      "min": 0,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "default": 8
+    },
+    {
+      "type": "select",
+      "id": "heading_preset",
+      "label": "Heading size",
+      "options": [
+        {
+          "value": "h4",
+          "label": "Large"
+        },
+        {
+          "value": "h5",
+          "label": "Medium"
+        },
+        {
+          "value": "h6",
+          "label": "Small"
+        }
+      ],
+      "default": "h6"
+    },
+    {
+      "type": "select",
+      "id": "link_preset",
+      "label": "Link size",
+      "options": [
+        {
+          "value": "paragraph",
+          "label": "Paragraph"
+        },
+        {
+          "value": "h6",
+          "label": "Small"
+        }
+      ],
+      "default": "paragraph"
+    },
+    {
+      "type": "header",
+      "content": "Links",
+      "info": "Used when no menu is selected. Leave a label empty to hide that row."
+    },
+    {
+      "type": "text",
+      "id": "link_1_label",
+      "label": "Link 1 label"
+    },
+    {
+      "type": "url",
+      "id": "link_1_url",
+      "label": "Link 1 URL"
+    },
+    {
+      "type": "text",
+      "id": "link_2_label",
+      "label": "Link 2 label"
+    },
+    {
+      "type": "url",
+      "id": "link_2_url",
+      "label": "Link 2 URL"
+    },
+    {
+      "type": "text",
+      "id": "link_3_label",
+      "label": "Link 3 label"
+    },
+    {
+      "type": "url",
+      "id": "link_3_url",
+      "label": "Link 3 URL"
+    },
+    {
+      "type": "text",
+      "id": "link_4_label",
+      "label": "Link 4 label"
+    },
+    {
+      "type": "url",
+      "id": "link_4_url",
+      "label": "Link 4 URL"
+    },
+    {
+      "type": "text",
+      "id": "link_5_label",
+      "label": "Link 5 label"
+    },
+    {
+      "type": "url",
+      "id": "link_5_url",
+      "label": "Link 5 URL"
+    },
+    {
+      "type": "text",
+      "id": "link_6_label",
+      "label": "Link 6 label"
+    },
+    {
+      "type": "url",
+      "id": "link_6_url",
+      "label": "Link 6 URL"
+    },
+    {
+      "type": "text",
+      "id": "link_7_label",
+      "label": "Link 7 label"
+    },
+    {
+      "type": "url",
+      "id": "link_7_url",
+      "label": "Link 7 URL"
+    },
+    {
+      "type": "text",
+      "id": "link_8_label",
+      "label": "Link 8 label"
+    },
+    {
+      "type": "url",
+      "id": "link_8_url",
+      "label": "Link 8 URL"
+    },
+    {
+      "type": "header",
+      "content": "t:content.padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "t:settings.top",
+      "min": 0,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "t:settings.bottom",
+      "min": 0,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "default": 0
+    }
+  ],
+  "presets": [
+    {
+      "name": "Footer links"
+    }
+  ]
+}
+{% endschema %}
