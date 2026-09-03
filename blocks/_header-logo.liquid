@@ -108,7 +108,15 @@
     }
 
     @media screen and (max-width: 749px) {
-      padding: 0;
+      #header-component & {
+        display: none;
+      }
+
+      #header-component:has(&) .header__columns {
+        --header-template-columns: var(--header-mobile-bookend) var(--header-mobile-bookend) 1fr auto;
+
+        grid-template-areas: 'leftA leftB spacer rightB';
+      }
     }
 
     @media screen and (min-width: 750px) {

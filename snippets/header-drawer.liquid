@@ -80,16 +80,26 @@
       "
       style="--color-foreground: {{ settings.page_text_color }}; --color-foreground-rgb: {{ settings.page_text_color.rgb }};"
     >
-      <button
-        class="button close-button menu-drawer__close-button focus-inset"
-        type="button"
-        aria-label="{{ 'actions.close' | t }}"
-        on:click="/close"
-      >
-        <span class="svg-wrapper header-drawer-icon header-drawer-icon--close">
-          {{- 'icon-close.svg' | inline_asset_content -}}
-        </span>
-      </button>
+      {% capture close_button %}
+        <button
+          class="button close-button menu-drawer__close-button focus-inset"
+          type="button"
+          aria-label="{{ 'actions.close' | t }}"
+          on:click="/close"
+        >
+          <span class="svg-wrapper header-drawer-icon header-drawer-icon--close">
+            {{- 'icon-close.svg' | inline_asset_content -}}
+          </span>
+        </button>
+      {% endcapture %}
+      {% if data_header_drawer_type == 'mobile-drawer' %}
+        <div class="menu-drawer__header">
+          <a href="{{ routes.root_url }}" class="menu-drawer__brand">{{ shop.name }}</a>
+          {{ close_button }}
+        </div>
+      {% else %}
+        {{ close_button }}
+      {% endif %}
       <nav
         class="menu-drawer__navigation"
         style="
@@ -833,6 +843,28 @@
     @media screen and (min-width: 750px) {
       margin-top: var(--drawer-header-desktop-top);
     }
+  }
+
+  .menu-drawer__header {
+    display: flex;
+    min-height: 60px;
+    padding-inline: var(--padding-xl);
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid rgb(var(--color-foreground-rgb) / var(--opacity-10));
+  }
+
+  .menu-drawer__brand {
+    color: var(--color-foreground);
+    font-family: var(--font-heading--family);
+    font-size: var(--font-size--xl);
+    font-weight: 500;
+    text-decoration: none;
+  }
+
+  .menu-drawer__brand:hover {
+    color: var(--color-foreground);
+    text-decoration: none;
   }
 
   details:not(.menu-open) .header__icon--menu .header-drawer-icon--close {
