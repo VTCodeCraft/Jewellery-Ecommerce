@@ -100,7 +100,6 @@
         assign dailywear_collection = collections['dailywear-party-wear']
         assign best_sellers_collection = collections['best-sellers']
         assign featured_collection = collections['featured-products']
-        assign shop_menu_image = jewellery_sets_collection.featured_image | default: necklaces_collection.featured_image
       %}
 
       <li
@@ -118,20 +117,30 @@
           <div id="submenu-shop" class="menu-list__submenu-inner header-navigation__mega-menu">
             <div class="header-navigation__mega-menu-content">
               <div class="header-navigation__mega-menu-column">
-                <p class="header-navigation__menu-label">Shop by type</p>
+                <p class="header-navigation__menu-label">Product type</p>
                 <a href="{{ necklaces_collection.url }}" class="header-navigation__mega-link">Necklaces / Pendants</a>
                 <a href="{{ jewellery_sets_collection.url }}" class="header-navigation__mega-link">Jewellery Sets</a>
+                <a href="{{ routes.all_products_collection_url }}" class="header-navigation__mega-link">Shop all</a>
               </div>
               <div class="header-navigation__mega-menu-column">
-                <p class="header-navigation__menu-label">Shop</p>
-                <a href="{{ routes.all_products_collection_url }}" class="header-navigation__mega-link">View all jewellery</a>
+                <p class="header-navigation__menu-label">Highlights</p>
+                <a href="{{ best_sellers_collection.url }}" class="header-navigation__mega-link">Best Sellers</a>
+                <a href="{{ featured_collection.url }}" class="header-navigation__mega-link">Featured</a>
               </div>
-              {% if shop_menu_image != blank %}
-                <a href="{{ routes.all_products_collection_url }}" class="header-navigation__mega-feature">
-                  {{ shop_menu_image | image_url: width: 900 | image_tag: widths: '320, 480, 640, 900', sizes: '300px', loading: 'lazy', class: 'header-navigation__mega-image', alt: shop_menu_image.alt }}
-                  <span class="header-navigation__mega-caption">Timeless pieces, made to be worn</span>
+              <div class="header-navigation__mega-menu-column">
+                <p class="header-navigation__menu-label">Occasions</p>
+                <a href="{{ wedding_collection.url }}" class="header-navigation__mega-link">Wedding</a>
+                <a href="{{ festival_collection.url }}" class="header-navigation__mega-link">Traditional / Festival</a>
+                <a href="{{ dailywear_collection.url }}" class="header-navigation__mega-link">Dailywear / Partywear</a>
+              </div>
+              <div class="header-navigation__mega-media" aria-label="Paridhi Creation jewellery">
+                <a href="{{ wedding_collection.url }}" class="header-navigation__mega-feature">
+                  <img src="{{ 'shop-editorial-square.png' | asset_url }}" alt="Gold necklace set and earrings" class="header-navigation__mega-image header-navigation__mega-image--square" width="1254" height="1254" loading="lazy">
                 </a>
-              {% endif %}
+                <a href="{{ festival_collection.url }}" class="header-navigation__mega-feature">
+                  <img src="{{ 'shop-editorial-landscape.png' | asset_url }}" alt="Ruby jewellery collection" class="header-navigation__mega-image header-navigation__mega-image--landscape" width="1448" height="1086" loading="lazy">
+                </a>
+              </div>
             </div>
           </div>
         </div>
@@ -148,11 +157,14 @@
         <a href="{{ routes.root_url }}" data-skip-node-update="true" class="menu-list__link" aria-controls="submenu-occasions" aria-haspopup="true" aria-expanded="false" ref="menuitem">
           <span class="menu-list__link-title">Occasions</span>
         </a>
-        <div class="menu-list__submenu{{ background_color_classes }}" ref="submenu[]">
+        <div class="menu-list__submenu{{ background_color_classes }}" ref="submenu[]" data-floating-submenu>
           <div id="submenu-occasions" class="menu-list__submenu-inner header-navigation__occasion-menu">
-            <a href="{{ wedding_collection.url }}" class="header-navigation__occasion-link">Wedding</a>
-            <a href="{{ festival_collection.url }}" class="header-navigation__occasion-link">Traditional / Festival</a>
-            <a href="{{ dailywear_collection.url }}" class="header-navigation__occasion-link">Dailywear / Partywear</a>
+            <div class="header-navigation__occasion-links">
+              <a href="{{ wedding_collection.url }}" class="header-navigation__occasion-link">Wedding</a>
+              <a href="{{ festival_collection.url }}" class="header-navigation__occasion-link">Traditional / Festival</a>
+              <a href="{{ dailywear_collection.url }}" class="header-navigation__occasion-link">Dailywear / Partywear</a>
+            </div>
+            <img src="{{ 'royal-wedding-flatlay.jpg' | asset_url }}" alt="Royal wedding jewellery flatlay" class="header-navigation__occasion-image" width="3840" height="2560" loading="lazy">
           </div>
         </div>
       </li>
@@ -325,13 +337,14 @@
 
   .header-navigation__mega-menu {
     padding: var(--padding-3xl) var(--padding-inline);
+    background: var(--color-background);
   }
 
   .header-navigation__mega-menu-content {
     display: grid;
-    grid-template-columns: minmax(10rem, 1fr) minmax(10rem, 1fr) minmax(14rem, 20rem);
-    gap: var(--gap-3xl);
-    max-width: var(--wide-page-width);
+    grid-template-columns: repeat(3, minmax(8rem, 0.72fr)) minmax(29rem, 1.8fr);
+    gap: var(--gap-xl);
+    max-width: 78rem;
     margin-inline: auto;
   }
 
@@ -362,40 +375,62 @@
   }
 
   .header-navigation__mega-feature {
+    display: block;
     color: var(--color-foreground);
     text-decoration: none;
+  }
+
+  .header-navigation__mega-media {
+    display: grid;
+    /* 3:4 tracks keep the square and 4:3 landscape assets the same height. */
+    grid-template-columns: minmax(0, 3fr) minmax(0, 4fr);
+    gap: var(--gap-sm);
+    align-items: start;
   }
 
   .header-navigation__mega-image {
     display: block;
     width: 100%;
-    aspect-ratio: 4 / 3;
     object-fit: cover;
   }
 
-  .header-navigation__mega-caption {
-    display: block;
-    margin-top: var(--padding-sm);
-    font-size: var(--font-size--h6);
-    letter-spacing: var(--font-h6--letter-spacing);
-    text-transform: uppercase;
+  .header-navigation__mega-image--square {
+    aspect-ratio: 1;
+  }
+
+  .header-navigation__mega-image--landscape {
+    aspect-ratio: 4 / 3;
   }
 
   .header-navigation__occasion-menu {
-    display: flex;
-    flex-direction: column;
-    width: max-content;
-    min-width: 16rem;
+    display: grid;
+    grid-template-columns: minmax(12rem, 1fr) minmax(15rem, 1.25fr);
+    width: min(39rem, calc(100vw - 2 * var(--padding-inline)));
     padding: var(--padding-xl);
-    gap: var(--gap-lg);
+    gap: var(--gap-xl);
     background: var(--color-background);
     border: 1px solid rgb(var(--color-foreground-rgb) / var(--opacity-10));
+    box-shadow: 0 12px 28px rgb(var(--color-foreground-rgb) / var(--opacity-10));
   }
 
   .header-navigation__item--occasions > .menu-list__submenu {
-    width: max-content;
-    left: auto;
+    width: min(39rem, calc(100vw - 2 * var(--padding-inline)));
+    inset-inline-start: 0;
     padding-inline: 0;
+  }
+
+  .header-navigation__occasion-links {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: var(--gap-lg);
+  }
+
+  .header-navigation__occasion-image {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    min-height: 12rem;
+    object-fit: cover;
   }
 
   .menu-list__list {
@@ -829,6 +864,40 @@
   /* Hide product cards in collapsed submenus from the IntersectionObserver that fires product view events */
   .menu-list__list-item:not(:has([aria-expanded='true'])) > .menu-list__submenu product-component {
     display: none;
+  }
+
+  /* SHOP is intentionally wide and editorial; OCCASIONS remains anchored to
+     its trigger as a compact, content-width menu. These follow the generic
+     Horizon submenu rules above, so they belong after those rules. */
+  .header-navigation__item--occasions {
+    position: relative;
+  }
+
+  .menu-list__list-item.header-navigation__item--occasions > .menu-list__submenu {
+    position: absolute;
+    top: calc(100% - 1px);
+    left: 0;
+    width: min(39rem, calc(100vw - 2 * var(--padding-inline)));
+    padding: 0;
+    clip-path: inset(0);
+  }
+
+  .header-navigation__item--occasions .header-navigation__occasion-menu {
+    max-height: none;
+    padding: var(--padding-xl);
+    opacity: var(--submenu-content-opacity);
+    transform: none;
+  }
+
+  @media screen and (min-width: 750px) and (max-width: 989px) {
+    .header-navigation__mega-menu-content {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .header-navigation__mega-media {
+      grid-column: 1 / -1;
+      max-width: 28rem;
+    }
   }
 {% endstylesheet %}
 

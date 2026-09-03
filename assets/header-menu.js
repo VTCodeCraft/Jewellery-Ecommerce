@@ -233,6 +233,10 @@ class HeaderMenu extends Component {
       submenu = this.overflowMenu;
     }
 
+    // Floating submenus are anchored popovers. They use the menu's visibility
+    // state, but must not contribute to the header's expanded height.
+    const isFloatingSubmenu = submenu?.hasAttribute('data-floating-submenu') ?? false;
+
     if (submenu) {
       clearTimeout(this.#hoverDispatchTimer);
       this.#hoverDispatchTimer = undefined;
@@ -259,7 +263,7 @@ class HeaderMenu extends Component {
         requestAnimationFrame(() => {
           // Double requestAnimationFrame to ensure the height is properly calculated and not defaulting to the contain-intrinsic-size
           requestAnimationFrame(() => {
-            if (submenu.offsetHeight > 0) {
+            if (!isFloatingSubmenu && submenu.offsetHeight > 0) {
               this.headerComponent?.style.setProperty('--submenu-height', `${submenu.offsetHeight}px`);
               this.#cleanupMutationObserver();
             }
@@ -296,8 +300,11 @@ class HeaderMenu extends Component {
 
     const headerVisibleHeight = this.#getHeaderVisibleHeight();
 
-    this.headerComponent.style.setProperty('--submenu-height', `${finalHeight}px`);
-    this.#setFullOpenHeaderHeight(finalHeight, headerVisibleHeight);
+    const headerSubmenuHeight = isFloatingSubmenu ? 0 : finalHeight;
+    const expandedHeaderVisibleHeight = isFloatingSubmenu ? 0 : headerVisibleHeight;
+
+    this.headerComponent.style.setProperty('--submenu-height', `${headerSubmenuHeight}px`);
+    this.#setFullOpenHeaderHeight(headerSubmenuHeight, expandedHeaderVisibleHeight);
     this.style.setProperty('--submenu-opacity', '1');
     this.#startPointerTracking(item, previouslyActiveItem);
   };
