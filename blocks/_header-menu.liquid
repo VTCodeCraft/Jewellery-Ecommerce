@@ -164,7 +164,7 @@
               <a href="{{ festival_collection.url }}" class="header-navigation__occasion-link">Traditional / Festival</a>
               <a href="{{ dailywear_collection.url }}" class="header-navigation__occasion-link">Dailywear / Partywear</a>
             </div>
-            <img src="{{ 'royal-wedding-flatlay.jpg' | asset_url }}" alt="Royal wedding jewellery flatlay" class="header-navigation__occasion-image" width="3840" height="2560" loading="lazy">
+            <img src="{{ 'royal-wedding-flatlay.png' | asset_url }}" alt="Royal wedding jewellery flatlay" class="header-navigation__occasion-image" width="3840" height="2560" loading="lazy">
           </div>
         </div>
       </li>
@@ -883,10 +883,22 @@
   }
 
   .header-navigation__item--occasions .header-navigation__occasion-menu {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(14rem, 1.25fr);
+    align-items: center;
     max-height: none;
     padding: var(--padding-xl);
     opacity: var(--submenu-content-opacity);
     transform: none;
+  }
+
+  .header-navigation__item--occasions .header-navigation__occasion-links {
+    align-self: start;
+    min-width: 0;
+  }
+
+  .header-navigation__item--occasions .header-navigation__occasion-image {
+    min-width: 0;
   }
 
   @media screen and (min-width: 750px) and (max-width: 989px) {
