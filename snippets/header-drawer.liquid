@@ -94,7 +94,17 @@
       {% endcapture %}
       {% if data_header_drawer_type == 'mobile-drawer' %}
         <div class="menu-drawer__header">
-          <a href="{{ routes.root_url }}" class="menu-drawer__brand">{{ shop.name }}</a>
+          {%- comment -%}
+            The header logo is hidden below 750px, so this is the brand on mobile.
+            Keep it in step with the desktop wordmark.
+          {%- endcomment -%}
+          <a href="{{ routes.root_url }}" class="menu-drawer__brand" aria-label="{{ shop.name | escape }}">
+            {%- if settings.brand_lockup -%}
+              {%- render 'brand-lockup' -%}
+            {%- else -%}
+              {{- shop.name -}}
+            {%- endif -%}
+          </a>
           {{ close_button }}
         </div>
         {% liquid

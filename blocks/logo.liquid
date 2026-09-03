@@ -28,6 +28,7 @@
 <div
   class="
     logo-block
+    {% if settings.logo == blank and settings.logo_inverse == blank and settings.brand_lockup %}logo-block--lockup{% endif %}
     spacing-style
   "
   style="
@@ -63,6 +64,8 @@
     <div class="logo-block__image-wrapper">
       {{ logo_image }}
     </div>
+  {% elsif settings.brand_lockup %}
+    {% render 'brand-lockup' %}
   {% else %}
     {% render 'jumbo-text', text: shop.name %}
   {% endif %}
@@ -85,6 +88,24 @@
         var(--logo-width-mobile, var(--logo-width)) + var(--padding-inline-start) + var(--padding-inline-end)
       );
     }
+  }
+
+  /* The character-count width above assumes one line of text, which clips or
+     over-reserves space for a two-line wordmark. Fill the column instead and let
+     the parent group's width setting decide the column - sizing to the wordmark's
+     own width would otherwise shrink the whole footer brand column to fit it. */
+  .logo-block--lockup {
+    width: 100%;
+    max-width: 100%;
+    max-height: none;
+  }
+
+  /* In a flex row the wordmark's column is often the only shrinkable item (the
+     footer's link columns are content-sized), so every pixel of shrink landed on
+     it and collapsed it to the wordmark's own width. Hold it to the width
+     configured on the group instead. */
+  .group-block:has(> .group-block-content > .logo-block--lockup) {
+    flex-shrink: 0;
   }
 
   .logo-block__image-wrapper {

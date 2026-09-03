@@ -1,0 +1,57 @@
+{%- doc -%}
+  Two-line brand wordmark: the name over a smaller, right-offset descriptor.
+
+  Sizes are in `em`, never px, so the lockup inherits whatever font-size its
+  container sets - the header uses `--font-size--md`, the footer's logo block uses
+  `--logo-height`. One snippet therefore scales correctly in both places.
+
+  Renders nothing when the lockup is switched off, so callers fall back to
+  `shop.name`. An uploaded logo image always takes precedence over this, because
+  the callers only reach it when `settings.logo` is blank.
+
+  @example
+  {% render 'brand-lockup' %}
+{%- enddoc -%}
+
+{%- if settings.brand_lockup and settings.brand_lockup_primary != blank -%}
+  <span class="brand-lockup">
+    <span class="brand-lockup__primary">{{ settings.brand_lockup_primary }}</span>
+    {%- if settings.brand_lockup_secondary != blank -%}
+      <span class="brand-lockup__secondary">{{ settings.brand_lockup_secondary }}</span>
+    {%- endif -%}
+  </span>
+{%- endif -%}
+
+{% stylesheet %}
+  /* align-items: flex-end is what produces the staggered right-offset read. */
+  .brand-lockup {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: flex-end;
+    line-height: 1;
+    white-space: nowrap;
+    max-width: 100%;
+  }
+
+  .brand-lockup__primary {
+    font-family: var(--font-heading--family);
+    font-weight: var(--font-heading--weight);
+    font-style: var(--font-heading--style);
+    font-size: 1em;
+    line-height: 1;
+    letter-spacing: 0.01em;
+  }
+
+  .brand-lockup__secondary {
+    font-family: var(--font-subheading--family);
+    font-weight: var(--font-subheading--weight);
+    font-size: 0.34em;
+    line-height: 1;
+    letter-spacing: 0.38em;
+    text-transform: uppercase;
+    margin-block-start: 0.5em;
+    /* letter-spacing adds a trailing space after the last letter; pull it back
+       so the two lines share an optical right edge. */
+    margin-inline-end: -0.38em;
+  }
+{% endstylesheet %}

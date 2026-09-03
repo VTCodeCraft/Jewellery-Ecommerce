@@ -23,6 +23,19 @@
   assign alt_text_fallback = 'accessibility.home_logo_alt' | t: store_name: shop.name
 %}
 
+{%- comment -%}
+  image.liquid prints text_fallback unescaped, so the two-line wordmark can be
+  handed over as captured markup without touching that shared snippet. An
+  uploaded logo image still wins - the fallback is only reached when it is blank.
+{%- endcomment -%}
+{%- capture brand_text -%}
+  {%- if settings.brand_lockup -%}
+    {%- render 'brand-lockup' -%}
+  {%- else -%}
+    {{- shop.name -}}
+  {%- endif -%}
+{%- endcapture -%}
+
 {% comment %}
   Output all logo variants, use CSS to hide/show the appropriate one
   based on the .header[transparent] selector
@@ -60,7 +73,7 @@
       class: 'header-logo__image',
       height: settings.logo_height,
       alt_text_fallback: alt_text_fallback,
-      text_fallback: shop.name,
+      text_fallback: brand_text,
       style: logo_style
     %}
   </span>
@@ -75,7 +88,7 @@
         class: 'header-logo__image',
         height: settings.logo_height,
         alt_text_fallback: alt_text_fallback,
-        text_fallback: shop.name,
+        text_fallback: brand_text,
         style: inverse_logo_style
       %}
     </span>

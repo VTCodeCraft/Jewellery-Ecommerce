@@ -26,6 +26,34 @@
         "info": "t:content.inverse_logo_info"
       },
       {
+        "type": "header",
+        "content": "Text wordmark"
+      },
+      {
+        "type": "paragraph",
+        "content": "Used when no logo image is uploaded. Renders the brand name on two lines, the second smaller and offset right."
+      },
+      {
+        "type": "checkbox",
+        "id": "brand_lockup",
+        "label": "Use text wordmark",
+        "default": true
+      },
+      {
+        "type": "text",
+        "id": "brand_lockup_primary",
+        "label": "First line",
+        "default": "Newora",
+        "visible_if": "{{ settings.brand_lockup }}"
+      },
+      {
+        "type": "text",
+        "id": "brand_lockup_secondary",
+        "label": "Second line",
+        "default": "Jewels",
+        "visible_if": "{{ settings.brand_lockup }}"
+      },
+      {
         "type": "range",
         "id": "logo_height",
         "label": "t:settings.desktop_height",
