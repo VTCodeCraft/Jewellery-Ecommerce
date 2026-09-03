@@ -1,8 +1,7 @@
 import { OverflowList } from '@theme/overflow-list';
 import VariantPicker from '@theme/variant-picker';
 import { ProductComponent } from '@theme/view-event-elements';
-import { debounce, isDesktopBreakpoint, mediaQueryLarge, yieldToMainThread } from '@theme/utilities';
-import { SlideshowSelectEvent } from '@theme/events';
+import { isDesktopBreakpoint, mediaQueryLarge, yieldToMainThread } from '@theme/utilities';
 import { morph } from '@theme/morph';
 import { StandardEvents, ProductSelectEvent } from '@shopify/events';
 
@@ -99,7 +98,6 @@ if (!customElements.get('product-card-link')) {
  *
  * @typedef {object} ProductCardRefs
  * @property {HTMLAnchorElement} productCardLink - The product card link element.
- * @property {import('slideshow').Slideshow} [slideshow] - The slideshow component.
  * @property {import('quick-add').QuickAddComponent} [quickAdd] - The quick add component.
  * @property {HTMLElement} [cardGallery] - The card gallery component.
  * @property {HTMLElement} [cardGalleryMedia] - The stable primary/hover media stack.
@@ -200,27 +198,15 @@ export class ProductCard extends ProductCardLink {
     this.#handleQuickAdd();
 
     this.addEventListener(StandardEvents.productSelect, this.#handleProductSelect);
-    this.addEventListener(SlideshowSelectEvent.eventName, this.#handleSlideshowSelect);
     mediaQueryLarge.addEventListener('change', this.#handleQuickAdd);
 
     this.addEventListener('click', this.navigateToProduct);
 
-    // Preload the next image on the slideshow to avoid white flashes on previewImage
-    setTimeout(() => {
-      if (this.refs.slideshow?.isNested) {
-        this.#preloadNextPreviewImage();
-      }
-    });
   }
 
   disconnectedCallback() {
     super.disconnectedCallback();
     this.removeEventListener('click', this.navigateToProduct);
-  }
-
-  #preloadNextPreviewImage() {
-    const currentSlide = this.refs.slideshow?.slides?.[this.refs.slideshow?.current];
-    currentSlide?.nextElementSibling?.querySelector('img[loading="lazy"]')?.removeAttribute('loading');
   }
 
   /**
@@ -270,8 +256,6 @@ export class ProductCard extends ProductCardLink {
         }
 
         this.#updateVariantImages(html);
-        this.#previousSlideIndex = null;
-
         // Remove attribute after re-rendering since a variant selection has been made
         this.removeAttribute('data-no-swatch-selected');
 
@@ -436,99 +420,6 @@ export class ProductCard extends ProductCardLink {
   get variantPicker() {
     return this.querySelector('swatches-variant-picker-component');
   }
-  /** @type {number | null} */
-  #previousSlideIndex = null;
-
-  /**
-   * Handles the slideshow select event.
-   * @param {SlideshowSelectEvent} event - The slideshow select event.
-   */
-  #handleSlideshowSelect = (event) => {
-    if (event.detail.userInitiated) {
-      this.#previousSlideIndex = event.detail.index;
-    }
-  };
-
-  /**
-   * Previews a variant.
-   * @param {string} id - The id of the variant to preview.
-   */
-  previewVariant(id) {
-    const { slideshow } = this.refs;
-
-    if (!slideshow) return;
-
-    this.resetVariant.cancel();
-    slideshow.select({ id }, undefined, { animate: false });
-  }
-
-  /**
-   * Previews the next image.
-   * @param {PointerEvent} event - The pointer event.
-   */
-  previewImage(event) {
-    if (event.pointerType !== 'mouse') return;
-
-    const { slideshow } = this.refs;
-
-    if (!slideshow) return;
-
-    this.resetVariant.cancel();
-
-    if (this.#previousSlideIndex != null && this.#previousSlideIndex > 0) {
-      slideshow.select(this.#previousSlideIndex, undefined, { animate: false });
-    } else {
-      slideshow.next(undefined, { animate: false });
-      setTimeout(() => this.#preloadNextPreviewImage());
-    }
-  }
-
-  /**
-   * Resets the image to the variant image.
-   * @param {PointerEvent} event - The pointer event.
-   */
-  resetImage(event) {
-    if (event.pointerType !== 'mouse') return;
-
-    const { slideshow } = this.refs;
-
-    if (!this.variantPicker) {
-      if (!slideshow) return;
-      slideshow.previous(undefined, { animate: false });
-    } else {
-      this.#resetVariant();
-    }
-  }
-
-  /**
-   * Resets the image to the variant image.
-   */
-  #resetVariant = () => {
-    const { slideshow } = this.refs;
-
-    if (!slideshow) return;
-
-    // If we have a selected variant, always use its image
-    if (this.variantPicker?.selectedOption) {
-      const id = this.variantPicker.selectedOption.dataset.optionMediaId;
-      if (id) {
-        slideshow.select({ id }, undefined, { animate: false });
-        return;
-      }
-    }
-
-    // No variant selected - use initial slide if it's valid
-    const initialSlide = slideshow.initialSlide;
-    const slideId = initialSlide?.getAttribute('slide-id');
-    if (initialSlide && slideshow.slides?.includes(initialSlide) && slideId) {
-      slideshow.select({ id: slideId }, undefined, { animate: false });
-      return;
-    }
-
-    // No valid initial slide or selected variant - go to previous
-    slideshow.previous(undefined, { animate: false });
-  };
-
   /**
    * Intercepts the click event on the product card anchor, we want
    * to use this to add an intermediate state to the history.
@@ -583,10 +474,11 @@ export class ProductCard extends ProductCardLink {
     }
   };
 
-  /**
-   * Resets the variant.
-   */
-  resetVariant = debounce(this.#resetVariant, 100);
+  // Swatch hover hooks remain in the markup for compatibility. A committed
+  // selection re-renders the primary layer through the section response.
+  previewVariant() {}
+
+  resetVariant() {}
 }
 
 if (!customElements.get('product-card')) {

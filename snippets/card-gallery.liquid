@@ -72,10 +72,6 @@
     --gallery-aspect-ratio: {{ ratio }};
   "
   data-product-id="{{ product.id }}"
-  {% if settings.show_second_image_on_hover and product.media.size > 1 %}
-    on:pointerenter="/previewImage"
-    on:pointerleave="/resetImage"
-  {% endif %}
   {% if settings.transition_to_main_product %}
     data-view-transition-to-main-product
   {% endif %}
@@ -109,9 +105,37 @@
 
         assign featured_media_class = media_class | replace: '[media_type]', featured_media.media_type | append: media_class_suffix
       %}
-      {%- if product.media.size == 1 -%}
+      {% liquid
+        assign hover_media = blank
+        for media in product.media
+          if media.id != featured_media.id and media.media_type == 'image'
+            assign alt_down = media.alt | downcase
+            if alt_down contains 'model' or alt_down contains 'worn' or alt_down contains 'wearing' or alt_down contains 'face' or alt_down contains 'on body'
+              assign hover_media = media
+              break
+            endif
+          endif
+        endfor
+
+        # The catalog's second image is the audited model-wearing fallback.
+        if hover_media == blank and product.media.size > 1
+          assign fallback_hover_media = product.media[1]
+          if fallback_hover_media.id != featured_media.id and fallback_hover_media.media_type == 'image'
+            assign hover_media = fallback_hover_media
+          endif
+        endif
+
+        assign hover_media_loading = 'lazy'
+        assign hover_media_sizes = 'auto, ' | append: image_sizes
+        if section.index == null or section.index < 5
+          assign hover_media_loading = 'eager'
+        endif
+      %}
+
+      <div class="card-gallery__media-stack" ref="cardGalleryMedia">
         <div
-          class="{{ featured_media_class }}"
+          class="card-gallery__media card-gallery__media--primary {{ featured_media_class }}"
+          data-card-primary-media-id="{{ featured_media.id }}"
           style="--product-media-fit: {{ media_fit | default: 'cover' }};"
         >
           {% render 'product-media',
@@ -121,74 +145,22 @@
             preview_image_only: true
           %}
         </div>
-      {%- else -%}
-        {% liquid
-          # Check if there are generic media that are not variant images
-          assign variant_images = product.images | where: 'attached_to_variant?', true | map: 'src'
-          assign generic_media_size = product.media.size | minus: variant_images.size
-
-          # Product card hover: two-image only, no arrows, no carousel
-          assign show_arrows = false
-
-          # Find hover (worn/model) image: Image 2 = Face/Worn per spec
-          # Prefer media where alt contains model/worn/face, else use second media
-          assign hover_media = null
-          if product.media.size > 1
-            for m in product.media
-              assign alt_down = m.alt | downcase
-              if alt_down contains 'model' or alt_down contains 'worn' or alt_down contains 'face' or alt_down contains 'on body'
-                assign hover_media = m
-                break
-              endif
-            endfor
-            if hover_media == null
-              assign hover_media = product.media[1]
-            endif
-            # Ensure hover is not the featured/main if duplicate
-            if hover_media.id == product.featured_media.id and product.media.size > 2
-              assign hover_media = product.media[2]
-            endif
-          endif
-
-          assign max_visible_slide_count = 1
-          if hover_media != null
-            assign max_visible_slide_count = 2
-          endif
-
-          capture slides
-            # Slide 1: Main image (featured)
-            assign media = product.featured_media
-            assign class = media_class | replace: '[media_type]', media.media_type | append: media_class_suffix
-            capture slideshow_children
-              render 'product-media', media: media, sizes: featured_media_sizes, loading: featured_media_loading, preview_image_only: true
-            endcapture
-            render 'slideshow-slide', slide_id: media.id, index: 0, hidden: false, class: class, attributes: '', children: slideshow_children, media_fit: media_fit
-
-            # Slide 2: Hover image only if exists and not same as main
-            if hover_media != null and hover_media.id != product.featured_media.id
-              assign class = media_class | replace: '[media_type]', hover_media.media_type | append: media_class_suffix
-              assign hover_sizes = 'auto, ' | append: image_sizes
-              capture slideshow_children
-                render 'product-media', media: hover_media, sizes: hover_sizes, loading: 'lazy', preview_image_only: true
-              endcapture
-              render 'slideshow-slide', slide_id: hover_media.id, index: 1, hidden: false, class: class, attributes: '', children: slideshow_children, media_fit: media_fit
-            endif
-          endcapture
-
-          assign slideshow_attributes = 'data-generic-media-size="[generic_media_size]"' | replace: '[generic_media_size]', generic_media_size
-          # disabled="true" keeps the card inert to swipe/drag (no carousel), and
-          # does not block select() - so the hover swap below still works.
-          assign slideshow_attributes = slideshow_attributes | append: ' disabled="true"'
-        %}
-        {% render 'slideshow',
-          ref: 'slideshow',
-          initial_slide: 0,
-          slides: slides,
-          slide_count: max_visible_slide_count,
-          show_arrows: show_arrows,
-          attributes: slideshow_attributes
-        %}
-      {%- endif -%}
+        {% if hover_media != blank %}
+          <div
+            class="card-gallery__media card-gallery__media--hover {{ media_class | replace: '[media_type]', hover_media.media_type | append: media_class_suffix }}"
+            data-card-hover-media-id="{{ hover_media.id }}"
+            aria-hidden="true"
+            style="--product-media-fit: {{ media_fit | default: 'cover' }};"
+          >
+            {% render 'product-media',
+              media: hover_media,
+              sizes: hover_media_sizes,
+              loading: hover_media_loading,
+              preview_image_only: true
+            %}
+          </div>
+        {% endif %}
+      </div>
     </a>
   {% elsif product != blank and product.media.size == 0 %}
     <div class="product-card-gallery__title-placeholder">
@@ -228,6 +200,48 @@
     overflow: hidden;
     container-type: inline-size; /* Make card-gallery a container */
     container-name: card-gallery-container; /* Optional: name the container */
+  }
+
+  .card-gallery__media-stack {
+    position: relative;
+    width: 100%;
+    aspect-ratio: var(--gallery-aspect-ratio);
+    overflow: hidden;
+  }
+
+  .card-gallery__media-stack > .card-gallery__media {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    transition: opacity 380ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .card-gallery__media--primary {
+    opacity: 1;
+  }
+
+  .card-gallery__media-stack > .card-gallery__media--hover {
+    z-index: 2;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .card-gallery__media .product-media,
+  .card-gallery__media .product-media__image {
+    width: 100%;
+    height: 100%;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .card-gallery__media-stack:has(.card-gallery__media--hover):hover .card-gallery__media--primary {
+      opacity: 0;
+    }
+
+    .card-gallery__media-stack:has(.card-gallery__media--hover):hover .card-gallery__media--hover {
+      opacity: 1;
+    }
   }
 
   @container (max-width: 70px) {
