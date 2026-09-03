@@ -39,7 +39,25 @@
   {% endif %}
 
   {% capture list_items %}
-    {% for collection in section_collections limit: max_items %}
+    {% liquid
+      # Hide collections with nothing to show. featured_image covers both the
+      # Admin cover image and the first-product fallback, so this only skips
+      # collections that are empty AND uncovered - they reappear on their own
+      # once products or a cover image are added. The `collection != blank`
+      # guard keeps the editor's placeholder cards rendering.
+      assign shown_collections = '' | split: ','
+      for collection in section_collections
+        if collection != blank and collection.featured_image == blank
+          continue
+        endif
+        assign one = section_collections | where: 'handle', collection.handle
+        assign shown_collections = shown_collections | concat: one
+      endfor
+      if shown_collections.size == 0
+        assign shown_collections = section_collections
+      endif
+    %}
+    {% for collection in shown_collections limit: max_items %}
       <div class="resource-list__item">
         {% content_for 'block', type: '_collection-card', id: 'static-collection-card', closest.collection: collection %}
       </div>
