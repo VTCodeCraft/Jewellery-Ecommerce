@@ -134,7 +134,7 @@
       </div>
       <div class="gift-card__price">
         <h2>
-          {{ gift_card.balance | money_with_currency }}
+          {{ gift_card.balance | money | replace: 'Rs. ', '₹' | replace: 'Rs.', '₹' }}
         </h2>
         {%- if gift_card.enabled == false or gift_card.expired -%}
           <p class="gift-card__badge gift-card__badge--expired">{{ 'gift_cards.issued.expired' | t }}</p>

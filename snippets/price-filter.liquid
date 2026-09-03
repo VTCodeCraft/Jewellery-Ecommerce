@@ -35,7 +35,7 @@
     >
       <span class="facets__label">{{ filter.label }}</span>
       <facet-status-component class="facets__status">
-        <template ref="moneyFormat">{{ shop.money_format }}</template>
+        <template ref="moneyFormat">{{ shop.money_format | replace: 'Rs. ', '₹' | replace: 'Rs.', '₹' }}</template>
 
         <span
           class="hide-when-empty"
@@ -45,16 +45,16 @@
         >
           {%- if filter.min_value.value != null or filter.max_value.value != null %}
             {%- if filter.min_value.value != null and filter.max_value.value != null %}
-              {{- filter.min_value.value | money | strip_html -}}
+              {{- filter.min_value.value | money | replace: 'Rs. ', '₹' | replace: 'Rs.', '₹' | strip_html -}}
               –
-              {{- filter.max_value.value | money | strip_html -}}
+              {{- filter.max_value.value | money | replace: 'Rs. ', '₹' | replace: 'Rs.', '₹' | strip_html -}}
             {%- elsif filter.min_value.value != null -%}
-              {{ filter.min_value.value | money | strip_html }}–{{ filter.range_max | money | strip_html }}
+              {{ filter.min_value.value | money | replace: 'Rs. ', '₹' | replace: 'Rs.', '₹' | strip_html }}–{{ filter.range_max | money | replace: 'Rs. ', '₹' | replace: 'Rs.', '₹' | strip_html }}
 
             {%- elsif filter.max_value.value != null -%}
-              {{- 0 | money | strip_html -}}
+              {{- 0 | money | replace: 'Rs. ', '₹' | replace: 'Rs.', '₹' | strip_html -}}
               –
-              {{- filter.max_value.value | money | strip_html -}}
+              {{- filter.max_value.value | money | replace: 'Rs. ', '₹' | replace: 'Rs.', '₹' | strip_html -}}
             {%- endif -%}
           {%- endif -%}
         </span>
@@ -80,7 +80,7 @@
           {%- endif %}
         "
         id="facet-inputs-{{ filter.param_name | escape | replace: '.', '-' }}"
-        data-money-format="{{ shop.money_format | strip_html }}"
+        data-money-format="{{ shop.money_format | replace: 'Rs. ', '₹' | replace: 'Rs.', '₹' | strip_html }}"
         data-currency="{{ localization.country.currency.iso_code }}"
         on:change="/updatePriceFilterAndResults"
       >
@@ -151,7 +151,7 @@
             {%- endif %}
           "
         >
-          {%- assign formatted_highest_price = filter.range_max | money -%}
+          {%- assign formatted_highest_price = filter.range_max | money | replace: 'Rs. ', '₹' | replace: 'Rs.', '₹' -%}
           {{ 'content.price_filter_html' | t: price: formatted_highest_price }}
         </div>
 

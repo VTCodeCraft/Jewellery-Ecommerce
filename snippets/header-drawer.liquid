@@ -97,11 +97,48 @@
           <a href="{{ routes.root_url }}" class="menu-drawer__brand">{{ shop.name }}</a>
           {{ close_button }}
         </div>
+        {% liquid
+          assign necklaces_collection = collections['necklaces-pendants']
+          assign jewellery_sets_collection = collections['jewellery-sets']
+          assign wedding_collection = collections['wedding']
+          assign festival_collection = collections['traditional-festival']
+          assign dailywear_collection = collections['dailywear-party-wear']
+          assign best_sellers_collection = collections['best-sellers']
+          assign featured_collection = collections['featured-products']
+        %}
+        <nav class="menu-drawer__navigation menu-drawer__navigation--paridhi" aria-label="{{ 'accessibility.header_navigation_label' | t }}">
+          <ul class="menu-drawer__menu menu-drawer__menu--paridhi list-unstyled" role="list">
+            <li><a href="{{ routes.root_url }}" class="menu-drawer__menu-item menu-drawer__menu-item--mainlist">Home</a></li>
+            <li>
+              <details>
+                <summary class="menu-drawer__menu-item menu-drawer__menu-item--mainlist"><span>Shop</span><span class="svg-wrapper icon-plus">{{- 'icon-plus.svg' | inline_asset_content -}}</span></summary>
+                <ul class="menu-drawer__menu menu-drawer__menu--childlist list-unstyled" role="list">
+                  <li><a href="{{ necklaces_collection.url }}" class="menu-drawer__menu-item menu-drawer__menu-item--child">Necklaces / Pendants</a></li>
+                  <li><a href="{{ jewellery_sets_collection.url }}" class="menu-drawer__menu-item menu-drawer__menu-item--child">Jewellery Sets</a></li>
+                  <li><a href="{{ routes.all_products_collection_url }}" class="menu-drawer__menu-item menu-drawer__menu-item--child">View all jewellery</a></li>
+                </ul>
+              </details>
+            </li>
+            <li>
+              <details>
+                <summary class="menu-drawer__menu-item menu-drawer__menu-item--mainlist"><span>Occasions</span><span class="svg-wrapper icon-plus">{{- 'icon-plus.svg' | inline_asset_content -}}</span></summary>
+                <ul class="menu-drawer__menu menu-drawer__menu--childlist list-unstyled" role="list">
+                  <li><a href="{{ wedding_collection.url }}" class="menu-drawer__menu-item menu-drawer__menu-item--child">Wedding</a></li>
+                  <li><a href="{{ festival_collection.url }}" class="menu-drawer__menu-item menu-drawer__menu-item--child">Traditional / Festival</a></li>
+                  <li><a href="{{ dailywear_collection.url }}" class="menu-drawer__menu-item menu-drawer__menu-item--child">Dailywear / Partywear</a></li>
+                </ul>
+              </details>
+            </li>
+            <li><a href="{{ best_sellers_collection.url }}" class="menu-drawer__menu-item menu-drawer__menu-item--mainlist">Bestsellers</a></li>
+            <li><a href="{{ featured_collection.url }}" class="menu-drawer__menu-item menu-drawer__menu-item--mainlist">Featured</a></li>
+            {% if pages['contact'] != blank %}<li><a href="{{ pages['contact'].url }}" class="menu-drawer__menu-item menu-drawer__menu-item--mainlist">Contact</a></li>{% endif %}
+          </ul>
+        </nav>
       {% else %}
         {{ close_button }}
       {% endif %}
       <nav
-        class="menu-drawer__navigation"
+        class="menu-drawer__navigation menu-drawer__navigation--configured"
         style="
           {%- render 'menu-font-styles', settings: block_settings, menu_type: 'drawer' %}
           {%- render 'submenu-font-styles', settings: block_settings %}
@@ -842,6 +879,20 @@
 
     @media screen and (min-width: 750px) {
       margin-top: var(--drawer-header-desktop-top);
+    }
+  }
+
+  .menu-drawer__navigation--paridhi {
+    display: none;
+  }
+
+  @media screen and (max-width: 749px) {
+    .menu-drawer__navigation--paridhi {
+      display: block;
+    }
+
+    .menu-drawer__navigation--configured {
+      display: none;
     }
   }
 

@@ -365,6 +365,12 @@ class ProductFormComponent extends Component {
     const form = this.querySelector('form');
     if (!form) throw new Error('Product form element missing');
 
+    // A submit can happen without the input blurring first (for example with
+    // Enter), so normalize manual input before FormData is created.
+    if (!overrideVariantId) {
+      this.refs.quantitySelector?.clampValue?.();
+    }
+
     if (!overrideVariantId && this.refs.quantitySelector?.canAddToCart) {
       const validation = this.refs.quantitySelector.canAddToCart();
 

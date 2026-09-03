@@ -58,18 +58,13 @@
     assign use_currency = true
   endif
 
-  # Format all prices
-  if use_currency
-    assign price = price | money_with_currency
-    assign compare_at_price = compare_at_price | money_with_currency
-    assign price_min = price_min | money_with_currency
-    assign price_max = price_max | money_with_currency
-  else
-    assign price = price | money
-    assign compare_at_price = compare_at_price | money
-    assign price_min = price_min | money
-    assign price_max = price_max | money
-  endif
+  # Use the storefront's money formatting, with the Indian rupee symbol in
+  # place of the legacy "Rs." prefix. Currency-code display is intentionally
+  # omitted so prices remain in the requested ₹1,500.00 format.
+  assign price = price | money | replace: 'Rs. ', '₹' | replace: 'Rs.', '₹'
+  assign compare_at_price = compare_at_price | money | replace: 'Rs. ', '₹' | replace: 'Rs.', '₹'
+  assign price_min = price_min | money | replace: 'Rs. ', '₹' | replace: 'Rs.', '₹'
+  assign price_max = price_max | money | replace: 'Rs. ', '₹' | replace: 'Rs.', '₹'
 -%}
 
 <div ref="priceContainer">
@@ -113,11 +108,7 @@
   {% endif %}
   {%- if selected_variant.unit_price and show_unit_price %}
     {%- liquid
-      if use_currency
-        assign unit_price = selected_variant.unit_price | money_with_currency
-      else
-        assign unit_price = selected_variant.unit_price | money
-      endif
+      assign unit_price = selected_variant.unit_price | money | replace: 'Rs. ', '₹' | replace: 'Rs.', '₹'
     -%}
     {% render 'unit-price', price: unit_price, measurement: selected_variant.unit_price_measurement %}
   {%- endif -%}

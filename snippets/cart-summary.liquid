@@ -18,7 +18,7 @@
           class="cart-totals__original-value cart-secondary-typography"
           data-testid="cart-subtotal-value"
         >
-          {{- cart.items_subtotal_price | money -}}
+          {{- cart.items_subtotal_price | money | replace: 'Rs. ', '₹' | replace: 'Rs.', '₹' -}}
         </span>
       </span>
       <ul
@@ -33,7 +33,7 @@
               {{ discount.title | escape }}
             </span>
             <span class="cart-discounts__value cart-secondary-typography"
-              >-{{ discount.total_allocated_amount | money -}}
+              >-{{ discount.total_allocated_amount | money | replace: 'Rs. ', '₹' | replace: 'Rs.', '₹' -}}
             </span>
           </li>
         {%- endfor -%}
@@ -220,11 +220,7 @@
   {% endif %}
 
   {%- liquid
-    if settings.currency_code_enabled_cart_total
-      assign total_price = cart.total_price | money_with_currency
-    else
-      assign total_price = cart.total_price | money
-    endif
+    assign total_price = cart.total_price | money | replace: 'Rs. ', '₹' | replace: 'Rs.', '₹'
   -%}
 
   <div class="cart-totals__container{% if settings.show_installments %} cart-totals__container--has-installments{% endif %}">

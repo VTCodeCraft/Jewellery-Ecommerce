@@ -150,9 +150,9 @@
                   <span>{{ variant.quantity_rule.min }}+</span>
                   <span>
                     {%- if use_currency -%}
-                      {{- variant.price | money_with_currency | strip -}}
+                      {{- variant.price | money | replace: 'Rs. ', '₹' | replace: 'Rs.', '₹' | strip -}}
                     {%- else -%}
-                      {{- variant.price | money | strip -}}
+                      {{- variant.price | money | replace: 'Rs. ', '₹' | replace: 'Rs.', '₹' | strip -}}
                     {%- endif -%}
                     /{{ 'content.each_abbreviation' | t -}}
                   </span>
@@ -170,9 +170,9 @@
                     <span>{{ price_break.minimum_quantity }}+</span>
                     <span>
                       {%- if use_currency -%}
-                        {{- price_break.price | money_with_currency | strip -}}
+                        {{- price_break.price | money | replace: 'Rs. ', '₹' | replace: 'Rs.', '₹' | strip -}}
                       {%- else -%}
-                        {{- price_break.price | money | strip -}}
+                        {{- price_break.price | money | replace: 'Rs. ', '₹' | replace: 'Rs.', '₹' | strip -}}
                       {%- endif -%}
                       /{{ 'content.each_abbreviation' | t -}}
                     </span>
@@ -196,9 +196,9 @@
                         <span>{{ price_break.minimum_quantity }}+</span>
                         <span>
                           {%- if use_currency -%}
-                            {{- price_break.price | money_with_currency | strip -}}
+                            {{- price_break.price | money | replace: 'Rs. ', '₹' | replace: 'Rs.', '₹' | strip -}}
                           {%- else -%}
-                            {{- price_break.price | money | strip -}}
+                            {{- price_break.price | money | replace: 'Rs. ', '₹' | replace: 'Rs.', '₹' | strip -}}
                           {%- endif -%}
                           /{{ 'content.each_abbreviation' | t -}}
                         </span>

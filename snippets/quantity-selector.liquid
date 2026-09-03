@@ -29,6 +29,15 @@
   else
     assign min_quantity = variant.quantity_rule.min | default: 1
   endif
+
+  # Shopify only needs a stock cap when it manages inventory and overselling is denied.
+  # Preserve any stricter quantity rule configured for the variant.
+  assign max_quantity = variant.quantity_rule.max
+  if variant.inventory_management == 'shopify' and variant.inventory_policy == 'deny'
+    if max_quantity == blank or variant.inventory_quantity < max_quantity
+      assign max_quantity = variant.inventory_quantity
+    endif
+  endif
 %}
 
 <div
@@ -75,8 +84,8 @@
       {% if line_index %}
         data-cart-line="{{ line_index | plus: 1 }}"
       {% endif %}
-      {% if variant.quantity_rule.max %}
-        max="{{ variant.quantity_rule.max }}"
+      {% if max_quantity != blank %}
+        max="{{ max_quantity }}"
       {% endif %}
       step="{{ variant.quantity_rule.increment | default: 1 }}"
       {% if can_update_quantity == false or variant.available == false %}
@@ -116,7 +125,7 @@
         assign use_currency = settings.currency_code_enabled_product_pages
       -%}
       {%- capture price_breaks_json -%}
-        [{%- for price_break in variant.quantity_price_breaks -%}{%- unless forloop.first -%},{%- endunless -%}{%- if use_currency -%}{"quantity":{{ price_break.minimum_quantity }},"price":{{ price_break.price | money_with_currency | json }}}{%- else -%}{"quantity":{{ price_break.minimum_quantity }},"price":{{ price_break.price | money | json }}}{%- endif -%}{%- endfor -%}]
+        [{%- for price_break in variant.quantity_price_breaks -%}{%- unless forloop.first -%},{%- endunless -%}{"quantity":{{ price_break.minimum_quantity }},"price":{{ price_break.price | money | replace: 'Rs. ', '₹' | replace: 'Rs.', '₹' | json }}}{%- endfor -%}]
       {%- endcapture -%}
 
       {%- liquid
@@ -139,7 +148,7 @@
       <price-per-item
         class="price-per-item"
         data-variant-id="{{ variant.id }}"
-        data-variant-price="{%- if use_currency -%}{{ variant.price | money_with_currency | escape }}{%- else -%}{{ variant.price | money | escape }}{%- endif -%}"
+        data-variant-price="{{ variant.price | money | replace: 'Rs. ', '₹' | replace: 'Rs.', '₹' | escape }}"
         data-min-quantity="{{ variant.quantity_rule.min | default: 1 }}"
         data-price-breaks="{{ price_breaks_json | strip | escape }}"
         data-at-text="{{ 'content.price_at' | t | escape }}"
@@ -151,11 +160,7 @@
           ref="pricePerItemText"
         >
           {{- 'content.price_at' | t }}
-          {%- if use_currency -%}
-            {{- display_price | money_with_currency -}}
-          {%- else -%}
-            {{- display_price | money -}}
-          {%- endif -%}
+          {{- display_price | money | replace: 'Rs. ', '₹' | replace: 'Rs.', '₹' -}}
           /
           {{- 'content.each_abbreviation' | t }}
         </span>

@@ -100,7 +100,7 @@
               data-quantity="{{ min_qty }}"
             >
               <span class="volume-pricing-info__quantity">{{ min_qty }}+</span>
-              {%- capture price_text -%}{%- if use_currency -%}{{ variant.price | money_with_currency | strip }}/{{ 'content.each_abbreviation' | t }}{%- else -%}{{ variant.price | money | strip }}/{{ 'content.each_abbreviation' | t }}{%- endif -%}{%- endcapture -%}
+              {%- capture price_text -%}{{ variant.price | money | replace: 'Rs. ', '₹' | replace: 'Rs.', '₹' | strip }}/{{ 'content.each_abbreviation' | t }}{%- endcapture -%}
               <span class="volume-pricing-info__price"
                 ><span class="volume-pricing-info__checkmark">{{- 'icon-checkmark.svg' | inline_asset_content -}}</span>
                 {{- price_text | strip -}}
@@ -124,7 +124,7 @@
                 data-quantity="{{ price_break.minimum_quantity }}"
               >
                 <span class="volume-pricing-info__quantity">{{ price_break.minimum_quantity }}+</span>
-                {%- capture price_text -%}{%- if use_currency -%}{{ price_break.price | money_with_currency | strip }}/{{ 'content.each_abbreviation' | t }}{%- else -%}{{ price_break.price | money | strip }}/{{ 'content.each_abbreviation' | t }}{%- endif -%}{%- endcapture -%}
+                {%- capture price_text -%}{{ price_break.price | money | replace: 'Rs. ', '₹' | replace: 'Rs.', '₹' | strip }}/{{ 'content.each_abbreviation' | t }}{%- endcapture -%}
                 <span class="volume-pricing-info__price"
                   ><span class="volume-pricing-info__checkmark">
                     {{- 'icon-checkmark.svg' | inline_asset_content -}}

@@ -89,6 +89,29 @@ export class QuantitySelectorComponent extends Component {
   }
 
   /**
+   * Clamps manually entered quantities before a form can be submitted.
+   * @returns {number} The valid quantity now shown in the input.
+   */
+  clampValue() {
+    const { quantityInput } = this.refs;
+    const { min, step, value } = this.getCurrentValues();
+    const effectiveMax = this.getEffectiveMax();
+    let normalized = Math.min(effectiveMax ?? Infinity, Math.max(min, value));
+
+    if ((normalized - min) % step !== 0) {
+      normalized = min + Math.floor((normalized - min) / step) * step;
+    }
+
+    if (normalized !== value) {
+      quantityInput.value = normalized.toString();
+      this.onQuantityChange();
+    }
+
+    this.updateButtonStates();
+    return normalized;
+  }
+
+  /**
    * Updates min/max/step constraints and snaps value to valid increment
    * @param {string} min - Minimum value
    * @param {string|null} max - Maximum value (null if no max)
@@ -232,10 +255,7 @@ export class QuantitySelectorComponent extends Component {
     event.preventDefault();
     const { quantityInput } = this.refs;
     const { min, step } = this.getCurrentValues();
-    const effectiveMax = this.getEffectiveMax();
-
-    // Snap to bounds
-    const quantity = Math.min(effectiveMax ?? Infinity, Math.max(min, parseInt(event.target.value) || 0));
+    const quantity = this.clampValue();
 
     // Validate step increment
     if ((quantity - min) % step !== 0) {
@@ -245,9 +265,7 @@ export class QuantitySelectorComponent extends Component {
       return;
     }
 
-    quantityInput.value = quantity.toString();
     this.onQuantityChange();
-    this.updateButtonStates();
   }
 
   /**

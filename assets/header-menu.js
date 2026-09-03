@@ -34,12 +34,14 @@ class HeaderMenu extends Component {
 
     onDocumentLoaded(this.#preloadImages);
     window.addEventListener('resize', this.#resizeListener);
+    this.addEventListener('keydown', this.#handleKeydown);
     this.overflowMenu?.addEventListener('pointerleave', this.#overflowSubmenuListener);
   }
 
   disconnectedCallback() {
     super.disconnectedCallback();
     window.removeEventListener('resize', this.#resizeListener);
+    this.removeEventListener('keydown', this.#handleKeydown);
     document.body.removeEventListener('pointermove', this.#onPointerMove);
     if (this.#state.activeItem) {
       this.#stopPointerTracking(this.#state.activeItem);
@@ -58,6 +60,14 @@ class HeaderMenu extends Component {
   }, 100);
 
   #overflowSubmenuListener = () => {
+    this.#deactivate();
+  };
+
+  #handleKeydown = (event) => {
+    if (event.key !== 'Escape' || !this.#state.activeItem) return;
+
+    event.preventDefault();
+    this.#state.activeItem.focus();
     this.#deactivate();
   };
 

@@ -32,15 +32,15 @@
         on:keydown="/removeFilter?form="
       >
         {%- if filter.min_value.value != null and filter.max_value.value != null %}
-          {{- filter.min_value.value | money -}}
+          {{- filter.min_value.value | money | replace: 'Rs. ', '₹' | replace: 'Rs.', '₹' -}}
           –
-          {{- filter.max_value.value | money -}}
+          {{- filter.max_value.value | money | replace: 'Rs. ', '₹' | replace: 'Rs.', '₹' -}}
         {%- elsif filter.min_value.value != null -%}
-          {{ filter.min_value.value | money }}–{{ filter.range_max | money }}
+          {{ filter.min_value.value | money | replace: 'Rs. ', '₹' | replace: 'Rs.', '₹' }}–{{ filter.range_max | money | replace: 'Rs. ', '₹' | replace: 'Rs.', '₹' }}
         {%- elsif filter.max_value.value != null -%}
-          {{- 0 | money -}}
+          {{- 0 | money | replace: 'Rs. ', '₹' | replace: 'Rs.', '₹' -}}
           –
-          {{- filter.max_value.value | money -}}
+          {{- filter.max_value.value | money | replace: 'Rs. ', '₹' | replace: 'Rs.', '₹' -}}
         {%- endif -%}
         <span class="svg-wrapper svg-wrapper--smaller">
           {{- 'icon-filters-close.svg' | inline_asset_content -}}

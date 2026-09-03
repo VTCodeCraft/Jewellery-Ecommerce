@@ -462,3 +462,21 @@ footer .button:hover {
   background-color: var(--brand-gold);
   color: var(--brand-cream);
 }
+
+/* Wishlist empty-state CTA: explicitly keep the label legible on hover. */
+.wishlist__empty-button {
+  --button-color: var(--brand-cream);
+  --button-background-color: var(--brand-cocoa);
+  --button-border-color: var(--brand-cocoa);
+}
+
+.wishlist__empty-button:hover,
+.wishlist__empty-button:active {
+  --button-color: var(--brand-cream);
+  --button-background-color: var(--brand-ruby);
+  --button-border-color: var(--brand-ruby);
+}
+
+.wishlist__empty-button:focus-visible {
+  outline-color: var(--brand-gold);
+}

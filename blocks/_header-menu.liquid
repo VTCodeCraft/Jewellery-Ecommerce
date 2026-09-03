@@ -92,62 +92,81 @@
     %}
 
     {% capture children %}
-      {% for link in block_settings.menu.links %}
-        <li
-          role="presentation"
-          class="menu-list__list-item"
-          on:focus="/activate"
-          on:blur="/deactivate"
-          on:pointerenter="/activate"
-          on:pointerleave="/deactivate"
-        >
-          <a
-            href="{{ link.url }}"
-            data-skip-node-update="true"
-            class="menu-list__link{% if link.active %} menu-list__link--active{% endif %}"
-            {%- if link.links != blank -%}
-              aria-controls="submenu-{{ forloop.index }}"
-              aria-haspopup="true"
-              aria-expanded="false"
-            {%- endif -%}
-            {% if link.current %}
-              aria-current="page"
-            {% endif %}
-            ref="menuitem"
-          >
-            <span class="menu-list__link-title">{{- link.title -}}</span>
-          </a>
-          {%- if link.links != blank -%}
-            <div class="menu-list__submenu{{ background_color_classes }}" ref="submenu[]">
-              <div
-                id="submenu-{{ forloop.index }}"
-                class="menu-list__submenu-inner"
-                style="{% render 'submenu-font-styles', settings: block_settings %}"
-              >
-                {% assign list_id = 'MegaMenuList-' | append: forloop.index %}
-                <div class="mega-menu section section--full-width-margin section--{{ section.settings.section_width }}">
-                  <div
-                    class="mega-menu__grid"
-                    data-menu-grid-id="{{ list_id }}"
-                  >
-                    {% render 'mega-menu-list',
-                      parent_link: link,
-                      id: list_id,
-                      section: section,
-                      grid_columns_count: 6,
-                      grid_columns_count_tablet: 4,
-                      grid_columns_count_collection_images: 8,
-                      menu_content_type: menu_content_type,
-                      content_aspect_ratio: ratio,
-                      image_border_radius: image_border_radius
-                    %}
-                  </div>
-                </div>
+      {% liquid
+        assign necklaces_collection = collections['necklaces-pendants']
+        assign jewellery_sets_collection = collections['jewellery-sets']
+        assign wedding_collection = collections['wedding']
+        assign festival_collection = collections['traditional-festival']
+        assign dailywear_collection = collections['dailywear-party-wear']
+        assign best_sellers_collection = collections['best-sellers']
+        assign featured_collection = collections['featured-products']
+        assign shop_menu_image = jewellery_sets_collection.featured_image | default: necklaces_collection.featured_image
+      %}
+
+      <li
+        role="presentation"
+        class="menu-list__list-item header-navigation__item header-navigation__item--shop"
+        on:focus="/activate"
+        on:blur="/deactivate"
+        on:pointerenter="/activate"
+        on:pointerleave="/deactivate"
+      >
+        <a href="{{ routes.all_products_collection_url }}" data-skip-node-update="true" class="menu-list__link" aria-controls="submenu-shop" aria-haspopup="true" aria-expanded="false" ref="menuitem">
+          <span class="menu-list__link-title">Shop</span>
+        </a>
+        <div class="menu-list__submenu{{ background_color_classes }}" ref="submenu[]">
+          <div id="submenu-shop" class="menu-list__submenu-inner header-navigation__mega-menu">
+            <div class="header-navigation__mega-menu-content">
+              <div class="header-navigation__mega-menu-column">
+                <p class="header-navigation__menu-label">Shop by type</p>
+                <a href="{{ necklaces_collection.url }}" class="header-navigation__mega-link">Necklaces / Pendants</a>
+                <a href="{{ jewellery_sets_collection.url }}" class="header-navigation__mega-link">Jewellery Sets</a>
               </div>
+              <div class="header-navigation__mega-menu-column">
+                <p class="header-navigation__menu-label">Shop</p>
+                <a href="{{ routes.all_products_collection_url }}" class="header-navigation__mega-link">View all jewellery</a>
+              </div>
+              {% if shop_menu_image != blank %}
+                <a href="{{ routes.all_products_collection_url }}" class="header-navigation__mega-feature">
+                  {{ shop_menu_image | image_url: width: 900 | image_tag: widths: '320, 480, 640, 900', sizes: '300px', loading: 'lazy', class: 'header-navigation__mega-image', alt: shop_menu_image.alt }}
+                  <span class="header-navigation__mega-caption">Timeless pieces, made to be worn</span>
+                </a>
+              {% endif %}
             </div>
-          {%- endif -%}
-        </li>
-      {% endfor %}
+          </div>
+        </div>
+      </li>
+
+      <li
+        role="presentation"
+        class="menu-list__list-item header-navigation__item header-navigation__item--occasions"
+        on:focus="/activate"
+        on:blur="/deactivate"
+        on:pointerenter="/activate"
+        on:pointerleave="/deactivate"
+      >
+        <a href="{{ routes.root_url }}" data-skip-node-update="true" class="menu-list__link" aria-controls="submenu-occasions" aria-haspopup="true" aria-expanded="false" ref="menuitem">
+          <span class="menu-list__link-title">Occasions</span>
+        </a>
+        <div class="menu-list__submenu{{ background_color_classes }}" ref="submenu[]">
+          <div id="submenu-occasions" class="menu-list__submenu-inner header-navigation__occasion-menu">
+            <a href="{{ wedding_collection.url }}" class="header-navigation__occasion-link">Wedding</a>
+            <a href="{{ festival_collection.url }}" class="header-navigation__occasion-link">Traditional / Festival</a>
+            <a href="{{ dailywear_collection.url }}" class="header-navigation__occasion-link">Dailywear / Partywear</a>
+          </div>
+        </div>
+      </li>
+
+      <li role="presentation" class="menu-list__list-item header-navigation__item">
+        <a href="{{ best_sellers_collection.url }}" data-skip-node-update="true" class="menu-list__link" ref="menuitem"><span class="menu-list__link-title">Bestsellers</span></a>
+      </li>
+
+      <li role="presentation" class="menu-list__list-item header-navigation__item">
+        <a href="{{ featured_collection.url }}" data-skip-node-update="true" class="menu-list__link" ref="menuitem"><span class="menu-list__link-title">Featured</span></a>
+      </li>
+
+      {% comment %} Preserve Horizon's constrained-width overflow affordance. {% endcomment %}
+      {% unless block_settings.menu.links == blank %}
       <li
         class="menu-list__list-item"
         role="presentation"
@@ -167,6 +186,7 @@
           <span class="menu-list__link-title">{{ 'actions.more' | t }}</span>
         </button>
       </li>
+      {% endunless %}
     {% endcapture %}
 
     <header-menu
@@ -278,6 +298,104 @@
 
     display: flex;
     height: 100%;
+  }
+
+  .header-navigation__item > .menu-list__link {
+    position: relative;
+  }
+
+  .header-navigation__item > .menu-list__link::before {
+    position: absolute;
+    right: calc(var(--gap-xl) / 2);
+    bottom: calc(var(--header-padding) * 0.5);
+    left: calc(var(--gap-xl) / 2);
+    height: 1px;
+    background: currentColor;
+    content: '';
+    opacity: 0;
+    transform: scaleX(0.65);
+    transition: opacity var(--animation-speed-fast) var(--animation-easing), transform var(--animation-speed-fast) var(--animation-easing);
+  }
+
+  .header-navigation__item:hover > .menu-list__link::before,
+  .header-navigation__item:focus-within > .menu-list__link::before {
+    opacity: 1;
+    transform: scaleX(1);
+  }
+
+  .header-navigation__mega-menu {
+    padding: var(--padding-3xl) var(--padding-inline);
+  }
+
+  .header-navigation__mega-menu-content {
+    display: grid;
+    grid-template-columns: minmax(10rem, 1fr) minmax(10rem, 1fr) minmax(14rem, 20rem);
+    gap: var(--gap-3xl);
+    max-width: var(--wide-page-width);
+    margin-inline: auto;
+  }
+
+  .header-navigation__mega-menu-column {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap-lg);
+  }
+
+  .header-navigation__menu-label {
+    margin: 0 0 var(--padding-sm);
+    font-family: var(--font-subheading--family);
+    font-size: var(--font-size--h6);
+    font-weight: var(--font-subheading--weight);
+    letter-spacing: var(--font-h6--letter-spacing);
+    text-transform: uppercase;
+  }
+
+  .header-navigation__mega-link,
+  .header-navigation__occasion-link {
+    color: var(--color-foreground);
+    text-decoration: none;
+  }
+
+  .header-navigation__mega-link:hover,
+  .header-navigation__occasion-link:hover {
+    color: var(--brand-ruby, var(--color-foreground));
+  }
+
+  .header-navigation__mega-feature {
+    color: var(--color-foreground);
+    text-decoration: none;
+  }
+
+  .header-navigation__mega-image {
+    display: block;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+  }
+
+  .header-navigation__mega-caption {
+    display: block;
+    margin-top: var(--padding-sm);
+    font-size: var(--font-size--h6);
+    letter-spacing: var(--font-h6--letter-spacing);
+    text-transform: uppercase;
+  }
+
+  .header-navigation__occasion-menu {
+    display: flex;
+    flex-direction: column;
+    width: max-content;
+    min-width: 16rem;
+    padding: var(--padding-xl);
+    gap: var(--gap-lg);
+    background: var(--color-background);
+    border: 1px solid rgb(var(--color-foreground-rgb) / var(--opacity-10));
+  }
+
+  .header-navigation__item--occasions > .menu-list__submenu {
+    width: max-content;
+    left: auto;
+    padding-inline: 0;
   }
 
   .menu-list__list {
