@@ -120,17 +120,10 @@
       }
     }
 
-    @media screen and (max-width: 749px) {
-      #header-component & {
-        display: none;
-      }
-
-      #header-component:has(&) .header__columns {
-        --header-template-columns: var(--header-mobile-bookend) var(--header-mobile-bookend) 1fr auto;
-
-        grid-template-areas: 'leftA leftB spacer rightB';
-      }
-    }
+    /* The logo was hidden below 750px for a while, with the brand living only
+       inside the menu drawer. The section's own mobile grid already reserves a
+       symmetric centre area (44px bookends each side), so the wordmark shows
+       centred on every device again. */
 
     @media screen and (min-width: 750px) {
       flex-shrink: 0;
