@@ -326,6 +326,23 @@
     justify-self: flex-end;
   }
 
+  /* Drawer mode on desktop widths uses the narrow mobile bookend grid,
+     which can't fit text actions — force the same icon-only treatment
+     as mobile (text hidden, icons shown). */
+  @media screen and (min-width: 750px) {
+    #header-component[data-menu-style='drawer'] :is(header-actions, .search-action) .mobile\:hidden {
+      display: none !important;
+    }
+
+    #header-component[data-menu-style='drawer'] :is(header-actions, .search-action) span.svg-wrapper.desktop\:hidden {
+      display: inline-flex !important;
+    }
+
+    #header-component[data-menu-style='drawer'] :is(header-actions, .search-action) span:not(.svg-wrapper).desktop\:hidden {
+      display: inline !important;
+    }
+  }
+
   .header__column--right header-actions {
     margin-inline-start: calc(var(--gap-md) * -1);
   }

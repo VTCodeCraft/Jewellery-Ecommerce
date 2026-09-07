@@ -224,7 +224,7 @@
             class: class,
             ref: 'overflowMenu',
             children: children,
-            minimum-items: 2,
+            minimum-items: 4,
             data-testid: 'header-menu-overflow-list',
             attributes: 'data-skip-node-update'
           %}
@@ -318,9 +318,9 @@
 
   .header-navigation__item > .menu-list__link::before {
     position: absolute;
-    right: calc(var(--gap-xl) / 2);
+    right: calc(var(--gap-xl) / 4);
     bottom: calc(var(--header-padding) * 0.5);
-    left: calc(var(--gap-xl) / 2);
+    left: calc(var(--gap-xl) / 4);
     height: 1px;
     background: currentColor;
     content: '';
@@ -491,7 +491,7 @@
   }
 
   .menu-list__link-title {
-    padding-inline: calc(var(--gap-xl) / 2);
+    padding-inline: calc(var(--gap-xl) / 4);
   }
   [slot='overflow'] .menu-list__link-title {
     padding-inline: 0;

@@ -790,7 +790,10 @@ export function setHeaderMenuStyle() {
     window.requestAnimationFrame(() => {
       const overflowList = headerComponent?.querySelector('overflow-list');
       const hasReachedMinimum = overflowList && overflowList.hasAttribute('minimum-reached');
-      headerComponent.dataset.menuStyle = isTouchDevice() || hasReachedMinimum ? 'drawer' : 'menu';
+      // Show the drawer (hamburger) only when the menu content doesn't fit,
+      // regardless of touch support. `minimum-reached` is set by overflow-list
+      // when visible menu items drop below the minimum.
+      headerComponent.dataset.menuStyle = hasReachedMinimum ? 'drawer' : 'menu';
     });
   }
 }
