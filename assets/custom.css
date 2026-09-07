@@ -302,6 +302,22 @@ popover-content,
   color: var(--brand-ruby);
 }
 
+/* Tablet navbar — restore right-side spacing (750px – 989px).
+
+   Root cause: .header__columns carries the 'spacing-style' class which applies
+   padding-inline: var(--padding-inline-start) var(--padding-inline-end);
+   Both custom properties default to 0px, so they override the section grid's
+   padding-right: var(--page-margin) in EVERY header menu-style mode.
+
+   Fix: override --padding-inline-end on the header columns element at tablet
+   widths regardless of menu style (drawer on touch, menu on pointer devices).
+   Uses the CSS custom property so spacing-style reads the corrected value. */
+@media screen and (min-width: 750px) and (max-width: 989px) {
+  .header .header__columns {
+    --padding-inline-end: var(--page-margin);
+  }
+}
+
 /* ------------------------------------------------------------
    Hero
    ------------------------------------------------------------ */
@@ -463,6 +479,21 @@ footer .button:hover {
   color: var(--brand-cream);
 }
 
+/* Newsletter subscribe area — consistent roundedness across all screen sizes */
+footer .email-signup__input-group--integrated {
+  border-radius: 100px !important;
+  background-color: var(--brand-cream, #F7F3EE) !important;
+  border-color: transparent !important;
+}
+
+footer .email-signup__input-group--integrated .email-signup__input {
+  border-radius: 100px 0 0 100px !important;
+}
+
+footer .email-signup__input-group--integrated .email-signup__button--integrated {
+  border-radius: 100px !important;
+}
+
 /* Wishlist empty-state CTA: explicitly keep the label legible on hover. */
 .wishlist__empty-button {
   --button-color: var(--brand-cream);
@@ -479,4 +510,231 @@ footer .button:hover {
 
 .wishlist__empty-button:focus-visible {
   outline-color: var(--brand-gold);
+}
+
+/* ------------------------------------------------------------
+   Footer — Mobile responsiveness (< 750px)
+   ------------------------------------------------------------ */
+@media screen and (max-width: 749px) {
+  /* Ensure footer layout stacks cleanly with natural auto height */
+  footer .section,
+  footer .custom-section-content,
+  footer .section-content-wrapper.mobile-column {
+    height: auto !important;
+    min-height: 0 !important;
+  }
+
+  footer .section-content-wrapper.mobile-column {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-start;
+    width: 100%;
+    gap: 24px;
+  }
+
+  /* Newsletter block on mobile */
+  footer .email-signup-block {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-inline: auto;
+  }
+
+  footer .email-signup__form {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  footer .email-signup__input-group {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-height: 46px;
+  }
+
+  footer .email-signup__input-group--integrated {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    background-color: var(--brand-cream, #F7F3EE) !important;
+    border-radius: 100px !important;
+    padding: 4px !important;
+    box-sizing: border-box !important;
+  }
+
+  footer .email-signup__input-group--integrated .email-signup__input {
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+    padding: 8px 10px 8px 16px !important;
+    font-size: 0.875rem !important;
+    color: var(--brand-espresso, #2B1A12) !important;
+    background-color: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+  }
+
+  footer .email-signup__input-group--integrated .email-signup__input::placeholder {
+    color: var(--brand-muted, #7A6B63) !important;
+    font-size: 0.875rem !important;
+    opacity: 0.85 !important;
+  }
+
+  footer .email-signup__input-group--integrated .email-signup__button--integrated {
+    flex-shrink: 0 !important;
+    margin: 0 !important;
+    padding: 8px 16px !important;
+    font-size: 0.8125rem !important;
+    font-weight: 500 !important;
+    letter-spacing: normal !important;
+    border-radius: 100px !important;
+    min-height: 38px !important;
+    white-space: nowrap !important;
+    width: auto !important;
+  }
+
+  /* Brand and 'Get in touch' column spans full width with natural content height */
+  footer .group-block,
+  footer .group-block--width-custom {
+    width: 100% !important;
+    max-width: 100% !important;
+    flex: 0 0 auto !important;
+    flex-basis: auto !important;
+    flex-grow: 0 !important;
+    height: auto !important;
+  }
+
+  footer .group-block-content {
+    width: 100%;
+    height: auto !important;
+    align-items: flex-start;
+    justify-content: flex-start;
+    text-align: left;
+    gap: 16px;
+  }
+
+  footer .group-block .text-block,
+  footer .group-block p {
+    width: 100%;
+    max-width: 100%;
+    text-align: left;
+    word-break: normal;
+    overflow-wrap: break-word;
+  }
+
+  /* Footer accordion blocks (Shop, Customer care, About) */
+  footer accordion-custom.footer-links,
+  footer .footer-links {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    flex: 0 0 auto !important;
+    flex-basis: auto !important;
+    flex-grow: 0 !important;
+    height: auto !important;
+    box-sizing: border-box;
+  }
+
+  footer .footer-links .menu__details {
+    width: 100%;
+    margin: 0;
+    height: auto !important;
+  }
+
+  /* Accordion summary: full-width bar with heading on left, icon on far right */
+  footer .footer-links .menu__heading {
+    display: flex !important;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    min-height: var(--minimum-touch-target, 44px);
+    padding-block: 8px;
+    padding-inline: 0;
+    cursor: pointer;
+    user-select: none;
+    list-style: none;
+    text-align: left;
+  }
+
+  footer .footer-links .menu__heading::-webkit-details-marker {
+    display: none;
+  }
+
+  footer .footer-links .menu__heading__default {
+    display: none !important;
+  }
+
+  footer .footer-links .menu__heading__accordion {
+    display: flex !important;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    text-align: left;
+    font-size: inherit;
+    font-family: inherit;
+    font-weight: inherit;
+    letter-spacing: inherit;
+    text-transform: inherit;
+  }
+
+  footer .footer-links .menu__heading__toggle,
+  footer .footer-links .svg-wrapper.icon-plus {
+    margin-inline-start: auto;
+    margin-left: auto;
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 14px;
+    height: 14px;
+  }
+
+  /* Expanded accordion content and links */
+  footer .footer-links .details-content {
+    width: 100%;
+    height: auto;
+    padding-inline: 0;
+    margin-block-start: 10px;
+    padding-block-end: 4px;
+  }
+
+  footer .footer-links .details-content ul {
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  footer .footer-links .menu__item {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    text-align: left;
+  }
+
+  footer .footer-links .menu__item a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 36px;
+    width: 100%;
+    text-align: left;
+    color: var(--brand-cream, #F7F3EE);
+    font-size: 0.9375rem;
+    line-height: 1.4;
+    word-break: normal;
+    overflow-wrap: break-word;
+    transition: color var(--animation-speed, 0.2s) ease;
+  }
+
+  footer .footer-links .menu__item a:hover {
+    color: var(--brand-gold, #C5A880);
+  }
+
+  /* Trust and utilities sections on mobile */
+  footer .utilities {
+    text-wrap: wrap;
+    word-break: normal;
+    overflow-wrap: break-word;
+  }
 }

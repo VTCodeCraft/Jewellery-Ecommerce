@@ -357,7 +357,6 @@
             "accordion_icon": "plus",
             "menu_spacing": 8,
             "heading_preset": "h6",
-            "link_preset": "paragraph",
             "padding-block-start": 0,
             "padding-block-end": 0,
             "link_1_label": "Contact us",
@@ -368,14 +367,12 @@
             "link_3_url": "/pages/shipping",
             "link_4_label": "Returns & refunds",
             "link_4_url": "/pages/returns",
-            "link_5_label": "Size guide",
-            "link_5_url": "/pages/size-guide",
-            "link_6_label": "Jewellery care",
-            "link_6_url": "/pages/jewellery-care",
-            "link_7_label": "My account",
-            "link_7_url": "/account",
-            "link_8_label": "Wishlist",
-            "link_8_url": "/pages/wishlist"
+            "link_5_label": "Jewellery care",
+            "link_5_url": "/pages/jewellery-care",
+            "link_6_label": "My account",
+            "link_6_url": "/account",
+            "link_7_label": "Wishlist",
+            "link_7_url": "/pages/wishlist"
           }
         },
         "links_about": {
@@ -446,7 +443,7 @@
           "type": "text",
           "name": "t:names.text",
           "settings": {
-            "text": "<p>Secure payments · Easy returns · Dispatched from India · Here to help</p>",
+            "text": "<p>Secure payments \u00b7 Easy returns \u00b7 Dispatched from India \u00b7 Here to help</p>",
             "width": "fit-content",
             "max_width": "normal",
             "alignment": "left",
