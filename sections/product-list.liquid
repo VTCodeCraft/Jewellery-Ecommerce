@@ -13,10 +13,10 @@
 
   assign is_home_merchandising_section = false
   assign view_all_label = ''
-  if section.id == 'product_list_best_sellers'
+  if section.id contains 'product_list_best_sellers'
     assign is_home_merchandising_section = true
     assign view_all_label = 'VIEW ALL BESTSELLERS'
-  elsif section.id == 'product_list_themegen'
+  elsif section.id contains 'product_list_themegen'
     assign is_home_merchandising_section = true
     assign view_all_label = 'VIEW ALL FEATURED'
   endif
@@ -171,8 +171,9 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: fit-content;
-    padding: 12px 28px;
+    min-width: 190px;
+    min-height: 40px;
+    padding: 0 28px;
     border: 1px solid currentColor;
     border-radius: 0;
     background: transparent;
@@ -181,7 +182,7 @@
     font-size: 12px;
     font-weight: 500;
     line-height: 1;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.02em;
     text-decoration: none;
     text-transform: uppercase;
     transition: background-color 180ms ease, color 180ms ease, opacity 180ms ease;
@@ -289,7 +290,9 @@
     }
 
     .product-list-slider__footer-button {
-      padding: 11px 22px;
+      min-width: 165px;
+      min-height: 38px;
+      padding: 0 22px;
       font-size: 11px;
     }
   }

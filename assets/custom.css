@@ -374,15 +374,52 @@ popover-content,
 
 /* Our Shop / Editorial story — dark cocoa */
 .section-wrapper:has(.pull-quote),
-#shopify-section-section_x8mrnx {
+#shopify-section-section_x8mrnx,
+[id$='__section_x8mrnx'] {
   background-color: var(--brand-cocoa);
   color: var(--brand-cream);
 }
-#shopify-section-section_x8mrnx h2 {
+:is(#shopify-section-section_x8mrnx, [id$='__section_x8mrnx']) h2 {
   color: var(--brand-cream);
 }
-#shopify-section-section_x8mrnx p {
+:is(#shopify-section-section_x8mrnx, [id$='__section_x8mrnx']) p {
   color: var(--brand-champagne);
+}
+
+:is(#shopify-section-section_x8mrnx, [id$='__section_x8mrnx']) .button-custom[class*='__button_TmU98M'] {
+  --button-background-color: var(--brand-ivory);
+  --button-color: var(--brand-espresso);
+  --button-border-color: var(--brand-ivory);
+  --button-border-width: 1px;
+  --button-focus-outline-color: var(--brand-ivory);
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 24px;
+  border-radius: 2px;
+  font-family: var(--font-body--family);
+  font-size: 0.95rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition:
+    background-color 180ms ease,
+    color 180ms ease,
+    box-shadow 180ms ease,
+    transform 180ms ease;
+}
+
+:is(#shopify-section-section_x8mrnx, [id$='__section_x8mrnx']) .button-custom[class*='__button_TmU98M']:hover {
+  --button-background-color: var(--brand-cocoa);
+  --button-color: var(--brand-ivory);
+  --button-border-color: var(--brand-cocoa);
+
+  transform: translateY(-1px);
+}
+
+:is(#shopify-section-section_x8mrnx, [id$='__section_x8mrnx']) .button-custom[class*='__button_TmU98M']:focus-visible {
+  outline: 2px solid var(--brand-ivory);
+  outline-offset: 3px;
 }
 
 /* Best Sellers / Featured */
