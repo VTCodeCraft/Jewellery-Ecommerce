@@ -10,6 +10,16 @@
   if section.settings.collection != blank
     assign view_more_url = section.settings.collection.url
   endif
+
+  assign is_home_merchandising_section = false
+  assign view_all_label = ''
+  if section.id == 'product_list_best_sellers'
+    assign is_home_merchandising_section = true
+    assign view_all_label = 'VIEW ALL BESTSELLERS'
+  elsif section.id == 'product_list_themegen'
+    assign is_home_merchandising_section = true
+    assign view_all_label = 'VIEW ALL FEATURED'
+  endif
 %}
 
 <div
@@ -34,7 +44,7 @@
     <div class="product-list-slider__header-left">
       {%- content_for 'block', type: '_product-list-content', id: 'static-header' -%}
     </div>
-    {% if view_more_url != blank %}
+    {% if view_more_url != blank and is_home_merchandising_section == false %}
       <a href="{{ view_more_url }}" class="product-list-slider__view-more button-unstyled">
         View all
       </a>
@@ -105,6 +115,14 @@
     %}
   {% endif %}
 
+  {% if is_home_merchandising_section and view_more_url != blank %}
+    <div class="product-list-slider__footer-cta">
+      <a href="{{ view_more_url }}" class="product-list-slider__footer-button button-unstyled">
+        {{ view_all_label }}
+      </a>
+    </div>
+  {% endif %}
+
   <div
     class="section-resource-list__content"
     style="--horizontal-alignment: {{ section.settings.horizontal_alignment }};"
@@ -140,6 +158,38 @@
 
   .product-list-slider__view-more:hover {
     opacity: 0.7;
+  }
+
+  .product-list-slider__footer-cta {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-top: 32px;
+  }
+
+  .product-list-slider__footer-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: fit-content;
+    padding: 12px 28px;
+    border: 1px solid currentColor;
+    border-radius: 0;
+    background: transparent;
+    color: var(--color-foreground);
+    font-family: var(--font-body--family);
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1;
+    letter-spacing: 0.05em;
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: background-color 180ms ease, color 180ms ease, opacity 180ms ease;
+  }
+
+  .product-list-slider__footer-button:hover {
+    background: var(--color-foreground);
+    color: var(--color-background);
   }
 
   product-list-slider {
@@ -232,6 +282,15 @@
 
     .product-list-slider__track .resource-list__item {
       width: calc((100cqw - var(--resource-list-column-gap)) / 2);
+    }
+
+    .product-list-slider__footer-cta {
+      margin-top: 24px;
+    }
+
+    .product-list-slider__footer-button {
+      padding: 11px 22px;
+      font-size: 11px;
     }
   }
 
