@@ -76,6 +76,7 @@
     "apply": "Apply",
     "back": "Back",
     "back_to": "Back to {{ title }}",
+    "go_to_home": "Go to Home",
     "choose": "Choose",
     // Button to reset current selection or input
     "clear": "Clear",

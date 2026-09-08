@@ -173,6 +173,21 @@ product-price {
 
 .back-link .svg-wrapper {
   display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.back-link .svg-wrapper svg {
+  display: block;
+  width: 14px;
+  height: 14px;
+}
+
+/* Optical alignment: flex centers the full line-box, but cap-height text
+   reads high next to the icon — nudge the icon down to cap center. */
+.back-link .svg-wrapper {
+  position: relative;
+  top: 2px;
 }
 
 .back-link:hover {
@@ -410,9 +425,9 @@ popover-content,
 }
 
 :is(#shopify-section-section_x8mrnx, [id$='__section_x8mrnx']) .button-custom[class*='__button_TmU98M']:hover {
-  --button-background-color: var(--brand-cocoa);
-  --button-color: var(--brand-ivory);
-  --button-border-color: var(--brand-cocoa);
+  --button-background-color: var(--brand-ruby);
+  --button-color: var(--brand-cream);
+  --button-border-color: var(--brand-ruby);
 
   transform: translateY(-1px);
 }
@@ -774,4 +789,15 @@ footer .email-signup__input-group--integrated .email-signup__button--integrated 
     word-break: normal;
     overflow-wrap: break-word;
   }
+}
+
+/* ------------------------------------------------------------
+   Hero Shop now button — readable hover (ruby bg, cream text).
+   (Our Shop button hover is governed by its section-scoped rule
+   above, which wins on specificity.)
+   ------------------------------------------------------------ */
+a.button-custom--button_hero_primary:hover {
+  --button-background-color: var(--brand-ruby);
+  --button-color: var(--brand-cream);
+  --button-border-color: var(--brand-ruby);
 }

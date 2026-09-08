@@ -143,20 +143,20 @@
         data-template="{{ template }}"
       >
         {% comment %}
-          Back link on every route except the homepage. Deliberately a plain
+          Go to Home link on every route except the homepage. Deliberately a plain
           link to the home page rather than browser history, so it behaves
-          the same however the visitor arrived (product -> product -> back
-          goes home, not to the previous product). Styling in custom.css.
+          the same however the visitor arrived (product -> product -> go to home,
+          not to the previous product). Styling in custom.css.
         {% endcomment %}
         {% unless template.name == 'index' %}
           <div class="back-link-bar">
             <a
               href="{{ routes.root_url }}"
               class="back-link"
-              aria-label="{{ 'actions.back_to' | t: title: shop.name }}"
+              aria-label="{{ 'actions.go_to_home' | t }}"
             >
-              <span class="svg-wrapper" aria-hidden="true">{{ 'icon-chevron-left.svg' | inline_asset_content }}</span>
-              {{ 'actions.back' | t }}
+              <span class="svg-wrapper" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2.5 7.5 8 2.5l5.5 5M4 6.5V13.5h8V6.5" stroke="currentColor" stroke-width="var(--icon-stroke-width)" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+              {{ 'actions.go_to_home' | t }}
             </a>
           </div>
         {% endunless %}
