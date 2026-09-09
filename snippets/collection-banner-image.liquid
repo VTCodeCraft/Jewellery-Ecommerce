@@ -1,0 +1,67 @@
+{%- doc -%}
+  Collection banner image, resolved per collection handle from theme assets.
+
+  Rendered only inside templates/collection.json, so it can never leak into
+  footer or other sections. Add `assets/banner-<handle>.png` to support a
+  new collection; handles without a matching asset render nothing.
+
+  Desktop only (>= 990px): the image cell is hidden below that, leaving the
+  heading text full-width with no empty space left behind.
+{%- enddoc -%}
+
+{% liquid
+  assign banner_file = ''
+  case collection.handle
+    when 'all'
+      assign banner_file = 'banner-all.png'
+    when 'best-sellers'
+      assign banner_file = 'banner-best-sellers.png'
+    when 'featured-products'
+      assign banner_file = 'banner-featured.png'
+    when 'wedding'
+      assign banner_file = 'banner-wedding.png'
+    when 'traditional-festival'
+      assign banner_file = 'banner-traditional.png'
+    when 'dailywear-party-wear'
+      assign banner_file = 'banner-dailywear.png'
+    when 'necklaces-pendants'
+      assign banner_file = 'banner-necklaces-pendants.png'
+    when 'jewellery-sets'
+      assign banner_file = 'banner-jewellery-sets.png'
+  endcase
+%}
+
+{% if banner_file != '' %}
+  <div class="collection-banner-media">
+    <img
+      src="{{ banner_file | asset_url }}"
+      alt="{{ collection.title | escape }} banner"
+      loading="lazy"
+    >
+  </div>
+{% endif %}
+
+{% stylesheet %}
+  /* Hidden on tablet/mobile: heading text goes full-width, no gap remains. */
+  .collection-banner-media {
+    display: none;
+  }
+
+  @media screen and (min-width: 990px) {
+    .collection-banner-media {
+      display: block;
+      flex: 1 1 0;
+      min-width: 0;
+      align-self: stretch;
+    }
+
+    /* Compact editorial strip: matches the text column height, 200px floor. */
+    .collection-banner-media img {
+      width: 100%;
+      height: 100%;
+      min-height: 200px;
+      object-fit: cover;
+      display: block;
+    }
+  }
+{% endstylesheet %}
