@@ -7,15 +7,17 @@
     <li class="breadcrumbs__item"><a href="{{ routes.root_url }}" class="breadcrumbs__link" style="color:inherit; text-decoration:none;">Home</a></li>
     <li class="breadcrumbs__separator" aria-hidden="true">/</li>
     {% if collection and collection.handle != 'all' and template.name == 'collection' %}
+      {% capture display_title %}{% render 'collection-display-title', collection: collection %}{% endcapture %}
       <li class="breadcrumbs__item"><a href="/collections/all" class="breadcrumbs__link" style="color:inherit; text-decoration:none;">Shop</a></li>
       <li class="breadcrumbs__separator" aria-hidden="true">/</li>
-      <li class="breadcrumbs__item" aria-current="page">{{ collection.title }}</li>
+      <li class="breadcrumbs__item" aria-current="page">{{ display_title }}</li>
     {% elsif collection and template.name == 'product' %}
+      {% assign prod_collection = product.collections | first %}
+      {% capture prod_display_title %}{% render 'collection-display-title', collection: prod_collection %}{% endcapture %}
       <li class="breadcrumbs__item"><a href="/collections/all" class="breadcrumbs__link" style="color:inherit; text-decoration:none;">Shop</a></li>
       <li class="breadcrumbs__separator" aria-hidden="true">/</li>
-      {% assign prod_collection = product.collections | first %}
       {% if prod_collection %}
-        <li class="breadcrumbs__item"><a href="{{ prod_collection.url }}" class="breadcrumbs__link" style="color:inherit; text-decoration:none;">{{ prod_collection.title }}</a></li>
+        <li class="breadcrumbs__item"><a href="{{ prod_collection.url }}" class="breadcrumbs__link" style="color:inherit; text-decoration:none;">{{ prod_display_title }}</a></li>
         <li class="breadcrumbs__separator" aria-hidden="true">/</li>
       {% endif %}
       <li class="breadcrumbs__item" aria-current="page">{{ product.title | truncate: 30 }}</li>

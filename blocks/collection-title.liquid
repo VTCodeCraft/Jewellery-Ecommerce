@@ -5,7 +5,8 @@
   {% assign collection_title = '<p>' | append: text | append: '</p>' %}
   {% render 'text', fallback_text: collection_title, block: block %}
 {% elsif closest.collection != blank %}
-  {% assign collection_title = '<p>' | append: closest.collection.title | append: '</p>' %}
+  {% capture display_title %}{% render 'collection-display-title', collection: closest.collection %}{% endcapture %}
+  {% assign collection_title = '<p>' | append: display_title | append: '</p>' %}
   {% render 'text', fallback_text: collection_title, block: block %}
 {% endif %}
 

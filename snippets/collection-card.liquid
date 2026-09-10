@@ -66,7 +66,8 @@
       href="{{ collection.url }}"
     {% endunless %}
   >
-    <span class="visually-hidden">{{ collection.title }}</span>
+    {% capture sr_title %}{% render 'collection-display-title', collection: collection %}{% endcapture %}
+    <span class="visually-hidden">{{ sr_title }}</span>
   </a>
   <div class="collection-card__inner">
     {{ card_image }}

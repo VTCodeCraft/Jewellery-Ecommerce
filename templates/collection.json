@@ -52,26 +52,10 @@
               "blocks": {}
             },
             "text_title": {
-              "type": "text",
+              "type": "custom-liquid",
               "name": "t:names.title",
               "settings": {
-                "text": "<h1>{{ closest.collection.title }}</h1>",
-                "width": "fit-content",
-                "max_width": "normal",
-                "alignment": "left",
-                "type_preset": "h2",
-                "font": "var(--font-heading--family)",
-                "line_height": "normal",
-                "letter_spacing": "normal",
-                "case": "none",
-                "wrap": "pretty",
-                "background": false,
-                "background_color": "#00000026",
-                "corner_radius": 0,
-                "padding-block-start": 0,
-                "padding-block-end": 0,
-                "padding-inline-start": 0,
-                "padding-inline-end": 0
+                "custom_liquid": "{% capture display_title %}{% render 'collection-display-title', collection: closest.collection %}{% endcapture %}<h1 class=\"h2\">{{ display_title }}</h1>"
               },
               "blocks": {}
             },

@@ -7,7 +7,7 @@
 {% if closest.collection == blank %}
   {% assign collection_title = 'placeholders.collection_title' | t %}
 {% elsif closest.collection != blank %}
-  {% assign collection_title = closest.collection.title %}
+  {% capture collection_title %}{% render 'collection-display-title', collection: closest.collection %}{% endcapture %}
 {% endif %}
 
 {% assign plain_text = collection_title | strip_newlines | strip_html | strip %}

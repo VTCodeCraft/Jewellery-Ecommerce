@@ -298,7 +298,7 @@
         "occasion_daily": {
           "type": "occasion",
           "settings": {
-            "title": "DAILYWEAR / PARTY WEAR",
+            "title": "DAILYWEAR & PARTY WEAR",
             "text": "",
             "link": "shopify://collections/dailywear-party-wear"
           }

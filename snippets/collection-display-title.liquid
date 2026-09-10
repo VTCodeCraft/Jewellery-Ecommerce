@@ -1,0 +1,23 @@
+{%- doc -%}
+  Returns a clean display title for a collection handle, replacing "/" with "&"
+  in category names. Falls back to collection.title for unmapped handles.
+
+  @param {object} collection - The collection object
+  @return {string} The display title
+
+  @example
+  {% render 'collection-display-title', collection: collection %}
+{%- enddoc -%}
+
+{% liquid
+  case collection.handle
+    when 'necklaces-pendants'
+      assign display_title = 'Necklaces & Pendants'
+    when 'traditional-festival'
+      assign display_title = 'Traditional & Festival'
+    when 'dailywear-party-wear'
+      assign display_title = 'Partywear & Dailywear'
+    else
+      assign display_title = collection.title
+  endcase
+%}{{ display_title }}

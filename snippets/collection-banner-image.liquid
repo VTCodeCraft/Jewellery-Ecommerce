@@ -24,18 +24,16 @@
       assign banner_file = 'banner-traditional.png'
     when 'dailywear-party-wear'
       assign banner_file = 'banner-dailywear.png'
-    when 'necklaces-pendants'
-      assign banner_file = 'banner-necklaces-pendants.png'
-    when 'jewellery-sets'
-      assign banner_file = 'banner-jewellery-sets.png'
+
   endcase
 %}
 
 {% if banner_file != '' %}
+  {% capture display_title %}{% render 'collection-display-title', collection: collection %}{% endcapture %}
   <div class="collection-banner-media">
     <img
       src="{{ banner_file | asset_url }}"
-      alt="{{ collection.title | escape }} banner"
+      alt="{{ display_title | escape }} banner"
       loading="lazy"
     >
   </div>
