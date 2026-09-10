@@ -39,7 +39,7 @@
         "border_color": "",
         "border_radius": 0,
         "padding-block-start": 64,
-        "padding-block-end": 64
+        "padding-block-end": 32
       },
       "blocks": {
         "newsletter_heading": {
@@ -158,7 +158,7 @@
         "border_opacity": 100,
         "border_color": "",
         "border_radius": 0,
-        "padding-block-start": 72,
+        "padding-block-start": 40,
         "padding-block-end": 56
       },
       "blocks": {
@@ -326,7 +326,7 @@
             "menu": "",
             "show_as_accordion": true,
             "accordion_icon": "plus",
-            "menu_spacing": 8,
+            "menu_spacing": 14,
             "heading_preset": "h6",
             "link_preset": "paragraph",
             "padding-block-start": 0,
@@ -355,24 +355,22 @@
             "menu": "",
             "show_as_accordion": true,
             "accordion_icon": "plus",
-            "menu_spacing": 8,
+            "menu_spacing": 14,
             "heading_preset": "h6",
             "padding-block-start": 0,
             "padding-block-end": 0,
-            "link_1_label": "Contact us",
-            "link_1_url": "/pages/contact",
-            "link_2_label": "FAQ",
-            "link_2_url": "/pages/faq",
-            "link_3_label": "Shipping & delivery",
-            "link_3_url": "/pages/shipping",
-            "link_4_label": "Returns & refunds",
-            "link_4_url": "/pages/returns",
-            "link_5_label": "Jewellery care",
-            "link_5_url": "/pages/jewellery-care",
-            "link_6_label": "My account",
-            "link_6_url": "/account",
-            "link_7_label": "Wishlist",
-            "link_7_url": "/pages/wishlist"
+            "link_1_label": "FAQ",
+            "link_1_url": "/pages/faq",
+            "link_2_label": "Shipping & delivery",
+            "link_2_url": "/pages/shipping",
+            "link_3_label": "Returns & refunds",
+            "link_3_url": "/pages/returns",
+            "link_4_label": "Jewellery care",
+            "link_4_url": "/pages/jewellery-care",
+            "link_5_label": "Terms & Policies",
+            "link_5_url": "/policies/terms-of-service",
+            "link_6_label": "Privacy Policy",
+            "link_6_url": "/policies/privacy-policy"
           }
         },
         "links_about": {
@@ -383,7 +381,7 @@
             "menu": "",
             "show_as_accordion": true,
             "accordion_icon": "plus",
-            "menu_spacing": 8,
+            "menu_spacing": 14,
             "heading_preset": "h6",
             "link_preset": "paragraph",
             "padding-block-start": 0,
@@ -392,12 +390,8 @@
             "link_1_url": "/pages/our-story",
             "link_2_label": "About us",
             "link_2_url": "/pages/about",
-            "link_3_label": "Journal",
-            "link_3_url": "/blogs/news",
-            "link_4_label": "Our values",
-            "link_4_url": "/pages/our-values",
-            "link_5_label": "Contact",
-            "link_5_url": "/pages/contact"
+            "link_3_label": "Contact us",
+            "link_3_url": "/pages/contact"
           }
         }
       },
@@ -443,9 +437,9 @@
           "type": "text",
           "name": "t:names.text",
           "settings": {
-            "text": "<p>Secure payments \u00b7 Easy returns \u00b7 Dispatched from India \u00b7 Here to help</p>",
-            "width": "fit-content",
-            "max_width": "normal",
+            "text": "<p>Secure payments \u00b7 Easy returns \u00b7 Dispatched from India</p>",
+            "width": "100%",
+            "max_width": "none",
             "alignment": "left",
             "type_preset": "paragraph",
             "font": "var(--font-body--family)",
@@ -485,15 +479,6 @@
     "footer_utilities": {
       "type": "footer-utilities",
       "blocks": {
-        "block_23de1b3bac9d": {
-          "type": "footer-policy-list",
-          "settings": {
-            "text_color": "{{ settings.color_palette.color4 }}",
-            "font_size": "0.75rem",
-            "case": "none"
-          },
-          "blocks": {}
-        },
         "block_93fecb133fe8": {
           "type": "footer-copyright",
           "settings": {
@@ -503,11 +488,18 @@
             "case": "none"
           },
           "blocks": {}
+        },
+        "social_icons": {
+          "type": "social-links",
+          "settings": {
+            "instagram_url": "https://www.instagram.com/paridhicreation1234/"
+          },
+          "blocks": {}
         }
       },
       "block_order": [
-        "block_23de1b3bac9d",
-        "block_93fecb133fe8"
+        "block_93fecb133fe8",
+        "social_icons"
       ],
       "settings": {
         "section_width": "page-width",

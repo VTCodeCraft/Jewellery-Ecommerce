@@ -755,7 +755,7 @@ footer .email-signup__input-group--integrated .email-signup__button--integrated 
     list-style: none;
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 14px;
   }
 
   footer .footer-links .menu__item {
@@ -768,11 +768,11 @@ footer .email-signup__input-group--integrated .email-signup__button--integrated 
   footer .footer-links .menu__item a {
     display: inline-flex;
     align-items: center;
-    min-height: 36px;
+    min-height: 1.5rem;
     width: 100%;
     text-align: left;
-    color: var(--brand-cream, #F7F3EE);
-    font-size: 0.9375rem;
+    color: rgba(255, 249, 242, 0.7);
+    font-size: 0.8125rem;
     line-height: 1.4;
     word-break: normal;
     overflow-wrap: break-word;
@@ -780,7 +780,7 @@ footer .email-signup__input-group--integrated .email-signup__button--integrated 
   }
 
   footer .footer-links .menu__item a:hover {
-    color: var(--brand-gold, #C5A880);
+    color: var(--brand-cream, #FFF9F2);
   }
 
   /* Trust and utilities sections on mobile */
@@ -801,3 +801,5 @@ a.button-custom--button_hero_primary:hover {
   --button-color: var(--brand-cream);
   --button-border-color: var(--brand-ruby);
 }
+
+

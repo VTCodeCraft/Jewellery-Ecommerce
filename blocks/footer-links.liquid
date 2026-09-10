@@ -111,18 +111,35 @@
 {% # theme-check-enable ValidScopedCSSClass %}
 
 {% stylesheet %}
-  /* Only the touch-target floors; every other rule comes from the menu block. */
-  .footer-links .menu__item a {
-    display: inline-flex;
-    align-items: center;
-    min-height: var(--minimum-touch-target);
-  }
-
-  /* The summary is the accordion toggle on mobile, so it needs the same floor. */
+  /* Headings: clearly larger than links, semibold, bright cream. */
   .footer-links .menu__heading {
     display: flex;
     align-items: center;
     min-height: var(--minimum-touch-target);
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--brand-cream);
+  }
+
+  /* Links: smaller, regular weight, muted cream. Spacing comes from
+     min-height on the anchor — no extra margin needed. */
+  .footer-links .menu__item a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 1.5rem;
+    font-size: 0.8125rem;
+    font-weight: 400;
+    color: rgba(255, 249, 242, 0.7);
+    transition: color 0.2s ease;
+  }
+
+  .footer-links .menu__item a:hover {
+    color: var(--brand-cream);
+  }
+
+  /* Space between heading and first link */
+  .footer-links .details-content {
+    margin-block-start: 10px;
   }
 {% endstylesheet %}
 
