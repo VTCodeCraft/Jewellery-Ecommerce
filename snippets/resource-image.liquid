@@ -49,7 +49,7 @@
     assign image_resource = image_source
   elsif content_type == 'collections'
     assign collection = closest.collection
-    assign image_resource = collection.image
+    assign image_resource = image_source | default: collection.image
     if image_resource == blank
       assign image_resource = collection.products.first.featured_image
     endif
@@ -151,11 +151,22 @@
       {% render 'overlay', settings: block_settings %}
     {%- endif -%}
 
-    {{
-      image_resource
-      | image_url: width: 3840
-      | image_tag: widths: widths, class: 'resource-image__image', sizes: sizes, loading: loading
-    }}
+    {% if image_source != blank and content_type == 'collections' %}
+      <img
+        class="resource-image__image"
+        src="{{ image_source }}"
+        alt="{{ collection.title | escape }}"
+        widths="240, 352, 832, 1200, 1600, 1920, 2560, 3840"
+        sizes="{{ sizes }}"
+        loading="{{ loading }}"
+      >
+    {% else %}
+      {{
+        image_resource
+        | image_url: width: 3840
+        | image_tag: widths: widths, class: 'resource-image__image', sizes: sizes, loading: loading
+      }}
+    {% endif %}
   </div>
 {% else %}
   <div

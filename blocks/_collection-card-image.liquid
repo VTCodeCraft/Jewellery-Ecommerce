@@ -5,6 +5,7 @@
   Intended for collection-card.liquid block.
 
   @param {string} parent_block_id - The block.id of the collection-card block
+  @param {string} [image_source] - Optional override image URL for the collection card
 
   @example
   {% content_for 'block', type: '_collection-card-image', id: 'collection-card-image', parent_block_id: block.id %}
@@ -17,7 +18,8 @@
   parent_block_id: parent_block_id,
   block_settings: block.settings,
   section_settings: section.settings,
-  block_attributes: block.shopify_attributes
+  block_attributes: block.shopify_attributes,
+  image_source: image_source
 %}
 
 {% schema %}

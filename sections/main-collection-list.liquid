@@ -58,8 +58,23 @@
       endif
     %}
     {% for collection in shown_collections limit: max_items %}
+      {% liquid
+        assign image_source = nil
+        case collection.handle
+          when 'best-sellers'
+            assign image_source = 'bestseller.jpg' | asset_url
+          when 'featured-products'
+            assign image_source = 'featured.png' | asset_url
+          when 'dailywear-party-wear'
+            assign image_source = 'party_dailywaear.png' | asset_url
+          when 'traditional-festival'
+            assign image_source = 'explore-traditional-festival.png' | asset_url
+          when 'wedding'
+            assign image_source = 'wedding.png' | asset_url
+        endcase
+      %}
       <div class="resource-list__item">
-        {% content_for 'block', type: '_collection-card', id: 'static-collection-card', closest.collection: collection %}
+        {% content_for 'block', type: '_collection-card', id: 'static-collection-card', closest.collection: collection, image_source: image_source %}
       </div>
       {% unless forloop.last %}
         <!--@list/split-->
