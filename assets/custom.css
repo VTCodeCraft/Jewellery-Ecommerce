@@ -418,23 +418,30 @@ popover-content,
   font-weight: 500;
   text-decoration: none;
   transition:
-    background-color 180ms ease,
-    color 180ms ease,
-    box-shadow 180ms ease,
-    transform 180ms ease;
+    background-color 200ms ease,
+    color 200ms ease,
+    border-color 200ms ease,
+    box-shadow 200ms ease,
+    transform 200ms ease;
 }
 
 :is(#shopify-section-section_x8mrnx, [id$='__section_x8mrnx']) .button-custom[class*='__button_TmU98M']:hover {
-  --button-background-color: var(--brand-ruby);
-  --button-color: var(--brand-cream);
-  --button-border-color: var(--brand-ruby);
+  --button-background-color: #B1844B;
+  --button-color: #FFF9F2;
+  --button-border-color: #B1844B;
 
   transform: translateY(-1px);
 }
 
 :is(#shopify-section-section_x8mrnx, [id$='__section_x8mrnx']) .button-custom[class*='__button_TmU98M']:focus-visible {
-  outline: 2px solid var(--brand-ivory);
-  outline-offset: 3px;
+  outline: 2px solid #B1844B;
+  outline-offset: 2px;
+}
+
+:is(#shopify-section-section_x8mrnx, [id$='__section_x8mrnx']) .button-custom[class*='__button_TmU98M']:active {
+  --button-background-color: #4D2816;
+  --button-color: #FFF9F2;
+  --button-border-color: #4D2816;
 }
 
 /* Best Sellers / Featured */
