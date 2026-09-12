@@ -2,6 +2,7 @@
 
 
 ## Current Phase
+
 Phase 7.1 — Wishlist UX: header count now uses the cart's own badge component, and add-to-cart from the wishlist uses the theme's existing fly-to-cart animation. Verified live on the development theme. Not yet committed.
 
 ### Phase 7.1 — Wishlist count as a cart badge, and fly-to-cart from the wishlist
