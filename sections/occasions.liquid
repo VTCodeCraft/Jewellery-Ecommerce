@@ -51,7 +51,7 @@
                 | image_url: width: 1200
                 | image_tag:
                   widths: '600, 800, 1200',
-                  sizes: '(min-width: 990px) 33vw, (min-width: 750px) 50vw, 100vw',
+                  sizes: '(min-width: 990px) 25vw, (min-width: 750px) 50vw, 100vw',
                   alt: block_image.alt | default: block_title,
                   class: 'occasions__card-image',
                   loading: 'lazy'
@@ -61,9 +61,9 @@
                 assign fallback_asset = ''
                 if block_title == 'WEDDING'
                   assign fallback_asset = 'occasion-wedding.jpeg'
-                elsif block_title == 'TRADITIONAL FESTIVAL'
+                elsif block_title == 'FESTIVAL'
                   assign fallback_asset = 'occasion-festival.jpeg'
-                elsif block_title == 'DAILYWEAR & PARTY WEAR'
+                elsif block_title == 'DAILYWEAR' or block_title == 'PARTYWEAR'
                   assign fallback_asset = 'occasion-daily-wear.jpeg'
                 endif
               %}
@@ -102,7 +102,7 @@
     {% endfor %}
 
     {% if section.blocks.size == 0 %}
-      {% for i in (1..3) %}
+      {% for i in (1..4) %}
         {% liquid
           assign ph_title = ''
           assign ph_asset = ''
@@ -110,10 +110,13 @@
             assign ph_title = 'WEDDING'
             assign ph_asset = 'occasion-wedding.jpeg'
           elsif i == 2
-            assign ph_title = 'TRADITIONAL FESTIVAL'
+            assign ph_title = 'FESTIVAL'
             assign ph_asset = 'occasion-festival.jpeg'
           elsif i == 3
-            assign ph_title = 'DAILYWEAR & PARTY WEAR'
+            assign ph_title = 'DAILYWEAR'
+            assign ph_asset = 'occasion-daily-wear.jpeg'
+          elsif i == 4
+            assign ph_title = 'PARTYWEAR'
             assign ph_asset = 'occasion-daily-wear.jpeg'
           endif
         %}
@@ -181,7 +184,7 @@
 
   @media screen and (min-width: 990px) {
     .occasions__grid {
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(4, 1fr);
       gap: 24px;
     }
   }
@@ -287,12 +290,12 @@
   "name": "Occasions",
   "class": "section-wrapper occasions-wrapper",
   "tag": "section",
-  "max_blocks": 3,
+  "max_blocks": 4,
   "blocks": [
     {
       "type": "occasion",
       "name": "Occasion",
-      "limit": 3,
+      "limit": 4,
       "settings": [
         {
           "type": "image_picker",
@@ -394,15 +397,22 @@
         {
           "type": "occasion",
           "settings": {
-            "title": "TRADITIONAL FESTIVAL",
+            "title": "FESTIVAL",
             "text": "Timeless jewellery for festive and traditional moments."
           }
         },
         {
           "type": "occasion",
           "settings": {
-            "title": "DAILYWEAR & PARTY WEAR",
-            "text": "Versatile pieces for everyday style and evening occasions."
+            "title": "DAILYWEAR",
+            "text": "Versatile pieces for everyday style."
+          }
+        },
+        {
+          "type": "occasion",
+          "settings": {
+            "title": "PARTYWEAR",
+            "text": "Statement pieces for evening occasions."
           }
         }
       ]

@@ -341,10 +341,12 @@
             "link_4_url": "shopify://collections/jewellery-sets",
             "link_5_label": "Wedding",
             "link_5_url": "shopify://collections/wedding",
-            "link_6_label": "Traditional & festival",
-            "link_6_url": "shopify://collections/traditional-festival",
-            "link_7_label": "Daily & party wear",
-            "link_7_url": "shopify://collections/dailywear-party-wear"
+            "link_6_label": "Festival",
+            "link_6_url": "shopify://collections/festival",
+            "link_7_label": "Dailywear",
+            "link_7_url": "shopify://collections/dailywear",
+            "link_8_label": "Partywear",
+            "link_8_url": "shopify://collections/partywear"
           }
         },
         "links_care": {

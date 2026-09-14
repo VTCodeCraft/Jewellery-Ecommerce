@@ -455,14 +455,14 @@ popover-content,
   background-color: var(--brand-champagne);
 }
 
-/* Keep the two homepage category cards centered at a normal card width.
+/* Keep the homepage category cards centered at a normal card width.
    The explicit columns win over Horizon's generated/container grid rules. */
 @media screen and (min-width: 990px) {
   [id$='__collection_list_featured'] [data-testid='collections-list-grid'].resource-list--grid {
     width: 100%;
-    max-width: 800px;
+    max-width: 1200px;
     margin-inline: auto;
-    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
     justify-content: center;
   }
 }

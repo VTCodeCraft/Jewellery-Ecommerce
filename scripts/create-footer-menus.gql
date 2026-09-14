@@ -6,9 +6,9 @@ mutation CreateFooterMenus {
     items: [
       { title: "All Jewellery", url: "/collections/all" }
       { title: "Earrings", url: "/collections/earrings" }
-      { title: "Necklaces", url: "/collections/necklaces" }
+      { title: "Necklaces & Pendants", url: "/collections/necklaces-pendants" }
       { title: "Rings", url: "/collections/rings" }
-      { title: "Bracelets", url: "/collections/bracelets-bangles" }
+      { title: "Jewellery Sets", url: "/collections/jewellery-sets" }
     ]
   }) {
     menu { id handle title }

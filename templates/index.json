@@ -290,24 +290,33 @@
         "occasion_festival": {
           "type": "occasion",
           "settings": {
-            "title": "TRADITIONAL FESTIVAL",
+            "title": "FESTIVAL",
             "text": "",
-            "link": "shopify://collections/traditional-festival"
+            "link": "shopify://collections/festival"
           }
         },
         "occasion_daily": {
           "type": "occasion",
           "settings": {
-            "title": "DAILYWEAR & PARTY WEAR",
+            "title": "DAILYWEAR",
             "text": "",
-            "link": "shopify://collections/dailywear-party-wear"
+            "link": "shopify://collections/dailywear"
+          }
+        },
+        "occasion_partywear": {
+          "type": "occasion",
+          "settings": {
+            "title": "PARTYWEAR",
+            "text": "",
+            "link": "shopify://collections/partywear"
           }
         }
       },
       "block_order": [
         "occasion_wedding",
         "occasion_festival",
-        "occasion_daily"
+        "occasion_daily",
+        "occasion_partywear"
       ],
       "name": "Occasions",
       "settings": {
@@ -1054,11 +1063,12 @@
       "settings": {
         "collection_list": [
           "necklaces-pendants",
-          "jewellery-sets"
+          "jewellery-sets",
+          "earrings"
         ],
         "layout_type": "grid",
         "carousel_on_mobile": false,
-        "columns": 2,
+        "columns": 3,
         "mobile_columns": "2",
         "mobile_card_size": "60cqw",
         "columns_gap": 24,
