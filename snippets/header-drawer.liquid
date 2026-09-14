@@ -116,6 +116,7 @@
           assign dailywear_collection = collections['dailywear']
           assign partywear_collection = collections['partywear']
           assign best_sellers_collection = collections['best-sellers']
+          assign new_arrivals_collection = collections['new-arrivals']
           assign featured_collection = collections['featured-products']
         %}
         <nav class="menu-drawer__navigation menu-drawer__navigation--paridhi" aria-label="{{ 'accessibility.header_navigation_label' | t }}">
@@ -144,6 +145,7 @@
               </details>
             </li>
             <li><a href="{{ best_sellers_collection.url }}" class="menu-drawer__menu-item menu-drawer__menu-item--mainlist">Bestsellers</a></li>
+            <li><a href="{{ new_arrivals_collection.url }}" class="menu-drawer__menu-item menu-drawer__menu-item--mainlist">New Arrivals</a></li>
             <li><a href="{{ featured_collection.url }}" class="menu-drawer__menu-item menu-drawer__menu-item--mainlist">Featured</a></li>
             {% if pages['contact'] != blank %}<li><a href="{{ pages['contact'].url }}" class="menu-drawer__menu-item menu-drawer__menu-item--mainlist">Contact</a></li>{% endif %}
           </ul>
@@ -900,14 +902,18 @@
     display: none;
   }
 
+  .menu-drawer__navigation--configured {
+    display: none;
+  }
+
   @media screen and (max-width: 749px) {
     .menu-drawer__navigation--paridhi {
       display: block;
     }
+  }
 
-    .menu-drawer__navigation--configured {
-      display: none;
-    }
+  #header-component[data-menu-style='drawer'] .menu-drawer__navigation--paridhi {
+    display: block;
   }
 
   .menu-drawer__header {
