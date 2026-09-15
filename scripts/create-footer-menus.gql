@@ -36,7 +36,7 @@ mutation CreateFooterMenus {
     items: [
       { title: "FAQ", url: "/pages/faq" }
       { title: "Shipping & Delivery", url: "/pages/shipping-policy" }
-      { title: "Returns", url: "/pages/refund-policy" }
+      { title: "Returns", url: "/policies/refund-policy" }
       { title: "Jewellery Care", url: "/pages/jewellery-care" }
       { title: "Size Guide", url: "/pages/size-guide" }
     ]
