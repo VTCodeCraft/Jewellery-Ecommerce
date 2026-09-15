@@ -63,7 +63,9 @@
                   assign fallback_asset = 'occasion-wedding.jpeg'
                 elsif block_title == 'FESTIVAL'
                   assign fallback_asset = 'occasion-festival.jpeg'
-                elsif block_title == 'DAILYWEAR' or block_title == 'PARTYWEAR'
+                elsif block_title == 'DAILYWEAR'
+                  assign fallback_asset = 'occasion_dailywear.png'
+                elsif block_title == 'PARTYWEAR'
                   assign fallback_asset = 'occasion-daily-wear.jpeg'
                 endif
               %}
