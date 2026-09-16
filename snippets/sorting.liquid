@@ -20,11 +20,23 @@
   data-should-use-select-on-mobile="{{ should_use_select_on_mobile }}"
 >
   {% liquid
+    # Curated customer-facing sort order. Only these values are offered;
+    # everything else Shopify provides (e.g. title-ascending,
+    # title-descending, created-ascending) is intentionally hidden.
+    # `created-descending` (newest first) is labelled "New arrivals".
+    assign curated_sort_order = 'manual,relevance,best-selling,created-descending,price-ascending,price-descending' | split: ','
+
     assign default_sort_by = results.default_sort_by
-    for option in results.sort_options
-      if option.value == sort_by
-        assign status = option.name
-      endif
+    for value in curated_sort_order
+      for option in results.sort_options
+        if option.value == value and option.value == sort_by
+          if option.value == 'created-descending'
+            assign status = 'New arrivals'
+          else
+            assign status = option.name
+          endif
+        endif
+      endfor
     endfor
   %}
 
@@ -44,15 +56,23 @@
           disabled
         {% endif %}
       >
-        {% for option in results.sort_options %}
-          <option
-            value="{{ option.value }}"
-            {% if option.value == sort_by %}
-              selected
+        {% for value in curated_sort_order %}
+          {% for option in results.sort_options %}
+            {% if option.value == value %}
+              <option
+                value="{{ option.value }}"
+                {% if option.value == sort_by %}
+                  selected
+                {% endif %}
+              >
+                {% if option.value == 'created-descending' -%}
+                  New arrivals
+                {%- else -%}
+                  {{ option.name }}
+                {%- endif %}
+              </option>
             {% endif %}
-          >
-            {{ option.name }}
-          </option>
+          {% endfor %}
         {% endfor %}
       </select>
       <svg
@@ -107,37 +127,46 @@
         ref="listbox"
       >
         <div class="sorting-filter__options-inner">
-          {% for option in results.sort_options %}
-            <label
-              for="sort-option-{{ option.value }}-{{ section_id }}"
-            >
-              <div
-                class="sorting-filter__option"
-                role="option"
-                aria-selected="{% if option.value == sort_by %}true{% else %}false{% endif %}"
-                tabindex="{% if option.value == sort_by %}0{% else %}-1{% endif %}"
-              >
-                <input
-                  type="radio"
-                  name="sort_by"
-                  id="sort-option-{{ option.value }}-{{ section_id }}"
-                  {% if suffix != blank %}
-                    form="FacetFiltersForm--{{ section_id }}-{{ suffix }}"
-                  {% endif %}
-                  value="{{ option.value }}"
-                  class="sorting-filter__input"
-                  data-option-name="{{ option.name }}"
-                  {% if option.value == sort_by %}
-                    checked
-                  {% endif %}
-                  aria-hidden="true"
+          {% for value in curated_sort_order %}
+            {% for option in results.sort_options %}
+              {% if option.value == value %}
+                {% if option.value == 'created-descending' %}
+                  {% assign option_display_name = 'New arrivals' %}
+                {% else %}
+                  {% assign option_display_name = option.name %}
+                {% endif %}
+                <label
+                  for="sort-option-{{ option.value }}-{{ section_id }}"
                 >
-                <span class="svg-wrapper icon-checkmark sorting-filter__checkmark">
-                  {{- 'icon-checkmark.svg' | inline_asset_content -}}
-                </span>
-                <span class="sorting-filter__label">{{ option.name }}</span>
-              </div>
-            </label>
+                  <div
+                    class="sorting-filter__option"
+                    role="option"
+                    aria-selected="{% if option.value == sort_by %}true{% else %}false{% endif %}"
+                    tabindex="{% if option.value == sort_by %}0{% else %}-1{% endif %}"
+                  >
+                    <input
+                      type="radio"
+                      name="sort_by"
+                      id="sort-option-{{ option.value }}-{{ section_id }}"
+                      {% if suffix != blank %}
+                        form="FacetFiltersForm--{{ section_id }}-{{ suffix }}"
+                      {% endif %}
+                      value="{{ option.value }}"
+                      class="sorting-filter__input"
+                      data-option-name="{{ option_display_name }}"
+                      {% if option.value == sort_by %}
+                        checked
+                      {% endif %}
+                      aria-hidden="true"
+                    >
+                    <span class="svg-wrapper icon-checkmark sorting-filter__checkmark">
+                      {{- 'icon-checkmark.svg' | inline_asset_content -}}
+                    </span>
+                    <span class="sorting-filter__label">{{ option_display_name }}</span>
+                  </div>
+                </label>
+              {% endif %}
+            {% endfor %}
           {% endfor %}
         </div>
       </floating-panel-component>

@@ -278,6 +278,36 @@
               {% endif %}
             {% endif %}
             {% if block_settings.filter_style == 'horizontal' %}
+              {% if block_settings.enable_filtering %}
+                <button
+                  class="button facets-toggle__button facets-toggle__button--drawer button-unstyled button-unstyled--with-icon"
+                  on:click="#filters-drawer/open"
+                  type="button"
+                  aria-haspopup="dialog"
+                >
+                  <span class="svg-wrapper">
+                    {{ 'icon-filter.svg' | inline_asset_content }}
+                  </span>
+
+                  {{ 'actions.show_filters' | t }}
+
+                  {% if total_active_values > 0 %}
+                    <span
+                      class="filter-count-bubble"
+                      aria-label="{{ 'accessibility.filter_count' | t: count: total_active_values }}"
+                    >
+                      <span class="filter-count-bubble__background"></span>
+
+                      <span
+                        class="filter-count-bubble__text"
+                        aria-hidden="true"
+                      >
+                        {{ total_active_values }}
+                      </span>
+                    </span>
+                  {% endif %}
+                </button>
+              {% endif %}
               <div
                 class="products-count-wrapper"
                 data-testid="products-count"
@@ -1293,6 +1323,31 @@
     border-inline-start: var(--style-border-width) solid rgb(var(--color-foreground-rgb) / var(--opacity-10-25));
     height: var(--font-paragraph--size);
     position: absolute;
+  }
+
+  /* Desktop drawer trigger. Hidden on mobile (mobile uses the .facets-toggle row). */
+  .facets-toggle__button--drawer {
+    display: none;
+  }
+
+  @media screen and (min-width: 750px) {
+    /* Hide the inline horizontal filter dropdowns, active-filter pills and
+       horizontal clear-all on desktop. Product count, sorting and grid
+       density stay visible in the row. Filtering itself is untouched and
+       remains powered by results.filters inside #filters-drawer. */
+    .facets--horizontal .facets__filters-wrapper,
+    .facets--horizontal .facets-remove,
+    .facets--horizontal .facets-horizontal-remove {
+      display: none;
+    }
+
+    /* Show the drawer trigger as the left-most control of the desktop row.
+       Higher specificity than the mobile-only .facets-toggle__button rule. */
+    .facets--horizontal .facets-toggle__button--drawer {
+      display: inline-flex;
+      align-items: center;
+      flex-shrink: 0;
+    }
   }
 {% endstylesheet %}
 

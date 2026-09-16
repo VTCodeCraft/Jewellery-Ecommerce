@@ -101,6 +101,7 @@
         assign dailywear_collection = collections['dailywear']
         assign partywear_collection = collections['partywear']
         assign best_sellers_collection = collections['best-sellers']
+        assign new_arrivals_collection = collections['new-arrivals']
         assign featured_collection = collections['featured-products']
       %}
 
@@ -128,6 +129,7 @@
               <div class="header-navigation__mega-menu-column">
                 <p class="header-navigation__menu-label">Highlights</p>
                 <a href="{{ best_sellers_collection.url }}" class="header-navigation__mega-link">Best Sellers</a>
+                <a href="{{ new_arrivals_collection.url }}" class="header-navigation__mega-link">New Arrivals</a>
                 <a href="{{ featured_collection.url }}" class="header-navigation__mega-link">Featured</a>
               </div>
               <div class="header-navigation__mega-menu-column">
@@ -889,6 +891,27 @@
     width: min(39rem, calc(100vw - 2 * var(--padding-inline)));
     padding: 0;
     clip-path: inset(0);
+  }
+
+  /* SHOP panel must never clip its own content. The inner content is
+     shifted down by translateY(full - sub), which transforms don't count
+     toward layout — so a clip bottom pinned at 100% would slice exactly
+     that shifted amount off the last rows. Extending the bottom by the
+     same live shift makes it track the painted end for any measured
+     values, with no fixed height. Top edge kept as stock: it excludes
+     the panel's overlap over the nav row from rendering AND hit-testing
+     so neighbouring items stay reachable. Inner 80vh cap lifted below
+     (same precedent as the Occasions inner's `max-height: none`), so no
+     inner scrollbar either. */
+  .header-navigation__item--shop > .menu-list__submenu {
+    clip-path: rect(
+      var(--header-height) 100% calc(100% + var(--full-open-header-height) - var(--submenu-height)) 0
+    );
+  }
+
+  .header-navigation__item--shop .menu-list__submenu-inner {
+    max-height: none;
+    overflow: visible;
   }
 
   .header-navigation__item--occasions .header-navigation__occasion-menu {
