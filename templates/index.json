@@ -335,7 +335,7 @@
           "type": "text",
           "name": "t:names.heading",
           "settings": {
-            "text": "<h2>Our shop</h2>",
+            "text": "<h2>NEWORA JEWELS</h2>",
             "width": "fit-content",
             "max_width": "normal",
             "alignment": "left",
@@ -360,7 +360,7 @@
         "text_eFMntb": {
           "type": "text",
           "settings": {
-            "text": "<h2>At Studio Muse, we believe every piece is a wearable narrative\u2014crafted with intention, designed to empower modern women with individuality and artistry.</h2>",
+            "text": "<h2>Discover jewellery designed to bring timeless elegance to every celebration, every occasion, and every day.</h2>",
             "width": "100%",
             "max_width": "narrow",
             "alignment": "center",
@@ -385,7 +385,7 @@
         "button_TmU98M": {
           "type": "button",
           "settings": {
-            "label": "Shop now \u2192",
+            "label": "SHOP NOW \u2192",
             "link": "shopify://collections/all",
             "open_in_new_tab": false,
             "style_class": "button-custom",
