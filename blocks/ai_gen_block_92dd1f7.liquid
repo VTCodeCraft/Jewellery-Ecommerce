@@ -1,51 +1,68 @@
 {% doc %}
   @prompt
-    Add a simple reply-time notice area to the contact page near the contact form. Display the text: “Expect a reply within 2–3 working days.” Match the contact page’s existing styling, keep the notice easy to read on desktop and mobile, and make the text editable.
+    Add a subtle customer-care information strip beneath the contact information section. Display label: "Customer Care" and editable notice text: "We aim to respond to your enquiry within 2–3 working days." Match Newora Jewels' warm, elegant branding.
 {% enddoc %}
 {% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
 
 {% style %}
   .ai-reply-notice-{{ ai_gen_id }} {
-    display: block;
-    width: {{ block.settings.desktop_width_percent }}%;
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+    width: 100%;
     max-width: 100%;
     box-sizing: border-box;
-    margin: 0 0 20px;
-    padding: 16px 20px;
-    color: #2B1A12;
-    background-color: #F7F1E8;
-    border-left: 3px solid #4D2816;
-    font-family: inherit;
-    font-size: 15px;
-    line-height: 1.6;
+    margin: 0;
+    padding: 20px 0 0;
+    border-top: 1px solid var(--brand-border, #D8C6B3);
+    border-left: none;
+    background-color: transparent;
   }
 
-  .ai-reply-notice-{{ ai_gen_id }} p {
+  .ai-reply-notice-{{ ai_gen_id }} .customer-care-strip__label {
+    font-family: var(--font-subheading--family, inherit);
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--brand-muted, #725947);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .ai-reply-notice-{{ ai_gen_id }} .customer-care-strip__text {
     margin: 0;
+    font-family: var(--font-body--family, inherit);
+    font-size: 0.875rem;
+    line-height: 1.6;
+    color: var(--brand-muted, #725947);
+    letter-spacing: 0.01em;
   }
 
   @media screen and (max-width: 749px) {
     .ai-reply-notice-{{ ai_gen_id }} {
-      padding: 14px 16px;
-      margin-bottom: 16px;
-      font-size: 15px;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 6px;
+      padding: 18px 0 0;
     }
   }
 {% endstyle %}
 
-<div class="ai-reply-notice-{{ ai_gen_id }}" style="width: {{ block.settings.desktop_width_percent }}%;" role="note" {{ block.shopify_attributes }}>
-  <p>{{ block.settings.notice_text | escape }}</p>
+<div class="ai-reply-notice-{{ ai_gen_id }} customer-care-strip" role="note" {{ block.shopify_attributes }}>
+  <span class="customer-care-strip__label">Customer Care</span>
+  <p class="customer-care-strip__text">{{ block.settings.notice_text | escape }}</p>
 </div>
 
 {% schema %}
 {
-  "name": "Reply time notice",
+  "name": "Customer care strip",
   "settings": [
     {
       "type": "text",
       "id": "notice_text",
       "label": "Notice text",
-      "default": "Expect a reply within 2–3 working days."
+      "default": "We aim to respond to your enquiry within 2–3 working days."
     },
     {
       "type": "range",
@@ -60,10 +77,10 @@
   ],
   "presets": [
     {
-      "name": "Reply time notice"
+      "name": "Customer care strip"
     }
   ],
   "tag": null,
-  "class": "reply-time-notice"
+  "class": "customer-care-strip-wrapper"
 }
 {% endschema %}

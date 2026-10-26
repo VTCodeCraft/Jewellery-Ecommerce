@@ -38,6 +38,32 @@
           },
           "blocks": {}
         },
+        "subtitle": {
+          "type": "text",
+          "name": "t:names.text",
+          "settings": {
+            "text": "<p>We\u2019re here to help. We\u2019d love to hear from you.</p>",
+            "width": "100%",
+            "max_width": "normal",
+            "alignment": "center",
+            "type_preset": "paragraph",
+            "font": "var(--font-body--family)",
+            "font_size": "1rem",
+            "line_height": "normal",
+            "letter_spacing": "normal",
+            "case": "none",
+            "wrap": "pretty",
+            "text_color": "",
+            "background": false,
+            "background_color": "#00000026",
+            "corner_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
+        },
         "content": {
           "type": "text",
           "name": "t:names.content",
@@ -67,11 +93,12 @@
       },
       "block_order": [
         "title",
+        "subtitle",
         "content"
       ],
       "settings": {
         "content_direction": "column",
-        "gap": 32,
+        "gap": 12,
         "background_color": "{{ settings.color_palette.background }}",
         "padding-block-start": 40,
         "padding-block-end": 0
@@ -104,7 +131,7 @@
               "type": "contact-form-submit-button",
               "static": true,
               "settings": {
-                "label": "Submit",
+                "label": "Send Message",
                 "style_class": "button",
                 "custom_button_background": "{{ settings.color_palette.foreground }}",
                 "custom_button_text": "{{ settings.color_palette.background }}",
@@ -422,7 +449,7 @@
               "type": "text",
               "name": "t:names.text",
               "settings": {
-                "text": "<p>House No. 120, Street-8, M Block, Shastri Nagar, 110052 New Delhi DL, India</p>",
+                "text": "<p>House No. 120, Street-8, M Block, Shastri Nagar, 110052 New Delhi, DL, India</p>",
                 "width": "fit-content",
                 "max_width": "normal",
                 "alignment": "left",
@@ -464,7 +491,7 @@
         "align_baseline": false,
         "horizontal_alignment_flex_direction_column": "flex-start",
         "vertical_alignment_flex_direction_column": "center",
-        "gap": 32,
+        "gap": 0,
         "section_width": "page-width",
         "section_height": "",
         "section_height_custom": 50,
@@ -481,8 +508,8 @@
         "border_opacity": 100,
         "border_color": "",
         "border_radius": 0,
-        "padding-block-start": 24,
-        "padding-block-end": 8
+        "padding-block-start": 36,
+        "padding-block-end": 20
       }
     },
     "179301811107ccf973": {
@@ -491,7 +518,7 @@
         "ai_gen_block_92dd1f7_WVGmhF": {
           "type": "ai_gen_block_92dd1f7",
           "settings": {
-            "notice_text": "Expect a reply within 2–3 working days.",
+            "notice_text": "We aim to respond to your enquiry within 2–3 working days.",
             "desktop_width_percent": 100
           },
           "blocks": {}
@@ -508,7 +535,7 @@
         "align_baseline": false,
         "horizontal_alignment_flex_direction_column": "flex-start",
         "vertical_alignment_flex_direction_column": "center",
-        "gap": 12,
+        "gap": 0,
         "section_width": "page-width",
         "section_height": "",
         "section_height_custom": 50,
@@ -526,7 +553,7 @@
         "border_color": "",
         "border_radius": 0,
         "padding-block-start": 0,
-        "padding-block-end": 0
+        "padding-block-end": 48
       }
     }
   },

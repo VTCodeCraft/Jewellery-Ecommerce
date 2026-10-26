@@ -798,11 +798,9 @@ footer .email-signup__input-group--integrated .email-signup__button--integrated 
   }
 }
 
-/* ------------------------------------------------------------
-   Hero Shop now button — readable hover (ruby bg, cream text).
+/* Hero Shop now button — readable hover (ruby bg, cream text).
    (Our Shop button hover is governed by its section-scoped rule
-   above, which wins on specificity.)
-   ------------------------------------------------------------ */
+   above, which wins on specificity.) */
 a.button-custom--button_hero_primary:hover {
   --button-background-color: var(--brand-ruby);
   --button-color: var(--brand-cream);
@@ -810,3 +808,313 @@ a.button-custom--button_hero_primary:hover {
 }
 
 
+/* ============================================================
+   Contact page — polished refinements
+   Scoped to .contact-page-subtitle, .contact-form*, and
+   #shopify-section-contact_info / #shopify-section-179301811107ccf973
+   to avoid touching unrelated pages.
+   ============================================================ */
+
+/* ----------------------------------------------------------
+   1. Contact heading subtitle
+   ---------------------------------------------------------- */
+
+/* Targets the subtitle text block by its auto-generated block class.
+   snippets/text.liquid emits class="text-block text-block--{block.id} …"
+   on the wrapper, so text-block--subtitle is stable and unique. */
+.text-block--subtitle p {
+  margin: 0;
+  font-family: var(--font-body--family);
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--brand-muted);
+  letter-spacing: 0.01em;
+}
+
+/* ----------------------------------------------------------
+   2. Form fields — consistent sizing, hover & focus states
+   ---------------------------------------------------------- */
+
+/* Consistent height for single-line inputs */
+.contact-form__input:not(.contact-form__input--textarea) {
+  height: 48px;
+  padding-block: 0;
+  /* keep inline padding from the block stylesheet */
+  box-sizing: border-box;
+  line-height: 48px;
+}
+
+/* Hover: lighten border slightly to signal interactivity */
+.contact-form__input:hover {
+  border-color: var(--brand-muted);
+}
+
+/* Focus: gold outline consistent with global :focus-visible rule */
+.contact-form__input:focus,
+.contact-form__input:focus-visible {
+  outline: none;
+  border-color: var(--brand-gold);
+  box-shadow: 0 0 0 2px rgb(177 132 75 / 0.18);
+}
+
+/* Textarea — preserve resizability, constrain min height */
+.contact-form__input--textarea {
+  height: auto;
+  min-height: 140px;
+  line-height: 1.6;
+  padding-block: 14px;
+}
+
+/* Transition for all inputs */
+.contact-form__input {
+  transition:
+    border-color 160ms ease,
+    box-shadow 160ms ease;
+}
+
+/* Mobile: stack Name/Email row, full width inputs */
+@media screen and (max-width: 749px) {
+  .contact-form__form-row {
+    gap: 16px;
+  }
+}
+
+/* ----------------------------------------------------------
+   3. Submit button — hover / focus / active states
+   ---------------------------------------------------------- */
+
+/* The submit button uses Shopify's primary button class (.button).
+   We scope to .submit-button to avoid touching other buttons. */
+.submit-button {
+  transition:
+    background-color 180ms ease,
+    color 180ms ease,
+    border-color 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.submit-button:hover {
+  background-color: var(--brand-ruby);
+  border-color: var(--brand-ruby);
+  color: var(--brand-cream);
+}
+
+.submit-button:focus-visible {
+  outline: 2px solid var(--brand-gold);
+  outline-offset: 3px;
+}
+
+.submit-button:active {
+  background-color: var(--brand-cocoa);
+  border-color: var(--brand-cocoa);
+  color: var(--brand-cream);
+  transform: translateY(1px);
+}
+
+/* ----------------------------------------------------------
+   4. Contact info — editorial three-column layout
+   ---------------------------------------------------------- */
+
+/* Common content container:
+   Constrain both the 3-column contact info and customer care strip
+   to a shared 860px centered width, perfectly balanced beneath the form. */
+#shopify-section-contact_info .section-content-wrapper,
+#shopify-section-179301811107ccf973 .section-content-wrapper {
+  max-width: 860px !important;
+  margin-inline: auto !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+/* Ensure flex row stretches so vertical dividers have uniform height */
+#shopify-section-contact_info .section-content-wrapper {
+  display: flex !important;
+  align-items: stretch !important;
+  gap: 0 !important;
+}
+
+/* Three balanced columns with equal flex distribution */
+#shopify-section-contact_info .group-block {
+  flex: 1 1 0 !important;
+  min-width: 0 !important;
+  padding-inline: 28px !important;
+  box-sizing: border-box !important;
+}
+
+/* First column: flush on the left */
+#shopify-section-contact_info .group-block:first-child {
+  padding-inline-start: 0 !important;
+}
+
+/* Last column: flush on the right, no vertical divider */
+#shopify-section-contact_info .group-block:last-child {
+  padding-inline-end: 0 !important;
+}
+
+/* Subtle, refined vertical divider between columns */
+#shopify-section-contact_info .group-block:not(:last-child) {
+  border-inline-end: 1px solid var(--brand-border) !important;
+}
+
+/* Column inner layout: top-left aligned */
+#shopify-section-contact_info .group-block-content {
+  align-items: flex-start !important;
+  justify-content: flex-start !important;
+  text-align: left !important;
+}
+
+/* Small, uppercase section labels with restrained letter spacing */
+#shopify-section-contact_info .text-block.h6,
+#shopify-section-contact_info .text-block.h6 > *,
+#shopify-section-contact_info h6 {
+  font-family: var(--font-subheading--family, inherit) !important;
+  font-size: 0.6875rem !important; /* 11px */
+  font-weight: 500 !important;
+  letter-spacing: 0.12em !important;
+  text-transform: uppercase !important;
+  color: var(--brand-muted) !important;
+  margin-block: 0 10px !important;
+  line-height: 1.4 !important;
+}
+
+/* Body text — readable, comfortable line height, consistent styling */
+#shopify-section-contact_info .text-block.paragraph,
+#shopify-section-contact_info .text-block.paragraph p,
+#shopify-section-contact_info p {
+  font-family: var(--font-body--family, inherit) !important;
+  font-size: 0.9375rem !important; /* 15px */
+  line-height: 1.65 !important;
+  color: var(--brand-espresso) !important;
+  margin: 0 !important;
+  overflow-wrap: break-word !important;
+  word-break: normal !important;
+}
+
+/* Email link — subtle, elegant underline with hover transition */
+#shopify-section-contact_info a[href^="mailto"] {
+  color: var(--brand-espresso) !important;
+  text-decoration: none !important;
+  border-bottom: 1px solid var(--brand-border) !important;
+  padding-bottom: 1px !important;
+  transition: color 160ms ease, border-color 160ms ease !important;
+}
+
+#shopify-section-contact_info a[href^="mailto"]:hover {
+  color: var(--brand-ruby) !important;
+  border-bottom-color: var(--brand-ruby) !important;
+}
+
+/* Tablet (750px – 989px): tighter column padding to prevent crowding */
+@media screen and (min-width: 750px) and (max-width: 989px) {
+  #shopify-section-contact_info .section-content-wrapper,
+  #shopify-section-179301811107ccf973 .section-content-wrapper {
+    max-width: 100% !important;
+    padding-inline: 16px !important;
+  }
+
+  #shopify-section-contact_info .group-block {
+    padding-inline: 18px !important;
+  }
+
+  #shopify-section-contact_info .group-block:first-child {
+    padding-inline-start: 0 !important;
+  }
+
+  #shopify-section-contact_info .group-block:last-child {
+    padding-inline-end: 0 !important;
+  }
+
+  #shopify-section-contact_info .text-block.paragraph p,
+  #shopify-section-contact_info p {
+    font-size: 0.875rem !important;
+  }
+}
+
+/* Mobile (<750px): stack vertically, row separators */
+@media screen and (max-width: 749px) {
+  #shopify-section-contact_info .section-content-wrapper {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 0 !important;
+    max-width: 100% !important;
+    padding-inline: 0 !important;
+  }
+
+  #shopify-section-contact_info .group-block {
+    flex: none !important;
+    width: 100% !important;
+    padding-inline: 0 !important;
+    padding-block: 20px !important;
+    border-inline-end: none !important;
+    border-block-end: 1px solid var(--brand-border) !important;
+  }
+
+  #shopify-section-contact_info .group-block:first-child {
+    padding-block-start: 0 !important;
+  }
+
+  #shopify-section-contact_info .group-block:last-child {
+    border-block-end: none !important;
+    padding-block-end: 0 !important;
+  }
+}
+
+/* ----------------------------------------------------------
+   5. Customer care strip (response-time notice)
+   ---------------------------------------------------------- */
+
+/* Clean reset and subtle horizontal strip styling */
+#shopify-section-179301811107ccf973 {
+  padding-block-start: 0 !important;
+}
+
+[class*='ai-reply-notice-'],
+.customer-care-strip {
+  border-left: none !important;
+  background-color: transparent !important;
+  padding: 20px 0 0 !important;
+  margin: 0 !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+  border-top: 1px solid var(--brand-border) !important;
+
+  display: flex !important;
+  align-items: baseline !important;
+  gap: 16px !important;
+}
+
+/* Label: small, restrained uppercase */
+.customer-care-strip__label {
+  font-family: var(--font-subheading--family, inherit) !important;
+  font-size: 0.6875rem !important; /* 11px */
+  font-weight: 500 !important;
+  letter-spacing: 0.12em !important;
+  text-transform: uppercase !important;
+  color: var(--brand-muted) !important;
+  white-space: nowrap !important;
+  flex-shrink: 0 !important;
+}
+
+/* Notice text: quiet, secondary customer-care message */
+.customer-care-strip__text,
+[class*='ai-reply-notice-'] p {
+  font-family: var(--font-body--family, inherit) !important;
+  font-size: 0.875rem !important; /* 14px */
+  line-height: 1.6 !important;
+  color: var(--brand-muted) !important;
+  margin: 0 !important;
+  letter-spacing: 0.01em !important;
+}
+
+/* Mobile responsive for customer care strip */
+@media screen and (max-width: 749px) {
+  [class*='ai-reply-notice-'],
+  .customer-care-strip {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 6px !important;
+    padding-top: 18px !important;
+    margin-top: 20px !important;
+  }
+}
