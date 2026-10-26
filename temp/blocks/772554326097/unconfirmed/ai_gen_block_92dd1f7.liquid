@@ -1,0 +1,69 @@
+{% doc %}
+  @prompt
+    Add a simple reply-time notice area to the contact page near the contact form. Display the text: “Expect a reply within 2–3 working days.” Match the contact page’s existing styling, keep the notice easy to read on desktop and mobile, and make the text editable.
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-reply-notice-{{ ai_gen_id }} {
+    display: block;
+    width: {{ block.settings.desktop_width_percent }}%;
+    max-width: 100%;
+    box-sizing: border-box;
+    margin: 0 0 20px;
+    padding: 16px 20px;
+    color: #2B1A12;
+    background-color: #F7F1E8;
+    border-left: 3px solid #4D2816;
+    font-family: inherit;
+    font-size: 15px;
+    line-height: 1.6;
+  }
+
+  .ai-reply-notice-{{ ai_gen_id }} p {
+    margin: 0;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-reply-notice-{{ ai_gen_id }} {
+      padding: 14px 16px;
+      margin-bottom: 16px;
+      font-size: 15px;
+    }
+  }
+{% endstyle %}
+
+<div class="ai-reply-notice-{{ ai_gen_id }}" style="width: {{ block.settings.desktop_width_percent }}%;" role="note" {{ block.shopify_attributes }}>
+  <p>{{ block.settings.notice_text | escape }}</p>
+</div>
+
+{% schema %}
+{
+  "name": "Reply time notice",
+  "settings": [
+    {
+      "type": "text",
+      "id": "notice_text",
+      "label": "Notice text",
+      "default": "Expect a reply within 2–3 working days."
+    },
+    {
+      "type": "range",
+      "id": "desktop_width_percent",
+      "label": "Desktop width",
+      "min": 50,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 100
+    }
+  ],
+  "presets": [
+    {
+      "name": "Reply time notice"
+    }
+  ],
+  "tag": null,
+  "class": "reply-time-notice"
+}
+{% endschema %}
