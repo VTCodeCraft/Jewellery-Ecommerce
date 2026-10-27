@@ -1,0 +1,66 @@
+{%- doc -%}
+  Renders the post-add-to-cart Recommended Products Popup for Newora Jewels.
+  Displays a curated selection of complementary pieces in an elegant modal overlay.
+{%- enddoc -%}
+
+<recommended-products-popup
+  id="recommended-products-popup"
+  data-money-format="{{ shop.money_format | replace: 'Rs. ', '₹' | replace: 'Rs.', '₹' | escape }}"
+  data-currency="{{ cart.currency.iso_code | default: shop.currency }}"
+>
+  <dialog
+    ref="dialog"
+    class="recommended-products-modal dialog-modal"
+    scroll-lock
+    aria-labelledby="recommended-popup-title"
+    aria-describedby="recommended-popup-subtitle"
+  >
+    <div class="recommended-products-modal__inner">
+      <button
+        ref="closeButton"
+        on:click="/closeDialog"
+        class="button button-unstyled close-button recommended-products-modal__close"
+        aria-label="Close recommendations"
+        type="button"
+      >
+        <span class="svg-wrapper">
+          {{- 'icon-close.svg' | inline_asset_content -}}
+        </span>
+      </button>
+
+      <div class="recommended-products-modal__header">
+        <div class="recommended-products-modal__pill">
+          <span class="recommended-products-modal__check-icon" aria-hidden="true">
+            {{- 'icon-checkmark.svg' | inline_asset_content -}}
+          </span>
+          <span class="recommended-products-modal__pill-text">Added to your bag</span>
+        </div>
+        <h2 id="recommended-popup-title" class="recommended-products-modal__title">
+          Added to your bag
+        </h2>
+        <p id="recommended-popup-subtitle" class="recommended-products-modal__subtitle">
+          Complete your look with these beautiful pieces.
+        </p>
+      </div>
+
+      <div
+        ref="content"
+        class="recommended-products-modal__content"
+        role="region"
+        aria-label="Recommended jewellery"
+      >
+        <!-- Injected dynamically by recommended-products-popup.js -->
+      </div>
+
+      <div class="recommended-products-modal__footer">
+        <button
+          type="button"
+          on:click="/closeDialog"
+          class="button button-secondary recommended-products-modal__continue-btn"
+        >
+          Continue shopping
+        </button>
+      </div>
+    </div>
+  </dialog>
+</recommended-products-popup>
