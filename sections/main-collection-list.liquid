@@ -65,8 +65,10 @@
             assign image_source = 'bestseller.jpg' | asset_url
           when 'featured-products'
             assign image_source = 'featured.png' | asset_url
-          when 'dailywear', 'partywear'
-            assign image_source = 'party_dailywaear.png' | asset_url
+          when 'dailywear'
+            assign image_source = 'explore-dailywear.png' | asset_url
+          when 'partywear'
+            assign image_source = 'explore-partywear.png' | asset_url
           when 'festival'
             assign image_source = 'explore-festival.png' | asset_url
           when 'wedding'
