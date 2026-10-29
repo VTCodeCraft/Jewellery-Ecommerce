@@ -12,6 +12,7 @@
     "logo": "shopify://shop_images/newora_jewels.jpg",
     "logo_height": 36,
     "logo_height_mobile": 28,
+    "favicon": "shopify://shop_images/newora_jewels.jpg",
     "page_text_color": "{{ settings.color_palette.foreground }}",
     "type_body_font": "geist_n4",
     "type_subheading_font": "geist_n5",
