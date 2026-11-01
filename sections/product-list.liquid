@@ -12,15 +12,19 @@
   endif
 
   assign is_home_merchandising_section = false
+  assign use_fill_progress = false
   assign view_all_label = ''
   if section.id contains 'product_list_best_sellers'
     assign is_home_merchandising_section = true
+    assign use_fill_progress = true
     assign view_all_label = 'VIEW ALL BESTSELLERS'
   elsif section.id contains 'product_list_themegen'
     assign is_home_merchandising_section = true
+    assign use_fill_progress = true
     assign view_all_label = 'VIEW ALL FEATURED'
   elsif section.id contains 'product_list_new_arrivals'
     assign is_home_merchandising_section = true
+    assign use_fill_progress = true
     assign view_all_label = 'VIEW ALL NEW ARRIVALS'
   endif
 %}
@@ -92,7 +96,7 @@
   %}
 
   {% if section.settings.layout_type == 'grid' %}
-    <product-list-slider data-section-id="{{ section.id }}">
+    <product-list-slider data-section-id="{{ section.id }}"{% if use_fill_progress and request.page_type == 'index' %} data-progress-mode="fill"{% endif %}>
       <div class="product-list-slider__track" data-slider-track>
         {% render 'resource-list',
           list_items: list_items,
@@ -272,6 +276,11 @@
     background: rgb(var(--color-foreground-rgb, 0, 0, 0) / 0.55);
   }
 
+  product-list-slider[data-progress-mode="fill"] .product-list-slider__scrollbar-thumb {
+    min-width: 2px;
+    will-change: width;
+  }
+
   .product-list-slider__scrollbar-thumb.is-scrollbar-dragging {
     cursor: grabbing;
     background: rgb(var(--color-foreground-rgb, 0, 0, 0) / 0.55);
@@ -324,6 +333,8 @@
 
       const scrollbar = el.querySelector(SCROLLBAR_SELECTOR);
       const thumb = el.querySelector(THUMB_SELECTOR);
+      const useFillProgress = el.dataset.progressMode === 'fill';
+      if (useFillProgress && (!scrollbar || !thumb)) return;
 
       el.setAttribute(INITIALIZED_ATTR, '1');
 
@@ -350,7 +361,15 @@
 
         if (!hasOverflow) {
           thumb.style.width = '0px';
-          thumb.style.transform = 'translateX(0)';
+          thumb.style.transform = useFillProgress ? 'none' : 'translateX(0)';
+          return;
+        }
+
+        if (useFillProgress) {
+          const maxScroll = Math.max(0, scrollWidth - clientWidth);
+          const progress = maxScroll > 0 ? Math.min(1, Math.max(0, scrollLeft / maxScroll)) : 0;
+          thumb.style.width = `${progress * 100}%`;
+          thumb.style.transform = 'none';
           return;
         }
 
@@ -372,7 +391,21 @@
       }
 
       track.addEventListener('scroll', updateOverflow, { passive: true });
-      new ResizeObserver(updateOverflow).observe(track);
+      const resizeObserver = new ResizeObserver(updateOverflow);
+      resizeObserver.observe(track);
+      if (useFillProgress) {
+        // The viewport can stay fixed while its product row or images resize.
+        function observeContent() {
+          const content = track.firstElementChild;
+          if (content) resizeObserver.observe(content);
+          updateOverflow();
+        }
+        observeContent();
+        track.addEventListener('load', updateOverflow, true);
+        window.addEventListener('resize', updateOverflow);
+        const contentObserver = new MutationObserver(observeContent);
+        contentObserver.observe(track, { childList: true, subtree: true });
+      }
       updateOverflow();
 
       el._sliderRecalc = updateOverflow;
@@ -484,12 +517,21 @@
 
       if (scrollbar && thumb) {
         var thumbDrag = null;
+        var suppressScrollbarClick = false;
 
         function onThumbMove(e) {
           if (!thumbDrag) return;
           e.preventDefault();
 
           var trackWidth = scrollbar.clientWidth || track.clientWidth;
+          if (useFillProgress) {
+            const maxScroll = Math.max(0, track.scrollWidth - track.clientWidth);
+            if (trackWidth <= 0 || maxScroll <= 0) return;
+            if (Math.abs(e.clientX - thumbDrag.startX) > DRAG_THRESHOLD) thumbDrag.moved = true;
+            const progress = Math.min(1, Math.max(0, thumbDrag.startProgress + (e.clientX - thumbDrag.startX) / trackWidth));
+            track.scrollLeft = progress * maxScroll;
+            return;
+          }
           var scrollWidth = track.scrollWidth;
           var clientWidth = track.clientWidth;
           var thumbWidth = thumb.clientWidth;
@@ -507,6 +549,7 @@
 
         function onThumbUp() {
           if (thumbDrag) {
+            suppressScrollbarClick = useFillProgress && thumbDrag.moved;
             track.classList.remove('is-dragging');
             thumb.classList.remove('is-scrollbar-dragging');
             thumbDrag = null;
@@ -526,6 +569,8 @@
             startX: e.clientX,
             startScrollLeft: track.scrollLeft,
             startThumbLeft: thumbRect.left - scrollbarRect.left,
+            startProgress: Math.min(1, Math.max(0, track.scrollLeft / Math.max(1, track.scrollWidth - track.clientWidth))),
+            moved: false,
           };
 
           /* Reuse the track's is-dragging state so `scroll-behavior: auto`
@@ -539,11 +584,22 @@
         });
 
         scrollbar.addEventListener('click', function (e) {
-          if (e.target === thumb || thumbDrag) return;
+          if (suppressScrollbarClick) {
+            suppressScrollbarClick = false;
+            return;
+          }
+          if ((!useFillProgress && e.target === thumb) || thumbDrag) return;
 
           var scrollbarRect = scrollbar.getBoundingClientRect();
           var clickX = e.clientX - scrollbarRect.left;
           var trackWidth = scrollbar.clientWidth || track.clientWidth;
+          if (useFillProgress) {
+            const maxScroll = Math.max(0, track.scrollWidth - track.clientWidth);
+            if (trackWidth <= 0 || maxScroll <= 0) return;
+            const progress = Math.min(1, Math.max(0, clickX / trackWidth));
+            track.scrollTo({ left: progress * maxScroll, behavior: 'smooth' });
+            return;
+          }
           var thumbWidth = thumb.clientWidth;
           var maxScroll = track.scrollWidth - track.clientWidth;
           var maxThumbLeft = trackWidth - thumbWidth;
@@ -581,6 +637,9 @@
     /* ---- catch sliders added later (e.g. section rendering) ---- */
     new MutationObserver(function (mutations) {
       for (var i = 0; i < mutations.length; i++) {
+        // A streamed section can arrive before its scrollbar children do.
+        const pendingSlider = mutations[i].target.closest?.('product-list-slider[data-progress-mode="fill"]');
+        if (pendingSlider) initSlider(pendingSlider);
         for (var j = 0; j < mutations[i].addedNodes.length; j++) {
           var node = mutations[i].addedNodes[j];
           if (node.nodeType !== 1) continue;
