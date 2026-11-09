@@ -50,8 +50,8 @@
                 block_image
                 | image_url: width: 1200
                 | image_tag:
-                  widths: '600, 800, 1200',
-                  sizes: '(min-width: 990px) 25vw, (min-width: 750px) 50vw, 100vw',
+                  widths: '320, 480, 600, 800, 1200',
+                  sizes: '(min-width: 990px) 25vw, (min-width: 768px) 50vw, min(80vw, 384px)',
                   alt: block_image.alt | default: block_title,
                   class: 'occasions__card-image',
                   loading: 'lazy'
@@ -284,6 +284,54 @@
 
   .occasions__card--placeholder .occasions__card-overlay {
     background: rgba(0,0,0,0.08);
+  }
+
+  @media screen and (max-width: 767px) {
+    [data-testid='occasions-section'] {
+      padding-block-start: min(var(--padding-block-start), 32px);
+      padding-block-end: min(var(--padding-block-end), 32px);
+    }
+
+    .occasions__header {
+      margin-block-end: 20px;
+    }
+
+    .occasions__heading {
+      margin-block-end: 8px;
+    }
+
+    .occasions__grid {
+      grid-template-columns: none;
+      grid-auto-flow: column;
+      grid-auto-columns: min(calc((100% - 12px) / 1.2), 384px);
+      gap: 12px;
+      min-width: 0;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scroll-padding-inline: 4px;
+      /* Leave room for the existing link focus outline inside the scroller. */
+      padding: 4px 4px 8px;
+      margin: -4px -4px 0;
+    }
+
+    .occasions__card {
+      min-width: 0;
+      scroll-snap-align: start;
+    }
+
+    .occasions__card-media {
+      aspect-ratio: 4 / 5;
+      max-height: 480px;
+    }
+
+    .occasions__card-content {
+      padding: 16px 12px;
+    }
+
+    .occasions__card-title,
+    .occasions__card-text {
+      overflow-wrap: anywhere;
+    }
   }
 {% endstylesheet %}
 
