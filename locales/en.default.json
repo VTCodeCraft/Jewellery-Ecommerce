@@ -390,7 +390,8 @@
             "return_window_closed": "Replacement window closed",
             "already_returned": "Already replaced",
             "not_eligible_for_return": "Not eligible for replacement"
-          }
+          },
+          "note_label": "Describe the issue (optional)"
         },
         "return_policy_heading": "Replacement and refund policy",
         "bulk_apply_return_reason_modal": {
