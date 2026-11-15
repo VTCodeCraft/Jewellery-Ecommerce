@@ -410,7 +410,7 @@
         "estimated_total_label": "Item value",
         "refund_policy_notice": "Replacements are only for damaged, defective or incorrect items. Change-of-mind or style requests are declined, as per our {{refundPolicy}}.",
         "refund_policy": "replacement and refund policy",
-        "no_policy_notice": "Replacement eligibility will be based on our replacement and refund policy."
+        "no_policy_notice": "Replacements are only for damaged, defective or incorrect items. Change-of-mind or style requests are declined, as per our replacement and refund policy."
       },
       "order_action": {
         "request_return": "Request replacement",
