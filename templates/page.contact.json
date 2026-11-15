@@ -42,7 +42,7 @@
           "type": "text",
           "name": "t:names.text",
           "settings": {
-            "text": "<p>We\u2019re here to help. We\u2019d love to hear from you.</p>",
+            "text": "<p>We’re here to help. We’d love to hear from you.</p>",
             "width": "100%",
             "max_width": "normal",
             "alignment": "center",
@@ -253,7 +253,7 @@
               "type": "text",
               "name": "t:names.text",
               "settings": {
-                "text": "<p><a href=\"mailto:neworajewels@gmail.com\">neworajewels@gmail.com</a></p>",
+                "text": "<p><a href=\"mailto:neworajewels@gmail.com\">neworajewels@gmail.com</a></p><p>Grievance contact<br/>Name: Vinita Pandey<br/>Designation: Owner & Grievance Officer<br/>Email: <a href=\"mailto:neworajewels@gmail.com\">neworajewels@gmail.com</a></p>",
                 "width": "fit-content",
                 "max_width": "normal",
                 "alignment": "left",
@@ -518,7 +518,7 @@
         "ai_gen_block_92dd1f7_WVGmhF": {
           "type": "ai_gen_block_92dd1f7",
           "settings": {
-            "notice_text": "We aim to respond to your enquiry within 2–3 working days.",
+            "notice_text": "We aim to respond to customer support enquiries within 1–2 working days.",
             "desktop_width_percent": 100
           },
           "blocks": {}
