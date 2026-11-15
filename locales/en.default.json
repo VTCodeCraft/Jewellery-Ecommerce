@@ -366,8 +366,8 @@
         "exchange_subheader": "Replacement items will be added to your order once the replacement is processed."
       },
       "line_item_status": {
-        "return_in_progress": "Replacement requested",
-        "return_requested": "Replacement in progress"
+        "return_in_progress": "Replacement in progress",
+        "return_requested": "Replacement requested"
       }
     },
     "returns_and_cancellations": {
@@ -391,7 +391,11 @@
             "not_eligible_for_return": "Not eligible for replacement"
           }
         },
-        "return_policy_heading": "Replacement and refund policy"
+        "return_policy_heading": "Replacement and refund policy",
+        "bulk_apply_return_reason_modal": {
+          "title": "Apply a reason",
+          "description": "This reason will apply to all selected items"
+        }
       },
       "banner": {
         "cannot_request_return_title": "Cannot request replacement",
@@ -414,6 +418,18 @@
         "cancel_or_return": "Cancel or replace",
         "return_items_accessibility_label": "Request replacement for order {{orderName}}",
         "cancel_or_return_accessibility_label": "Cancel or replace items for order {{orderName}}"
+      }
+    },
+    "knowledge_base": {
+      "self_serve_returns": {
+        "enabled": "Customers can request replacements for damaged, defective or incorrect items themselves in their customer account."
+      }
+    }
+  },
+  "shopify": {
+    "checkout": {
+      "order_summary": {
+        "return_shipping_fee_label": "Shipping"
       }
     }
   }
