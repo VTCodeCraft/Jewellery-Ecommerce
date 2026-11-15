@@ -429,7 +429,7 @@
   "shopify": {
     "checkout": {
       "order_summary": {
-        "return_shipping_fee_label": "Shipping"
+        "return_shipping_fee_label": "Replacement shipping"
       }
     }
   }
