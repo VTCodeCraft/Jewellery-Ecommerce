@@ -382,7 +382,8 @@
           "items_to_return": {
             "one": "{{count}} item to replace",
             "other": "{{count}} items to replace"
-          }
+          },
+          "confirmation_email": "We'll send a confirmation email to {{email}}. Please reply to it with 3–5 clear photos of the issue."
         },
         "line_items": {
           "ineligible_reason": {
