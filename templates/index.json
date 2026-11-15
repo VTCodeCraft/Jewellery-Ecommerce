@@ -122,7 +122,7 @@
                   "type": "text",
                   "name": "t:names.text",
                   "settings": {
-                    "text": "<p>Handcrafted jewellery made in small batches \u2014 for everyday wear, for gifting, and for the days that matter most.</p>",
+                    "text": "<p>Handcrafted jewellery made in small batches — for everyday wear, for gifting, and for the days that matter most.</p>",
                     "width": "100%",
                     "max_width": "narrow",
                     "alignment": "center",
@@ -385,7 +385,7 @@
         "button_TmU98M": {
           "type": "button",
           "settings": {
-            "label": "SHOP NOW \u2192",
+            "label": "SHOP NOW →",
             "link": "shopify://collections/all",
             "open_in_new_tab": false,
             "style_class": "button-custom",
@@ -1322,8 +1322,7 @@
         "background_color": "{{ settings.color_palette.background }}",
         "padding-block-start": 72,
         "padding-block-end": 72
-      },
-      "block_order": null
+      }
     }
   },
   "order": [
