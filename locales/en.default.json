@@ -430,6 +430,9 @@
     "checkout": {
       "order_summary": {
         "return_shipping_fee_label": "Replacement shipping"
+      },
+      "shop_policies": {
+        "refund_policy": "Replacement and refund policy"
       }
     }
   }
