@@ -13,34 +13,6 @@
   "sections": {
     "footer_newsletter": {
       "type": "section",
-      "settings": {
-        "content_direction": "column",
-        "vertical_on_mobile": true,
-        "horizontal_alignment": "center",
-        "vertical_alignment": "center",
-        "align_baseline": false,
-        "horizontal_alignment_flex_direction_column": "center",
-        "vertical_alignment_flex_direction_column": "center",
-        "gap": 12,
-        "section_width": "page-width",
-        "section_height": "",
-        "section_height_custom": 50,
-        "background_media": "none",
-        "background_color": "{{ settings.color_palette.foreground }}",
-        "video_position": "cover",
-        "background_image_position": "cover",
-        "toggle_overlay": false,
-        "overlay_color": "#00000026",
-        "overlay_style": "solid",
-        "gradient_direction": "to top",
-        "border": "none",
-        "border_width": 1,
-        "border_opacity": 100,
-        "border_color": "",
-        "border_radius": 0,
-        "padding-block-start": 64,
-        "padding-block-end": 32
-      },
       "blocks": {
         "newsletter_heading": {
           "type": "text",
@@ -65,7 +37,8 @@
             "padding-block-end": 0,
             "padding-inline-start": 0,
             "padding-inline-end": 0
-          }
+          },
+          "blocks": {}
         },
         "newsletter_body": {
           "type": "text",
@@ -90,7 +63,8 @@
             "padding-block-end": 8,
             "padding-inline-start": 0,
             "padding-inline-end": 0
-          }
+          },
+          "blocks": {}
         },
         "newsletter_form": {
           "type": "email-signup",
@@ -122,26 +96,24 @@
             "padding-block-end": 0,
             "padding-inline-start": 0,
             "padding-inline-end": 0
-          }
+          },
+          "blocks": {}
         }
       },
       "block_order": [
         "newsletter_heading",
         "newsletter_body",
         "newsletter_form"
-      ]
-    },
-    "footer_main": {
-      "type": "section",
+      ],
       "settings": {
-        "content_direction": "row",
+        "content_direction": "column",
         "vertical_on_mobile": true,
-        "horizontal_alignment": "space-between",
-        "vertical_alignment": "flex-start",
+        "horizontal_alignment": "center",
+        "vertical_alignment": "center",
         "align_baseline": false,
         "horizontal_alignment_flex_direction_column": "center",
         "vertical_alignment_flex_direction_column": "center",
-        "gap": 48,
+        "gap": 12,
         "section_width": "page-width",
         "section_height": "",
         "section_height_custom": 50,
@@ -158,9 +130,12 @@
         "border_opacity": 100,
         "border_color": "",
         "border_radius": 0,
-        "padding-block-start": 40,
-        "padding-block-end": 56
-      },
+        "padding-block-start": 64,
+        "padding-block-end": 32
+      }
+    },
+    "footer_main": {
+      "type": "section",
       "blocks": {
         "group_brand": {
           "type": "group",
@@ -220,7 +195,8 @@
                 "padding-block-end": 0,
                 "padding-inline-start": 0,
                 "padding-inline-end": 0
-              }
+              },
+              "blocks": {}
             },
             "brand_description": {
               "type": "text",
@@ -245,7 +221,8 @@
                 "padding-block-end": 0,
                 "padding-inline-start": 0,
                 "padding-inline-end": 0
-              }
+              },
+              "blocks": {}
             },
             "brand_social": {
               "type": "social-links",
@@ -255,9 +232,18 @@
                 "facebook_url": "",
                 "instagram_url": "",
                 "youtube_url": "",
+                "tiktok_url": "",
+                "twitter_url": "",
+                "threads_url": "",
+                "linkedin_url": "",
+                "bluesky_url": "",
+                "snapchat_url": "",
                 "pinterest_url": "",
+                "tumblr_url": "",
+                "vimeo_url": "",
                 "custom_url": ""
-              }
+              },
+              "blocks": {}
             },
             "contact_heading": {
               "type": "text",
@@ -282,7 +268,8 @@
                 "padding-block-end": 0,
                 "padding-inline-start": 0,
                 "padding-inline-end": 0
-              }
+              },
+              "blocks": {}
             },
             "contact_details": {
               "type": "text",
@@ -307,7 +294,8 @@
                 "padding-block-end": 0,
                 "padding-inline-start": 0,
                 "padding-inline-end": 0
-              }
+              },
+              "blocks": {}
             }
           },
           "block_order": [
@@ -329,8 +317,6 @@
             "menu_spacing": 14,
             "heading_preset": "h6",
             "link_preset": "paragraph",
-            "padding-block-start": 0,
-            "padding-block-end": 0,
             "link_1_label": "All jewellery",
             "link_1_url": "shopify://collections/all",
             "link_2_label": "Best sellers",
@@ -346,8 +332,11 @@
             "link_7_label": "Dailywear",
             "link_7_url": "shopify://collections/dailywear",
             "link_8_label": "Partywear",
-            "link_8_url": "shopify://collections/partywear"
-          }
+            "link_8_url": "shopify://collections/partywear",
+            "padding-block-start": 0,
+            "padding-block-end": 0
+          },
+          "blocks": {}
         },
         "links_care": {
           "type": "footer-links",
@@ -359,21 +348,27 @@
             "accordion_icon": "plus",
             "menu_spacing": 14,
             "heading_preset": "h6",
-            "padding-block-start": 0,
-            "padding-block-end": 0,
+            "link_preset": "paragraph",
             "link_1_label": "FAQ",
             "link_1_url": "/pages/faq",
             "link_2_label": "Shipping & delivery",
             "link_2_url": "/policies/shipping-policy",
-            "link_3_label": "Returns & refunds",
+            "link_3_label": "Replacements & refunds",
             "link_3_url": "/policies/refund-policy",
             "link_4_label": "Jewellery care",
             "link_4_url": "/pages/jewellery-care",
             "link_5_label": "Terms & Policies",
             "link_5_url": "/policies/terms-of-service",
             "link_6_label": "Privacy Policy",
-            "link_6_url": "/policies/privacy-policy"
-          }
+            "link_6_url": "/policies/privacy-policy",
+            "link_7_label": "",
+            "link_7_url": "",
+            "link_8_label": "",
+            "link_8_url": "",
+            "padding-block-start": 0,
+            "padding-block-end": 0
+          },
+          "blocks": {}
         },
         "links_about": {
           "type": "footer-links",
@@ -386,15 +381,26 @@
             "menu_spacing": 14,
             "heading_preset": "h6",
             "link_preset": "paragraph",
-            "padding-block-start": 0,
-            "padding-block-end": 0,
             "link_1_label": "Our story",
             "link_1_url": "/pages/our-story",
             "link_2_label": "About us",
             "link_2_url": "/pages/about",
             "link_3_label": "Contact us",
-            "link_3_url": "/pages/contact"
-          }
+            "link_3_url": "/pages/contact",
+            "link_4_label": "",
+            "link_4_url": "",
+            "link_5_label": "",
+            "link_5_url": "",
+            "link_6_label": "",
+            "link_6_url": "",
+            "link_7_label": "",
+            "link_7_url": "",
+            "link_8_label": "",
+            "link_8_url": "",
+            "padding-block-start": 0,
+            "padding-block-end": 0
+          },
+          "blocks": {}
         }
       },
       "block_order": [
@@ -402,10 +408,83 @@
         "links_shop",
         "links_care",
         "links_about"
-      ]
+      ],
+      "settings": {
+        "content_direction": "row",
+        "vertical_on_mobile": true,
+        "horizontal_alignment": "space-between",
+        "vertical_alignment": "flex-start",
+        "align_baseline": false,
+        "horizontal_alignment_flex_direction_column": "center",
+        "vertical_alignment_flex_direction_column": "center",
+        "gap": 48,
+        "section_width": "page-width",
+        "section_height": "",
+        "section_height_custom": 50,
+        "background_media": "none",
+        "background_color": "{{ settings.color_palette.foreground }}",
+        "video_position": "cover",
+        "background_image_position": "cover",
+        "toggle_overlay": false,
+        "overlay_color": "#00000026",
+        "overlay_style": "solid",
+        "gradient_direction": "to top",
+        "border": "none",
+        "border_width": 1,
+        "border_opacity": 100,
+        "border_color": "",
+        "border_radius": 0,
+        "padding-block-start": 40,
+        "padding-block-end": 56
+      }
     },
     "footer_trust": {
       "type": "section",
+      "blocks": {
+        "trust_items": {
+          "type": "text",
+          "name": "t:names.text",
+          "settings": {
+            "text": "<p>Secure payments · Replacement support · Dispatched from India</p>",
+            "width": "100%",
+            "max_width": "none",
+            "alignment": "left",
+            "type_preset": "paragraph",
+            "font": "var(--font-body--family)",
+            "font_size": "0.8125rem",
+            "line_height": "normal",
+            "letter_spacing": "normal",
+            "case": "none",
+            "wrap": "pretty",
+            "text_color": "",
+            "background": false,
+            "background_color": "#00000026",
+            "corner_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
+        },
+        "trust_payment": {
+          "type": "payment-icons",
+          "name": "t:names.payment_icons",
+          "settings": {
+            "horizontal_alignment": "flex-end",
+            "gap": 8,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "trust_items",
+        "trust_payment"
+      ],
       "settings": {
         "content_direction": "row",
         "vertical_on_mobile": true,
@@ -433,50 +512,7 @@
         "border_radius": 0,
         "padding-block-start": 0,
         "padding-block-end": 32
-      },
-      "blocks": {
-        "trust_items": {
-          "type": "text",
-          "name": "t:names.text",
-          "settings": {
-            "text": "<p>Secure payments \u00b7 Easy returns \u00b7 Dispatched from India</p>",
-            "width": "100%",
-            "max_width": "none",
-            "alignment": "left",
-            "type_preset": "paragraph",
-            "font": "var(--font-body--family)",
-            "font_size": "0.8125rem",
-            "line_height": "normal",
-            "letter_spacing": "normal",
-            "case": "none",
-            "wrap": "pretty",
-            "text_color": "",
-            "background": false,
-            "background_color": "#00000026",
-            "corner_radius": 0,
-            "padding-block-start": 0,
-            "padding-block-end": 0,
-            "padding-inline-start": 0,
-            "padding-inline-end": 0
-          }
-        },
-        "trust_payment": {
-          "type": "payment-icons",
-          "name": "t:names.payment_icons",
-          "settings": {
-            "horizontal_alignment": "flex-end",
-            "gap": 8,
-            "padding-block-start": 0,
-            "padding-block-end": 0,
-            "padding-inline-start": 0,
-            "padding-inline-end": 0
-          }
-        }
-      },
-      "block_order": [
-        "trust_items",
-        "trust_payment"
-      ]
+      }
     },
     "footer_utilities": {
       "type": "footer-utilities",
@@ -494,7 +530,20 @@
         "social_icons": {
           "type": "social-links",
           "settings": {
-            "instagram_url": "https://www.instagram.com/neworajewels/"
+            "icon_color": "",
+            "facebook_url": "",
+            "instagram_url": "https://www.instagram.com/neworajewels/",
+            "youtube_url": "",
+            "tiktok_url": "",
+            "twitter_url": "",
+            "threads_url": "",
+            "linkedin_url": "",
+            "bluesky_url": "",
+            "snapchat_url": "",
+            "pinterest_url": "",
+            "tumblr_url": "",
+            "vimeo_url": "",
+            "custom_url": ""
           },
           "blocks": {}
         }
