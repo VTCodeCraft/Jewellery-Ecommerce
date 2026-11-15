@@ -286,6 +286,17 @@
               },
               "block_order": []
             },
+            "product_services": {
+              "type": "product-services",
+              "settings": {
+                "cod_available": true,
+                "delivery_heading": "Pay on Delivery Available",
+                "delivery_text": "Subject to checkout availability. Additional fees may apply.",
+                "replacement_heading": "7-Day Replacement Requests",
+                "replacement_text": "For eligible product issues, as per our policy."
+              },
+              "blocks": {}
+            },
             "product_info_description": {
               "type": "product-info",
               "settings": {
@@ -430,6 +441,7 @@
             "variant_picker_R3rGDr",
             "buy_buttons_eYQEYi",
             "wishlist_button",
+            "product_services",
             "product_info_description",
             "group_product_info"
           ]
