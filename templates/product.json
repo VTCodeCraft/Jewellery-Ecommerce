@@ -1,12 +1,13 @@
-/*
- * ------------------------------------------------------------
- * IMPORTANT: The contents of this file are auto-generated.
- *
- * This file may be updated by the Shopify admin theme editor
- * or related systems. Please exercise caution as any changes
- * made to this file may be overwritten.
- * ------------------------------------------------------------
- */{
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
   "sections": {
     "main": {
       "type": "product-information",
@@ -38,6 +39,7 @@
             "media_columns": "two",
             "image_gap": 4,
             "large_first_image": false,
+            "icons_style": "arrow",
             "slideshow_controls_style": "counter",
             "slideshow_mobile_controls_style": "dots",
             "thumbnail_position": "right",
@@ -116,6 +118,7 @@
                 "border_opacity": 100,
                 "border_color": "",
                 "border_radius": 0,
+                "link": "",
                 "open_in_new_tab": false,
                 "placeholder": "",
                 "padding-block-start": 0,
@@ -286,6 +289,17 @@
               },
               "block_order": []
             },
+            "wishlist_button": {
+              "type": "wishlist-button",
+              "name": "Wishlist button",
+              "settings": {
+                "style": "inline",
+                "alignment": "flex-start",
+                "padding-block-start": 0,
+                "padding-block-end": 0
+              },
+              "blocks": {}
+            },
             "product_services": {
               "type": "product-services",
               "settings": {
@@ -341,6 +355,7 @@
                 "border_opacity": 100,
                 "border_color": "",
                 "border_radius": 0,
+                "link": "",
                 "open_in_new_tab": false,
                 "placeholder": "",
                 "padding-block-start": 0,
@@ -400,39 +415,14 @@
                     "icon": "plus"
                   },
                   "blocks": {}
-                },
-                "product_info_shipping": {
-                  "type": "product-info",
-                  "settings": {
-                    "heading": "Shipping & returns",
-                    "source": "policies",
-                    "metafield_key": "",
-                    "text": "",
-                    "layout": "accordion",
-                    "open_by_default": false,
-                    "icon": "plus"
-                  },
-                  "blocks": {}
                 }
               },
               "block_order": [
                 "product_info_size",
                 "product_info_materials",
                 "product_info_occasion",
-                "product_info_care",
-                "product_info_shipping"
+                "product_info_care"
               ]
-            },
-            "wishlist_button": {
-              "type": "wishlist-button",
-              "name": "Wishlist button",
-              "settings": {
-                "style": "inline",
-                "alignment": "flex-start",
-                "padding-block-start": 0,
-                "padding-block-end": 0
-              },
-              "blocks": {}
             }
           },
           "block_order": [
@@ -454,13 +444,13 @@
         "content_width": "content-center-aligned",
         "desktop_media_position": "left",
         "equal_columns": false,
+        "media_width": 58,
         "limit_details_width": false,
         "gap": 48,
         "enable_sticky_add_to_cart": true,
         "background_color": "{{ settings.color_palette.background }}",
         "padding-block-start": 0,
-        "padding-block-end": 0,
-        "media_width": 58
+        "padding-block-end": 0
       }
     },
     "product_recommendations_qggXJq": {
