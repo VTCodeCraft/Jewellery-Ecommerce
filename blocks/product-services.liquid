@@ -1,0 +1,141 @@
+{%- doc -%}
+  Product-page delivery and replacement information. COD visibility is a
+  merchant confirmation, not an eligibility check; checkout determines fees
+  and availability. Keep replacement copy aligned with the published policy.
+{%- enddoc -%}
+
+{%- if request.page_type == 'product' and closest.product != blank -%}
+  {%- unless closest.product.gift_card? -%}
+    <div
+      class="product-services"
+      role="group"
+      aria-label="Delivery and replacement information"
+      {{ block.shopify_attributes }}
+    >
+      <ul class="product-services__list" role="list">
+        {% if block.settings.cod_available %}
+          <li class="product-services__row">
+            <svg class="product-services__icon" width="28" height="28" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" focusable="false">
+              {% render 'icon', icon: 'box' %}
+            </svg>
+            <div class="product-services__copy">
+              <p class="product-services__heading">{{ block.settings.delivery_heading | escape }}</p>
+              <p class="product-services__text">{{ block.settings.delivery_text | escape }}</p>
+            </div>
+          </li>
+        {% endif %}
+        <li class="product-services__row">
+          <svg class="product-services__icon" width="28" height="28" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" focusable="false">
+            {% render 'icon', icon: 'return' %}
+          </svg>
+          <div class="product-services__copy">
+            <p class="product-services__heading">{{ block.settings.replacement_heading | escape }}</p>
+            <p class="product-services__text">{{ block.settings.replacement_text | escape }}</p>
+          </div>
+        </li>
+      </ul>
+    </div>
+  {%- endunless -%}
+{%- endif -%}
+
+{% stylesheet %}
+  .product-services {
+    width: 100%;
+    min-width: 0;
+    border: 1px solid var(--brand-border);
+    border-radius: var(--style-border-radius-sm);
+    background: var(--brand-cream);
+    color: var(--brand-espresso);
+    font-family: var(--font-body--family);
+  }
+
+  .product-services__list {
+    margin: 0;
+    padding: 0 var(--padding-lg);
+    list-style: none;
+  }
+
+  .product-services__row {
+    display: grid;
+    grid-template-columns: 28px minmax(0, 1fr);
+    align-items: start;
+    gap: var(--gap-lg);
+    padding-block: var(--padding-md);
+  }
+
+  .product-services__row + .product-services__row {
+    border-block-start: 1px solid var(--brand-border);
+  }
+
+  .product-services__icon {
+    display: block;
+    margin-block-start: var(--padding-3xs);
+    color: var(--brand-ruby);
+  }
+
+  .product-services__copy {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .product-services__heading {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1.4;
+  }
+
+  .product-services__text {
+    margin: var(--margin-2xs) 0 0;
+    color: var(--brand-muted);
+    font-size: 0.875rem;
+    line-height: 1.5;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Delivery & replacement",
+  "tag": null,
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "cod_available",
+      "label": "COD is enabled in Payments",
+      "default": false,
+      "info": "Enable only after confirming Cash on Delivery in Settings > Payments. Checkout determines eligibility and fees."
+    },
+    {
+      "type": "text",
+      "id": "delivery_heading",
+      "label": "Delivery heading",
+      "default": "Pay on Delivery Available"
+    },
+    {
+      "type": "text",
+      "id": "delivery_text",
+      "label": "Delivery text",
+      "default": "Subject to checkout availability. Additional fees may apply."
+    },
+    {
+      "type": "text",
+      "id": "replacement_heading",
+      "label": "Replacement heading",
+      "default": "7-Day Replacement Requests",
+      "info": "Keep this wording consistent with the published replacement policy."
+    },
+    {
+      "type": "text",
+      "id": "replacement_text",
+      "label": "Replacement text",
+      "default": "For eligible product issues, as per our policy."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Delivery & replacement",
+      "category": "t:categories.products"
+    }
+  ]
+}
+{% endschema %}
